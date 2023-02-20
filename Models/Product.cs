@@ -9,6 +9,7 @@ namespace Models
     {
         public Product()
         {
+            Carts = new HashSet<Cart>();
             OrderDetails = new HashSet<OrderDetail>();
             Reviews = new HashSet<Review>();
         }
@@ -23,9 +24,11 @@ namespace Models
         public int? Amount { get; set; } = 0;
         public DateTime? CreateAt { get; set; } = DateTime.Now;
         public DateTime? UpdateAt { get; set; } = DateTime.Now;
+        public bool? IsDelete { get; set; } = false;
 
         public virtual Category Category { get; set; }
         public virtual User User { get; set; }
+        public virtual ICollection<Cart> Carts { get; set; }
         public virtual ICollection<OrderDetail> OrderDetails { get; set; }
         public virtual ICollection<Review> Reviews { get; set; }
     }

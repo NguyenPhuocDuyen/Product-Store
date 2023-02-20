@@ -9,6 +9,7 @@ namespace Models
     {
         public User()
         {
+            Carts = new HashSet<Cart>();
             Orders = new HashSet<Order>();
             Products = new HashSet<Product>();
             Reviews = new HashSet<Review>();
@@ -26,6 +27,7 @@ namespace Models
         public bool? IsDelete { get; set; } = false;
 
         public virtual Role Role { get; set; }
+        public virtual ICollection<Cart> Carts { get; set; }
         public virtual ICollection<Order> Orders { get; set; }
         public virtual ICollection<Product> Products { get; set; }
         public virtual ICollection<Review> Reviews { get; set; }

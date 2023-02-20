@@ -23,7 +23,7 @@ namespace ServerAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<OrderDetail>>> GetOrderDetails()
         {
-            return Ok(await _db.OrderDetail.GetAllAsync(includeProperties: "Order,Product"));
+            return Ok(await _db.OrderDetail.GetAllAsync());
         }
 
         // GET: api/OrderDetails/5

@@ -25,7 +25,7 @@ namespace ServerAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Product>>> GetProducts()
         {
-            return Ok(await _db.Product.GetAllAsync(includeProperties: "Category,User"));
+            return Ok(await _db.Product.GetAllAsync());
         }
 
         // GET: api/Products/5
@@ -58,7 +58,7 @@ namespace ServerAPI.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (! await ProductExists(id))
+                if (!await ProductExists(id))
                 {
                     return NotFound();
                 }
@@ -73,7 +73,7 @@ namespace ServerAPI.Controllers
 
         // POST: api/Products
         [HttpPost]
-        public async Task<ActionResult<Product>> PostProduct(Product product)
+        public async Task<ActionResult<Product>> Product(Product product)
         {
             _db.Product.Add(product);
             await _db.SaveAsync();
@@ -85,7 +85,7 @@ namespace ServerAPI.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteProduct(int id)
         {
-            var product = await _db.Product.GetFirstOrDefaultAsync(x=>x.Id == id);
+            var product =await _db.Product.GetFirstOrDefaultAsync(x=>x.Id == id);
             if (product == null)
             {
                 return NotFound();
@@ -99,12 +99,35 @@ namespace ServerAPI.Controllers
 
         private async Task<bool> ProductExists(int id)
         {
-            var product = await _db.Product.GetFirstOrDefaultAsync(x => x.Id == id);
+            var product =await _db.Product.GetFirstOrDefaultAsync(x => x.Id == id);
             if (product == null)
             {
                 return false;
             }
             return true;
+        }
+
+        // GET: api/Products
+        [HttpGet("TopSaleProductId")]
+        public async Task<ActionResult<IEnumerable<Product>>> GetTopSaleProducts()
+        {
+            //get order bought
+            var order = await _db.Order.GetAllAsync(filter: x => x.StatusId == 4);
+            var orderDetails = await _db.OrderDetail.GetAllAsync();
+            //get orderDetails bought
+            orderDetails = orderDetails.Join(order, or => or.OrderId, ord => ord.Id, (or, ord) => or);
+
+            var idP = (from obj in orderDetails
+                       group obj by obj.ProductId into gr
+                       let count = gr.Sum(x => x.Amount)
+                       orderby count descending
+                       select gr.Key)
+                       .Take(4);
+
+            var products = await _db.Product.GetAllAsync();
+            products = products.Where(x => idP.Contains(x.Id));
+
+            return Ok(idP);
         }
     }
 }

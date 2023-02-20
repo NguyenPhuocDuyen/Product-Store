@@ -23,7 +23,7 @@ namespace ServerAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Review>>> GetReviews()
         {
-            return Ok(await _db.Review.GetAllAsync(includeProperties: "Product,User"));
+            return Ok(await _db.Review.GetAllAsync());
         }
 
         // GET: api/Reviews/5

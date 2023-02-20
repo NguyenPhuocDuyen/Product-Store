@@ -16,7 +16,6 @@ namespace Models
         public string Title { get; set; } = string.Empty;
         public DateTime? CreateAt { get; set; } = DateTime.Now;
         public DateTime? UpdateAt { get; set; } = DateTime.Now;
-        public bool? IsDelete { get; set; } = false;
 
         public virtual ICollection<Order> Orders { get; set; }
     }

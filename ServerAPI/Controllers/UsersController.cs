@@ -23,10 +23,10 @@ namespace ServerAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<User>>> GetUsers()
         {
-            return Ok(await _db.User.GetAllAsync(includeProperties: "Role"));
+            return Ok(await _db.User.GetAllAsync());
         }
 
-        // GET: api/Users/5
+        // GET: api/Users/5s
         [HttpGet("{id}")]
         public async Task<ActionResult<User>> GetUser(int id)
         {
@@ -73,10 +73,17 @@ namespace ServerAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<User>> PostUser(User user)
         {
-            _db.User.Add(user);
-            await _db.SaveAsync();
+            var u = await _db.User.GetFirstOrDefaultAsync(
+                filter: x=>x.Email.ToLower().Trim()
+                .Equals(user.Email.ToLower().Trim()));
+            if (u == null)
+            {
+                _db.User.Add(user);
+                await _db.SaveAsync();
+                return u;
+            }
 
-            return CreatedAtAction("GetUser", new { id = user.Id }, user);
+            return BadRequest(u);
         }
 
         // DELETE: api/Users/5
@@ -103,6 +110,23 @@ namespace ServerAPI.Controllers
                 return false;
             }
             return true;
+        }
+
+        // POST: api/Users
+        [HttpPost("Login")]
+        public async Task<ActionResult<User>> Login(User user)
+        {
+            var u = await _db.User.GetFirstOrDefaultAsync(
+                filter: x=>x.Email.ToLower().Trim()
+                .Equals(user.Email.ToLower().Trim())
+                && x.Password.ToLower().Trim()
+                .Equals(user.Email.ToLower().Trim()));
+
+            if (u == null)
+            {
+                return NotFound();
+            }
+            return u;
         }
     }
 }
