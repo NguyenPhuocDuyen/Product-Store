@@ -10,53 +10,53 @@ namespace ServerAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class OrdersController : ControllerBase
+    public class CartsController : ControllerBase
     {
         private readonly IUnitOfWork _db;
 
-        public OrdersController(IUnitOfWork db)
+        public CartsController(IUnitOfWork db)
         {
             _db = db;
         }
 
-        // GET: api/Orders
+        // GET: api/Carts
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Order>>> GetOrders()
+        public async Task<ActionResult<IEnumerable<Cart>>> GetCarts()
         {
-            return Ok(await _db.Order.GetAllAsync());
+            return Ok(await _db.Cart.GetAllAsync());
         }
 
-        // GET: api/Orders/5
+        // GET: api/Carts/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Order>> GetOrder(int id)
+        public async Task<ActionResult<Cart>> GetCart(int id)
         {
-            var order = await _db.Order.GetFirstOrDefaultAsync(filter: x => x.Id == id,includeProperties: "Status,User");
+            var cart = await _db.Cart.GetFirstOrDefaultAsync(x => x.Id == id);
 
-            if (order == null)
+            if (cart == null)
             {
                 return NotFound();
             }
 
-            return order;
+            return cart;
         }
 
-        // PUT: api/Orders/5
+        // PUT: api/Carts/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutOrder(int id, Order order)
+        public async Task<IActionResult> PutCart(int id, Cart cart)
         {
-            if (id != order.Id)
+            if (id != cart.Id)
             {
                 return BadRequest();
             }
 
             try
             {
-                _db.Order.Update(order);
+                _db.Cart.Update(cart);
                 await _db.SaveAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!await OrderExists(id))
+                if (!await CartExists(id))
                 {
                     return NotFound();
                 }
@@ -69,36 +69,36 @@ namespace ServerAPI.Controllers
             return NoContent();
         }
 
-        // POST: api/Orders
+        // POST: api/Carts
         [HttpPost]
-        public async Task<ActionResult<Order>> PostOrder(Order order)
+        public async Task<ActionResult<Cart>> PostCart(Cart cart)
         {
-            _db.Order.Add(order);
+            _db.Cart.Add(cart);
             await _db.SaveAsync();
 
-            return CreatedAtAction("GetOrder", new { id = order.Id }, order);
+            return CreatedAtAction("GetCart", new { id = cart.Id }, cart);
         }
 
-        // DELETE: api/Orders/5
+        // DELETE: api/Carts/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteOrder(int id)
+        public async Task<IActionResult> DeleteCart(int id)
         {
-            var order = await _db.Order.GetFirstOrDefaultAsync(x => x.Id == id);
-            if (order == null)
+            var cart = await _db.Cart.GetFirstOrDefaultAsync(x => x.Id == id);
+            if (cart == null)
             {
                 return NotFound();
             }
 
-            _db.Order.Remove(order);
+            _db.Cart.Remove(cart);
             await _db.SaveAsync();
 
             return NoContent();
         }
 
-        private async Task<bool> OrderExists(int id)
+        private async Task<bool> CartExists(int id)
         {
-            var order = await _db.Order.GetFirstOrDefaultAsync(x => x.Id == id);
-            if (order == null)
+            var cart = await _db.Cart.GetFirstOrDefaultAsync(x => x.Id == id);
+            if (cart == null)
             {
                 return false;
             }

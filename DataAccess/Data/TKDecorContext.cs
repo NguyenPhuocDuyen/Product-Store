@@ -13,6 +13,7 @@ namespace Models
         {
         }
 
+        public virtual DbSet<Cart> Carts { get; set; }
         public virtual DbSet<Category> Categories { get; set; }
         public virtual DbSet<Order> Orders { get; set; }
         public virtual DbSet<OrderDetail> OrderDetails { get; set; }
@@ -33,6 +34,37 @@ namespace Models
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.HasAnnotation("Relational:Collation", "SQL_Latin1_General_CP1_CI_AS");
+
+            modelBuilder.Entity<Cart>(entity =>
+            {
+                entity.ToTable("Cart");
+
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.CreateAt)
+                    .HasColumnType("datetime")
+                    .HasColumnName("create_at");
+
+                entity.Property(e => e.ProductId).HasColumnName("product_id");
+
+                entity.Property(e => e.Quantity).HasColumnName("quantity");
+
+                entity.Property(e => e.UpdateAt)
+                    .HasColumnType("datetime")
+                    .HasColumnName("update_at");
+
+                entity.Property(e => e.UserId).HasColumnName("user_id");
+
+                entity.HasOne(d => d.Product)
+                    .WithMany(p => p.Carts)
+                    .HasForeignKey(d => d.ProductId)
+                    .HasConstraintName("FK__Cart__product_id__3C69FB99");
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.Carts)
+                    .HasForeignKey(d => d.UserId)
+                    .HasConstraintName("FK__Cart__user_id__3D5E1FD2");
+            });
 
             modelBuilder.Entity<Category>(entity =>
             {
@@ -65,8 +97,6 @@ namespace Models
                     .HasColumnType("datetime")
                     .HasColumnName("create_at");
 
-                entity.Property(e => e.IsDelete).HasColumnName("is_delete");
-
                 entity.Property(e => e.OrderAddress)
                     .HasMaxLength(255)
                     .HasColumnName("order_address");
@@ -82,12 +112,12 @@ namespace Models
                 entity.HasOne(d => d.Status)
                     .WithMany(p => p.Orders)
                     .HasForeignKey(d => d.StatusId)
-                    .HasConstraintName("FK__Order__status_id__34C8D9D1");
+                    .HasConstraintName("FK__Order__status_id__36B12243");
 
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.Orders)
                     .HasForeignKey(d => d.UserId)
-                    .HasConstraintName("FK__Order__user_id__33D4B598");
+                    .HasConstraintName("FK__Order__user_id__35BCFE0A");
             });
 
             modelBuilder.Entity<OrderDetail>(entity =>
@@ -102,8 +132,6 @@ namespace Models
                     .HasColumnType("datetime")
                     .HasColumnName("create_at");
 
-                entity.Property(e => e.IsDelete).HasColumnName("is_delete");
-
                 entity.Property(e => e.OrderId).HasColumnName("order_id");
 
                 entity.Property(e => e.PaymentPrice).HasColumnName("payment_price");
@@ -117,12 +145,12 @@ namespace Models
                 entity.HasOne(d => d.Order)
                     .WithMany(p => p.OrderDetails)
                     .HasForeignKey(d => d.OrderId)
-                    .HasConstraintName("FK__OrderDeta__order__36B12243");
+                    .HasConstraintName("FK__OrderDeta__order__38996AB5");
 
                 entity.HasOne(d => d.Product)
                     .WithMany(p => p.OrderDetails)
                     .HasForeignKey(d => d.ProductId)
-                    .HasConstraintName("FK__OrderDeta__produ__35BCFE0A");
+                    .HasConstraintName("FK__OrderDeta__produ__37A5467C");
             });
 
             modelBuilder.Entity<Product>(entity =>
@@ -143,6 +171,8 @@ namespace Models
                     .HasMaxLength(255)
                     .HasColumnName("description");
 
+                entity.Property(e => e.IsDelete).HasColumnName("is_delete");
+
                 entity.Property(e => e.RecentPrice).HasColumnName("recent_price");
 
                 entity.Property(e => e.Thumbnail)
@@ -162,12 +192,12 @@ namespace Models
                 entity.HasOne(d => d.Category)
                     .WithMany(p => p.Products)
                     .HasForeignKey(d => d.CategoryId)
-                    .HasConstraintName("FK__Product__categor__31EC6D26");
+                    .HasConstraintName("FK__Product__categor__33D4B598");
 
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.Products)
                     .HasForeignKey(d => d.UserId)
-                    .HasConstraintName("FK__Product__user_id__32E0915F");
+                    .HasConstraintName("FK__Product__user_id__34C8D9D1");
             });
 
             modelBuilder.Entity<Review>(entity =>
@@ -199,12 +229,12 @@ namespace Models
                 entity.HasOne(d => d.Product)
                     .WithMany(p => p.Reviews)
                     .HasForeignKey(d => d.ProductId)
-                    .HasConstraintName("FK__Review__product___38996AB5");
+                    .HasConstraintName("FK__Review__product___3A81B327");
 
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.Reviews)
                     .HasForeignKey(d => d.UserId)
-                    .HasConstraintName("FK__Review__user_id__398D8EEE");
+                    .HasConstraintName("FK__Review__user_id__3B75D760");
             });
 
             modelBuilder.Entity<Role>(entity =>
@@ -216,8 +246,6 @@ namespace Models
                 entity.Property(e => e.Description)
                     .HasMaxLength(255)
                     .HasColumnName("description");
-
-                entity.Property(e => e.IsDelete).HasColumnName("is_delete");
             });
 
             modelBuilder.Entity<Status>(entity =>
@@ -229,8 +257,6 @@ namespace Models
                 entity.Property(e => e.CreateAt)
                     .HasColumnType("datetime")
                     .HasColumnName("create_at");
-
-                entity.Property(e => e.IsDelete).HasColumnName("is_delete");
 
                 entity.Property(e => e.Title)
                     .HasMaxLength(255)
@@ -282,7 +308,7 @@ namespace Models
                 entity.HasOne(d => d.Role)
                     .WithMany(p => p.Users)
                     .HasForeignKey(d => d.RoleId)
-                    .HasConstraintName("FK__User__role_id__37A5467C");
+                    .HasConstraintName("FK__User__role_id__398D8EEE");
             });
 
             OnModelCreatingPartial(modelBuilder);

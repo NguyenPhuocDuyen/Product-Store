@@ -18,7 +18,6 @@ namespace Models
         public int? StatusId { get; set; }
         public DateTime? CreateAt { get; set; } = DateTime.Now;
         public DateTime? UpdateAt { get; set; } = DateTime.Now;
-        public bool? IsDelete { get; set; } = false;
 
         public virtual Status Status { get; set; }
         public virtual User User { get; set; }

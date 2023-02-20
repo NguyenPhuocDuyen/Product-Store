@@ -1,4 +1,5 @@
 ﻿using DataAccess.Repository.IRepository;
+using Microsoft.EntityFrameworkCore;
 using Models;
 using System;
 using System.Collections.Generic;
@@ -15,6 +16,7 @@ namespace DataAccess.Repository
         public UnitOfWork(TKDecorContext db)
         {
             _db = db;
+            Cart = new CartRepository(_db);
             Category = new CategoryRepository(_db);
             Order = new OrderRepository(_db);
             OrderDetail = new OrderDetailRepository(_db);
@@ -25,6 +27,7 @@ namespace DataAccess.Repository
             User = new UserRepository(_db);
         }
 
+        public ICartRepository Cart { get; private set; }
         public ICategoryRepository Category { get; private set; }
         public IOrderRepository Order { get; private set; }
         public IOrderDetailRepository OrderDetail { get; private set; }

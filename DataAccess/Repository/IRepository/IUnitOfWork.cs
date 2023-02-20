@@ -8,6 +8,7 @@ namespace DataAccess.Repository.IRepository
 {
     public interface IUnitOfWork : IDisposable
     {
+        ICartRepository Cart { get; }
         ICategoryRepository Category { get; }
         IOrderRepository Order  { get; }
         IOrderDetailRepository OrderDetail { get; }

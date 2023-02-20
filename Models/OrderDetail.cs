@@ -14,7 +14,6 @@ namespace Models
         public int? PaymentPrice { get; set; } = 0;
         public DateTime? CreateAt { get; set; } = DateTime.Now;
         public DateTime? UpdateAt { get; set; } = DateTime.Now;
-        public bool? IsDelete { get; set; } = false;
 
         public virtual Order Order { get; set; }
         public virtual Product Product { get; set; }
