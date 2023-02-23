@@ -25,14 +25,14 @@ namespace ServerAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Product>>> GetProducts()
         {
-            return Ok(await _db.Product.GetAllAsync());
+            return Ok(await _db.Product.GetAllAsync(includeProperties: "Category"));
         }
 
         // GET: api/Products/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Product>> GetProduct(int id)
         {
-            var product = await _db.Product.GetFirstOrDefaultAsync(filter: x=>x.Id == id, includeProperties: "Category,User");
+            var product = await _db.Product.GetFirstOrDefaultAsync(filter: x => x.Id == id, includeProperties: "Category,User");
 
             if (product == null)
             {
@@ -85,7 +85,7 @@ namespace ServerAPI.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteProduct(int id)
         {
-            var product =await _db.Product.GetFirstOrDefaultAsync(x=>x.Id == id);
+            var product = await _db.Product.GetFirstOrDefaultAsync(x => x.Id == id);
             if (product == null)
             {
                 return NotFound();
@@ -99,7 +99,7 @@ namespace ServerAPI.Controllers
 
         private async Task<bool> ProductExists(int id)
         {
-            var product =await _db.Product.GetFirstOrDefaultAsync(x => x.Id == id);
+            var product = await _db.Product.GetFirstOrDefaultAsync(x => x.Id == id);
             if (product == null)
             {
                 return false;
@@ -109,25 +109,19 @@ namespace ServerAPI.Controllers
 
         // GET: api/Products
         [HttpGet("TopSaleProductId")]
-        public async Task<ActionResult<IEnumerable<Product>>> GetTopSaleProducts()
+        public async Task<IActionResult> GetTopSaleProductId()
         {
             //get order bought
             var order = await _db.Order.GetAllAsync(filter: x => x.StatusId == 4);
-            var orderDetails = await _db.OrderDetail.GetAllAsync();
-            //get orderDetails bought
-            orderDetails = orderDetails.Join(order, or => or.OrderId, ord => ord.Id, (or, ord) => or);
+            var orderDetails = await _db.OrderDetail.GetAllAsync(includeProperties: "Product");
 
-            var idP = (from obj in orderDetails
+            var data = (from obj in orderDetails
                        group obj by obj.ProductId into gr
                        let count = gr.Sum(x => x.Amount)
                        orderby count descending
-                       select gr.Key)
-                       .Take(4);
+                       select gr.Key.Value).Take(4).ToList();
 
-            var products = await _db.Product.GetAllAsync();
-            products = products.Where(x => idP.Contains(x.Id));
-
-            return Ok(idP);
+            return Ok(data);
         }
     }
 }
