@@ -25,10 +25,11 @@ namespace Models
 
         //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         //{
-        //    if (!optionsBuilder.IsConfigured)
-        //    {
-        //        optionsBuilder.UseSqlServer("Server=(local);Uid=sa;Pwd=123456;DataBase=TKDecor;Integrated Security=true;TrustServerCertificate=True");
-        //    }
+        //    //    if (!optionsBuilder.IsConfigured)
+        //    //    {
+        //    //        optionsBuilder.UseSqlServer("Server=(local);Uid=sa;Pwd=123456;DataBase=TKDecor;Integrated Security=true;TrustServerCertificate=True");
+        //    //    }
+        //    //optionsBuilder.UseLazyLoadingProxies();
         //}
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

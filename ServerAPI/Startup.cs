@@ -33,12 +33,25 @@ namespace ServerAPI
         {
             services.AddDbContext<TKDecorContext>(options => options.UseSqlServer(
                 Configuration.GetConnectionString("DefaultConnection")));
+
             services.AddScoped<IDbInitializer, DbInitializer>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+
             services.AddControllersWithViews()
                  .AddNewtonsoftJson(options =>
                     options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
                 );
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAllOrigins",
+                    builder =>
+                    {
+                        builder.AllowAnyOrigin()
+                               .AllowAnyMethod()
+                               .AllowAnyHeader();
+                    });
+            });
 
             services.AddControllers();
             
@@ -71,6 +84,7 @@ namespace ServerAPI
                 var a = new DbInitializer(context);
                 a.Initialize();
             }
+            app.UseCors("AllowAllOrigins");
 
             app.UseAuthorization();
 

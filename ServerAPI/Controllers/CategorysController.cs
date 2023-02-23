@@ -23,7 +23,7 @@ namespace ServerAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Category>>> GetCategorys()
         {
-            return Ok(await _db.Category.GetAllAsync());
+            return Ok(await _db.Category.GetAllAsync(includeProperties: "Products"));
         }
 
         // GET: api/Categorys/5
