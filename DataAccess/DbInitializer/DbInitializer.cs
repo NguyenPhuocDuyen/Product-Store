@@ -34,17 +34,16 @@ namespace DataAccess.DbInitializer
             _db.Categories.AddRange(categories);
             _db.SaveChanges();
 
-            List<Role> roles = new()
-            {
-                new Role {Description = "Admin"},
-                new Role {Description = "Customer"}
-            };
-            _db.Roles.AddRange(roles);
+            _db.Roles.Add(new Role { Description = "Admin" });
+            _db.SaveChanges();
+            _db.Roles.Add(new Role { Description = "Customer" });
+            _db.SaveChanges();
+
+            _db.Users.Add(new User { RoleId = 1, Email = "Admin@gmail.com", Password = "Admin@gmail.com" });
             _db.SaveChanges();
 
             List<User> users = new()
             {
-                new User{RoleId = 1, Email = "Admin@gmail.com", Password = "Admin@gmail.com"},
                 new User{RoleId = 2, Email = "Customer1@gmail.com", Password = "Customer1@gmail.com", Address = "Ha Noi"},
                 new User{RoleId = 2, Email = "Customer2@gmail.com", Password = "Customer2@gmail.com", Address = "Ho Chi Minh"},
                 new User{RoleId = 2, Email = "Customer3@gmail.com", Password = "Customer3@gmail.com", Address = "Da Nang"},

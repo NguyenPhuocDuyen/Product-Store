@@ -120,7 +120,9 @@ namespace ServerAPI.Controllers
                 filter: x=>x.Email.ToLower().Trim()
                 .Equals(user.Email.ToLower().Trim())
                 && x.Password.ToLower().Trim()
-                .Equals(user.Email.ToLower().Trim()));
+                .Equals(user.Password.ToLower().Trim()),
+                includeProperties: "Role"
+                );
 
             if (u == null)
             {

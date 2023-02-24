@@ -2,6 +2,7 @@
 
 namespace ClientMVC.Controllers
 {
+    [SessionCheck]
     public class CustomerController : Controller
     {
         public IActionResult Index()
@@ -10,6 +11,11 @@ namespace ClientMVC.Controllers
         }
 
         public IActionResult Cart()
+        {
+            return View();
+        }
+
+        public IActionResult Details() 
         {
             return View();
         }

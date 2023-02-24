@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Security.Policy;
 using System.Threading.Tasks;
 using System.Web;
 using Utility;
@@ -46,6 +47,11 @@ namespace ClientMVC.Controllers
                     //check search by name and price
                     if (searchContent is not null)
                     {
+                        if (sort_order != 0)
+                        {
+                            searchContent = HttpUtility.UrlDecode(searchContent);
+                        }
+
                         searchContent = HttpUtility.HtmlDecode(searchContent);
                         //content = searchContent;
                         searchContent = searchContent.ToLower().Trim();
@@ -54,13 +60,13 @@ namespace ClientMVC.Controllers
                             || x.Category.Description.ToLower().Trim().Contains(searchContent)
                             ).ToList();
                     }
-
+                    //filter
                     if (min < max)
                     {
                         products = products.Where(x => x.RecentPrice >= min
                                         && x.RecentPrice <= max).ToList();
                     }
-
+                    //sort price
                     if (sort_order == 1)
                     {
                         products = products.OrderBy(x => x.RecentPrice).ToList();
@@ -69,13 +75,13 @@ namespace ClientMVC.Controllers
                     {
                         products = products.OrderByDescending(x => x.RecentPrice).ToList();
                     }
-
+                    //set var binding
                     ViewBag.searchContent = searchContent;
                     ViewBag.min = min;
                     ViewBag.max = max;
                     ViewBag.sort_order = sort_order;
                     ViewBag.TotalProduct = products.Count();
-
+                    //paging
                     var pageSize = 12;
                     var PagingListProduct = PaginatedList<Product>.CreateAsync(
                         products, pageIndex, pageSize);
