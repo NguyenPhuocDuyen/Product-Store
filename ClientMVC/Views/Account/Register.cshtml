@@ -1,6 +1,4 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model Models.ViewModel.UserRegister
 @{
     ViewData["Title"] = "Register";
     Layout = "~/Views/Shared/_LayoutAccount.cshtml";
@@ -13,25 +11,26 @@
                 <h2 class="form-title">Sign up</h2>
                 <form method="POST" class="register-form" id="register-form">
                     <div class="form-group">
-                        <label for="name"><i class="zmdi zmdi-account material-icons-name"></i></label>
-                        <input type="text" name="name" id="name" placeholder="Your Name"/>
+                        <label asp-for="FullName"><i class="zmdi zmdi-account material-icons-name"></i></label>
+                        <input asp-for="FullName" placeholder="Your Name"/>
                     </div>
                     <div class="form-group">
-                        <label for="email"><i class="zmdi zmdi-email"></i></label>
-                        <input type="email" name="email" id="email" placeholder="Your Email"/>
+                        <label asp-for="Email"><i class="zmdi zmdi-email"></i></label>
+                        <input asp-for="Email" placeholder="Your Email"/>
                     </div>
                     <div class="form-group">
-                        <label for="pass"><i class="zmdi zmdi-lock"></i></label>
-                        <input type="password" name="pass" id="pass" placeholder="Password"/>
+                        <label asp-for="Password"><i class="zmdi zmdi-lock"></i></label>
+                        <input asp-for="Password" type="password" placeholder="Password"/>
                     </div>
                     <div class="form-group">
-                        <label for="re-pass"><i class="zmdi zmdi-lock-outline"></i></label>
-                        <input type="password" name="re_pass" id="re_pass" placeholder="Repeat your password"/>
+                        <label asp-for="ConfirmPassword"><i class="zmdi zmdi-lock-outline"></i></label>
+                        <input type="password" asp-for="ConfirmPassword" placeholder="Repeat your password"/>
                     </div>
                     <div class="form-group">
-                        <input type="checkbox" name="agree-term" id="agree-term" class="agree-term" />
+                        <input asp-for="agreeRule" id="agree-term" class="agree-term" />
                         <label for="agree-term" class="label-agree-term"><span><span></span></span>I agree all statements in  <a href="#" class="term-service">Terms of service</a></label>
                     </div>
+                    <span style="color: red">@ViewBag.error</span>
                     <div class="form-group form-button">
                         <input type="submit" name="signup" id="signup" class="form-submit" value="Register"/>
                     </div>
@@ -40,6 +39,7 @@
             <div class="signup-image">
                 <figure><img src="/images/signup-image.jpg" alt="sing up image"></figure>
                 <a asp-action="Login" asp-controller="Account" class="signup-image-link">I am already member</a>
+                <a asp-action="Index" asp-controller="Home" class="signup-image-link">Back To Home</a>
             </div>
         </div>
     </div>
