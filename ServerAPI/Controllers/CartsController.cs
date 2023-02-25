@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Models;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -103,6 +104,30 @@ namespace ServerAPI.Controllers
                 return false;
             }
             return true;
+        }
+
+        // Khang - Post: AddProductToCart
+        [HttpPost("AddProductToCart")]
+        public async Task<IActionResult> AddCart([FromBody] Cart cart)
+        {
+            var oldCart = await _db.Cart.GetFirstOrDefaultAsync(x => x.UserId == cart.UserId && x.ProductId == cart.ProductId);
+            // Check cart is exist in database to create cart or upadate quantity
+            if(oldCart == null)
+            {
+                cart.Quantity = 1;
+                cart.CreateAt = DateTime.Now;
+                cart.UpdateAt = DateTime.Now;
+                _db.Cart.Add(cart);
+                await _db.SaveAsync();
+            }
+            else
+            {
+                oldCart.Quantity += 1;
+                oldCart.UpdateAt= DateTime.Now;
+                _db.Cart.Update(oldCart);
+                await _db.SaveAsync();
+            }
+            return NoContent();
         }
     }
 }
