@@ -1,9 +1,12 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
-<!-- Shop Details Section Begin -->
+﻿<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+@if (Model != null)
+{
+    <h2>@Model.Id</h2>
+    @*<p>@Model.Description</p>*@
+
+    <!-- Shop Details Section Begin -->
     <section class="shop-details">
         <div class="product__details__pic">
             <div class="container">
@@ -89,22 +92,28 @@
                                 <span> - 5 Reviews</span>
                             </div>
                             <h3>$270.00 <span>70.00</span></h3>
-                            <p>Coat with quilted lining and an adjustable hood. Featuring long sleeves with adjustable
+                            <p>
+                                Coat with quilted lining and an adjustable hood. Featuring long sleeves with adjustable
                                 cuff tabs, adjustable asymmetric hem with elastic side tabs and a front zip fastening
-                            with placket.</p>
+                                with placket.
+                            </p>
                             <div class="product__details__option">
                                 <div class="product__details__option__size">
                                     <span>Size:</span>
-                                    <label for="xxl">xxl
+                                    <label for="xxl">
+                                        xxl
                                         <input type="radio" id="xxl">
                                     </label>
-                                    <label class="active" for="xl">xl
+                                    <label class="active" for="xl">
+                                        xl
                                         <input type="radio" id="xl">
                                     </label>
-                                    <label for="l">l
+                                    <label for="l">
+                                        l
                                         <input type="radio" id="l">
                                     </label>
-                                    <label for="sm">s
+                                    <label for="sm">
+                                        s
                                         <input type="radio" id="sm">
                                     </label>
                                 </div>
@@ -130,10 +139,11 @@
                             <div class="product__details__cart__option">
                                 <div class="quantity">
                                     <div class="pro-qty">
-                                        <input type="text" value="1">
+                                        <input id="quatity" type="text" value="1">
                                     </div>
                                 </div>
-                                <a href="#" class="primary-btn">add to cart</a>
+                                <button id="addCart" data-id="@Model.Id" class="primary-btn pointer-event">add to cart</button>
+
                             </div>
                             <div class="product__details__btns__option">
                                 <a href="#"><i class="fa fa-heart"></i> add to wishlist</a>
@@ -157,49 +167,61 @@
                             <ul class="nav nav-tabs" role="tablist">
                                 <li class="nav-item">
                                     <a class="nav-link active" data-toggle="tab" href="#tabs-5"
-                                    role="tab">Description</a>
+                                   role="tab">Description</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" data-toggle="tab" href="#tabs-6" role="tab">Customer
-                                    Previews(5)</a>
+                                    <a class="nav-link" data-toggle="tab" href="#tabs-6" role="tab">
+                                        Customer
+                                        Previews(5)
+                                    </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" data-toggle="tab" href="#tabs-7" role="tab">Additional
-                                    information</a>
+                                    <a class="nav-link" data-toggle="tab" href="#tabs-7" role="tab">
+                                        Additional
+                                        information
+                                    </a>
                                 </li>
                             </ul>
                             <div class="tab-content">
                                 <div class="tab-pane active" id="tabs-5" role="tabpanel">
                                     <div class="product__details__tab__content">
-                                        <p class="note">Nam tempus turpis at metus scelerisque placerat nulla deumantos
+                                        <p class="note">
+                                            Nam tempus turpis at metus scelerisque placerat nulla deumantos
                                             solicitud felis. Pellentesque diam dolor, elementum etos lobortis des mollis
                                             ut risus. Sedcus faucibus an sullamcorper mattis drostique des commodo
-                                        pharetras loremos.</p>
+                                            pharetras loremos.
+                                        </p>
                                         <div class="product__details__tab__content__item">
                                             <h5>Products Infomation</h5>
-                                            <p>A Pocket PC is a handheld computer, which features many of the same
+                                            <p>
+                                                A Pocket PC is a handheld computer, which features many of the same
                                                 capabilities as a modern PC. These handy little devices allow
                                                 individuals to retrieve and store e-mail messages, create a contact
                                                 file, coordinate appointments, surf the internet, exchange text messages
                                                 and more. Every product that is labeled as a Pocket PC must be
                                                 accompanied with specific software to operate the unit and must feature
-                                            a touchscreen and touchpad.</p>
-                                            <p>As is the case with any new technology product, the cost of a Pocket PC
+                                                a touchscreen and touchpad.
+                                            </p>
+                                            <p>
+                                                As is the case with any new technology product, the cost of a Pocket PC
                                                 was substantial during it’s early release. For approximately $700.00,
                                                 consumers could purchase one of top-of-the-line Pocket PCs in 2003.
                                                 These days, customers are finding that prices have become much more
                                                 reasonable now that the newness is wearing off. For approximately
-                                            $350.00, a new Pocket PC can now be purchased.</p>
+                                                $350.00, a new Pocket PC can now be purchased.
+                                            </p>
                                         </div>
                                         <div class="product__details__tab__content__item">
                                             <h5>Material used</h5>
-                                            <p>Polyester is deemed lower quality due to its none natural quality’s. Made
+                                            <p>
+                                                Polyester is deemed lower quality due to its none natural quality’s. Made
                                                 from synthetic materials, not natural like wool. Polyester suits become
                                                 creased easily and are known for not being breathable. Polyester suits
                                                 tend to have a shine to them compared to wool and cotton suits, this can
                                                 make the suit look cheap. The texture of velvet is luxurious and
                                                 breathable. Velvet is a great choice for dinner party jacket and can be
-                                            worn all year round.</p>
+                                                worn all year round.
+                                            </p>
                                         </div>
                                     </div>
                                 </div>
@@ -207,63 +229,77 @@
                                     <div class="product__details__tab__content">
                                         <div class="product__details__tab__content__item">
                                             <h5>Products Infomation</h5>
-                                            <p>A Pocket PC is a handheld computer, which features many of the same
+                                            <p>
+                                                A Pocket PC is a handheld computer, which features many of the same
                                                 capabilities as a modern PC. These handy little devices allow
                                                 individuals to retrieve and store e-mail messages, create a contact
                                                 file, coordinate appointments, surf the internet, exchange text messages
                                                 and more. Every product that is labeled as a Pocket PC must be
                                                 accompanied with specific software to operate the unit and must feature
-                                            a touchscreen and touchpad.</p>
-                                            <p>As is the case with any new technology product, the cost of a Pocket PC
+                                                a touchscreen and touchpad.
+                                            </p>
+                                            <p>
+                                                As is the case with any new technology product, the cost of a Pocket PC
                                                 was substantial during it’s early release. For approximately $700.00,
                                                 consumers could purchase one of top-of-the-line Pocket PCs in 2003.
                                                 These days, customers are finding that prices have become much more
                                                 reasonable now that the newness is wearing off. For approximately
-                                            $350.00, a new Pocket PC can now be purchased.</p>
+                                                $350.00, a new Pocket PC can now be purchased.
+                                            </p>
                                         </div>
                                         <div class="product__details__tab__content__item">
                                             <h5>Material used</h5>
-                                            <p>Polyester is deemed lower quality due to its none natural quality’s. Made
+                                            <p>
+                                                Polyester is deemed lower quality due to its none natural quality’s. Made
                                                 from synthetic materials, not natural like wool. Polyester suits become
                                                 creased easily and are known for not being breathable. Polyester suits
                                                 tend to have a shine to them compared to wool and cotton suits, this can
                                                 make the suit look cheap. The texture of velvet is luxurious and
                                                 breathable. Velvet is a great choice for dinner party jacket and can be
-                                            worn all year round.</p>
+                                                worn all year round.
+                                            </p>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="tab-pane" id="tabs-7" role="tabpanel">
                                     <div class="product__details__tab__content">
-                                        <p class="note">Nam tempus turpis at metus scelerisque placerat nulla deumantos
+                                        <p class="note">
+                                            Nam tempus turpis at metus scelerisque placerat nulla deumantos
                                             solicitud felis. Pellentesque diam dolor, elementum etos lobortis des mollis
                                             ut risus. Sedcus faucibus an sullamcorper mattis drostique des commodo
-                                        pharetras loremos.</p>
+                                            pharetras loremos.
+                                        </p>
                                         <div class="product__details__tab__content__item">
                                             <h5>Products Infomation</h5>
-                                            <p>A Pocket PC is a handheld computer, which features many of the same
+                                            <p>
+                                                A Pocket PC is a handheld computer, which features many of the same
                                                 capabilities as a modern PC. These handy little devices allow
                                                 individuals to retrieve and store e-mail messages, create a contact
                                                 file, coordinate appointments, surf the internet, exchange text messages
                                                 and more. Every product that is labeled as a Pocket PC must be
                                                 accompanied with specific software to operate the unit and must feature
-                                            a touchscreen and touchpad.</p>
-                                            <p>As is the case with any new technology product, the cost of a Pocket PC
+                                                a touchscreen and touchpad.
+                                            </p>
+                                            <p>
+                                                As is the case with any new technology product, the cost of a Pocket PC
                                                 was substantial during it’s early release. For approximately $700.00,
                                                 consumers could purchase one of top-of-the-line Pocket PCs in 2003.
                                                 These days, customers are finding that prices have become much more
                                                 reasonable now that the newness is wearing off. For approximately
-                                            $350.00, a new Pocket PC can now be purchased.</p>
+                                                $350.00, a new Pocket PC can now be purchased.
+                                            </p>
                                         </div>
                                         <div class="product__details__tab__content__item">
                                             <h5>Material used</h5>
-                                            <p>Polyester is deemed lower quality due to its none natural quality’s. Made
+                                            <p>
+                                                Polyester is deemed lower quality due to its none natural quality’s. Made
                                                 from synthetic materials, not natural like wool. Polyester suits become
                                                 creased easily and are known for not being breathable. Polyester suits
                                                 tend to have a shine to them compared to wool and cotton suits, this can
                                                 make the suit look cheap. The texture of velvet is luxurious and
                                                 breathable. Velvet is a great choice for dinner party jacket and can be
-                                            worn all year round.</p>
+                                                worn all year round.
+                                            </p>
                                         </div>
                                     </div>
                                 </div>
@@ -275,7 +311,6 @@
         </div>
     </section>
     <!-- Shop Details Section End -->
-
     <!-- Related Section Begin -->
     <section class="related spad">
         <div class="container">
@@ -427,3 +462,36 @@
         </div>
     </section>
     <!-- Related Section End -->
+
+    <script>
+        $(document).ready(function () {
+            var id = $(this).closest('.product__item').data('id');
+            var buttons = document.querySelectorAll('#addCart');
+            buttons.forEach(function (button) {
+                button.addEventListener('click', function () {
+                    var productId = this.dataset.id;
+                    var quantity = $('#quatity').val();
+                    $.ajax({
+                        url: 'https://localhost:44362/api/Carts/AddProductToCart',
+                        type: 'POST',
+                        data: JSON.stringify({ UserId: '1', ProductId: productId, quantity: quantity }),
+                        contentType: 'application/json; charset=utf-8',
+                        dataType: 'json',
+                        success: function (data) {
+                            console.log("success", productId);
+                            toastr.success('Product added to cart successfully!');
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            console.log('Error: ' + textStatus + ' - ' + errorThrown);
+                            toastr.error('Error occurred while adding product to cart!');
+                        }
+                    });
+                });
+            });
+
+        });
+    </script>
+
+}
+
+

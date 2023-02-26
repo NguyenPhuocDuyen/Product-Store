@@ -122,7 +122,16 @@ namespace ServerAPI.Controllers
             }
             else
             {
-                oldCart.Quantity += 1;
+                if (cart.Quantity != null)
+                {
+
+                    oldCart.Quantity += cart.Quantity;
+                }
+                else
+                {
+                    oldCart.Quantity += 1;
+
+                }
                 oldCart.UpdateAt= DateTime.Now;
                 _db.Cart.Update(oldCart);
                 await _db.SaveAsync();
