@@ -18,6 +18,7 @@ namespace ClientMVC.Controllers
     public class ShopController : Controller
     {
         HttpResponseMessage response;
+        HttpRequestMessage request;
         string responseString;
         //string content;
 
@@ -112,9 +113,23 @@ namespace ClientMVC.Controllers
             return View();
         }
 
-        public IActionResult ProductDetail()
+        public IActionResult ProductDetail(int id)
         {
-            return View();
+            Product product = new();
+            // Get product from database based on ID
+            response = GobalVariables.WebAPIClient.GetAsync("Products/" + id).Result;
+            if (response.IsSuccessStatusCode)
+            {
+                responseString = response.Content.ReadAsStringAsync().Result;
+                product = JsonConvert.DeserializeObject<Product>(responseString);
+                ViewBag.ProductDetail = product;
+                if (product == null)
+                {
+                    return RedirectToAction("Index");
+                }
+            }
+
+            return View(product);
         }
 
         public IActionResult CheckOut()

@@ -1,4 +1,9 @@
-﻿@model Utility.PaginatedList<Models.Product>
+﻿<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!-- Include toastr CSS and JS files -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+@model Utility.PaginatedList<Models.Product>
 @{
     string searchContent = ViewBag.searchContent;
     int min = ViewBag.min;
@@ -8,6 +13,7 @@
 
     List<Models.Category> categories = ViewBag.Categories;
 }
+
 <!-- Breadcrumb Section Begin -->
 @*<section class="breadcrumb-option">
     <div class="container">
@@ -141,12 +147,12 @@
                                         <li><a href="#"><img src="~/img/icon/heart.png" alt=""></a></li>
                                         <li><a href="#"><img src="~/img/icon/compare.png" alt=""> <span>Compare</span></a>
                                         </li>
-                                        <li><a href="#"><img src="~/img/icon/search.png" alt=""></a></li>
+                                        <li><a href="@Url.Action("ProductDetail", "Shop", new { id = item.Id })"><img src="~/img/icon/search.png" alt=""></a></li>
                                     </ul>
                                 </div>
                                 <div class="product__item__text">
                                     <h6>@item.Title</h6>
-                                    <a href="#" class="add-cart">+ Add To Cart</a>
+                                    <a style="cursor: pointer" id="addCart" class="add-cart" data-id="@item.Id">+ Add To Cart</a>
                                     <div class="rating">
                                         <i class="fa fa-star"></i>
                                         <i class="fa fa-star"></i>
@@ -209,6 +215,35 @@
         const newHref = `/Shop?searchContent=@searchContent&min=@min&max=@max&sort_order=${selectedValue}`;
         sortLink.href = newHref;
     }
+
+</script>
+
+<script>
+    $(document).ready(function () {
+        var id = $(this).closest('.product__item').data('id');
+        var buttons = document.querySelectorAll('#addCart');
+        buttons.forEach(function (button) {
+            button.addEventListener('click', function () {
+                var productId = this.dataset.id;
+                $.ajax({
+                    url: 'https://localhost:44362/api/Carts/AddProductToCart',
+                    type: 'POST',
+                    data: JSON.stringify({ UserId: '1', ProductId: productId }),
+                    contentType: 'application/json; charset=utf-8',
+                    dataType: 'json',
+                    success: function (data) {
+                        console.log("success", productId);
+                        toastr.success('Product added to cart successfully!');
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        console.log('Error: ' + textStatus + ' - ' + errorThrown);
+                        toastr.error('Error occurred while adding product to cart!');
+                    }
+                });
+            });
+        });
+
+    });
 </script>
 <!-- Shop Section End -->
 @*<script src="~/js/search.js"></script>*@
