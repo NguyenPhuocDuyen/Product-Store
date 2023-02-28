@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Models;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace ServerAPI.Controllers
@@ -112,7 +113,7 @@ namespace ServerAPI.Controllers
         {
             var oldCart = await _db.Cart.GetFirstOrDefaultAsync(x => x.UserId == cart.UserId && x.ProductId == cart.ProductId);
             // Check cart is exist in database to create cart or upadate quantity
-            if(oldCart == null)
+            if (oldCart == null)
             {
                 cart.Quantity = 1;
                 cart.CreateAt = DateTime.Now;
@@ -132,11 +133,26 @@ namespace ServerAPI.Controllers
                     oldCart.Quantity += 1;
 
                 }
-                oldCart.UpdateAt= DateTime.Now;
+                oldCart.UpdateAt = DateTime.Now;
                 _db.Cart.Update(oldCart);
                 await _db.SaveAsync();
             }
             return NoContent();
+        }
+
+        // GET: api/Carts/5
+        [HttpGet("GetCartsUser/{id}")]
+        public async Task<ActionResult<List<Cart>>> GetCartsUser(int id)
+        {
+            var carts = await _db.Cart.GetAllAsync(x => x.UserId == id, 
+                includeProperties: "Product");
+
+            if (carts == null)
+            {
+                return NotFound();
+            }
+
+            return carts.ToList();
         }
     }
 }
