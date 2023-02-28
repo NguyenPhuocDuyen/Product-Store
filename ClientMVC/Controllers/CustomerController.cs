@@ -1,10 +1,18 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Models;
+using Newtonsoft.Json;
+using System.Collections.Generic;
+using System.Net.Http;
 
 namespace ClientMVC.Controllers
 {
     [SessionCheck]
     public class CustomerController : Controller
     {
+
+        HttpResponseMessage response;
+        string responseString;
         public IActionResult Index()
         {
             return View();
@@ -12,7 +20,22 @@ namespace ClientMVC.Controllers
 
         public IActionResult Cart()
         {
-            return View();
+            try
+            {
+                var id = HttpContext.Session.GetInt32("userId");
+                response = GobalVariables.WebAPIClient.GetAsync($"Carts/GetCartsUser/{id}").Result;
+                if (response.IsSuccessStatusCode)
+                {
+                    responseString = response.Content.ReadAsStringAsync().Result;
+                    List<Cart> products = JsonConvert.DeserializeObject<List<Cart>>(responseString);
+                return View(products);
+                }
+            }
+            catch
+            {
+            } 
+
+            return RedirectToAction("Index","Home");
         }
 
         public IActionResult Details() 

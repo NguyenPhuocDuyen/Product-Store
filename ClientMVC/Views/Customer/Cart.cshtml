@@ -1,10 +1,11 @@
 ﻿@*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
+@model List<Models.Cart>
 @{
 }
 <!-- Breadcrumb Section Begin -->
-    <section class="breadcrumb-option">
+    @*<section class="breadcrumb-option">
         <div class="container">
             <div class="row">
                 <div class="col-lg-12">
@@ -19,7 +20,7 @@
                 </div>
             </div>
         </div>
-    </section>
+    </section>*@
     <!-- Breadcrumb Section End -->
 
     <!-- Shopping Cart Section Begin -->
@@ -38,27 +39,33 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
+                                
+                                @foreach(var item in Model)
+                                {<tr id="ProductItem">
                                     <td class="product__cart__item">
                                         <div class="product__cart__item__pic">
                                             <img src="/img/shopping-cart/cart-1.jpg" alt="">
                                         </div>
                                         <div class="product__cart__item__text">
-                                            <h6>T-shirt Contrast Pocket</h6>
-                                            <h5>$98.49</h5>
+                                            <h6>@item.Product.Title</h6>
+                                            <h5>@item.Product.RecentPrice</h5>
                                         </div>
                                     </td>
                                     <td class="quantity__item">
                                         <div class="quantity">
                                             <div class="pro-qty-2">
-                                                <input type="text" value="1">
+                                                <input type="text" id="UpdateQuantityProduct" min="1" value="@item.Quantity">
                                             </div>
                                         </div>
                                     </td>
-                                    <td class="cart__price">$ 30.00</td>
-                                    <td class="cart__close"><i class="fa fa-close"></i></td>
+                                    
+                                    @*<td class="cart__close"><i id="handleDeleteProduct" data-id="${product.id}">Delete</i></td>*@
+                                    <td><button onclick="handleDeleteProduct" data-id="@item.Product.Id">Delete</button></td>
                                 </tr>
-                                <tr>
+                                }
+                                
+                                
+                               @* <tr>
                                     <td class="product__cart__item">
                                         <div class="product__cart__item__pic">
                                             <img src="/img/shopping-cart/cart-2.jpg" alt="">
@@ -117,10 +124,11 @@
                                     </td>
                                     <td class="cart__price">$ 30.00</td>
                                     <td class="cart__close"><i class="fa fa-close"></i></td>
-                                </tr>
+                                </tr>*@
                             </tbody>
                         </table>
                     </div>
+               
                     <div class="row">
                         <div class="col-lg-6 col-md-6 col-sm-6">
                             <div class="continue__btn">
@@ -129,11 +137,15 @@
                         </div>
                         <div class="col-lg-6 col-md-6 col-sm-6">
                             <div class="continue__btn update__btn">
-                                <a href="#"><i class="fa fa-spinner"></i> Update cart</a>
+                                @*<a href="#"><i class="fa fa-spinner"></i> Update cart</a>*@
+                            <a style="cursor: pointer" id="addCart" class="add-cart" >+ Update Cart</a>
                             </div>
                         </div>
                     </div>
+                    
                 </div>
+                
+
                 <div class="col-lg-4">
                     <div class="cart__discount">
                         <h6>Discount codes</h6>
@@ -153,5 +165,144 @@
                 </div>
             </div>
         </div>
-    </section>
+ @*   </section>*@
     <!-- Shopping Cart Section End -->
+    @*<section class="shopping__product">
+        <h2>Danh sach san pham</h2>
+        <ul id="list-product"></ul>
+
+       <div>
+            
+            <div>
+                <label>Title</label>
+                <input type="text" name="title"/>
+            </div>
+            <div>
+                <label>Price</label>
+                <input type="text" name="recent_price"/>
+            </div>
+            <div>
+                <label>Amount</label>
+                <input type="text" name="amount"/>
+            </div>
+
+            <div>
+                <button id="create">Create</button>
+            </div>
+        </div>*@
+
+    @*<div class="container">
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="shopping__cart__table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Image</th>
+                                <th>Product</th>
+                                <th>Price</th>
+                                <th>Amount</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="product__cart__item">
+                                    
+                                    <div>
+
+                                        
+                                       
+                                    </div>
+                                </td>
+                                <td class="quantity__item">
+                                    <div class="quantity">
+                                        <div class="pro-qty-2">
+                                            <input type="text" value="1">
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="cart__price"></td>
+                                <td class="cart__close">
+                                    <button onclick="handleDeleteproduct(${product.id})">Delete</button>
+                                    </td>
+                                
+                                <td class="quantity__item">
+                                    <div class="quantity">
+                                        <div class="pro-qty-2">
+                                            <input type="text" value="1">
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="cart__price">$ 30.00</td>
+                                <td class="cart__close"><i class="fa fa-close"></i></td>
+                            </tr>
+                            <tr>
+                                <td class="product__cart__item">
+                                    <div class="product__cart__item__pic">
+                                        <img src="/img/shopping-cart/cart-2.jpg" alt="">
+                                    </div>
+                                    <div class="product__cart__item__text">
+                                        <h6>Diagonal Textured Cap</h6>
+                                        <h5>$98.49</h5>
+                                    </div>
+                                </td>
+                                <td class="quantity__item">
+                                    <div class="quantity">
+                                        <div class="pro-qty-2">
+                                            <input type="text" value="1">
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="cart__price">$ 32.50</td>
+                                <td class="cart__close"><i class="fa fa-close"></i></td>
+                            </tr>
+                            <tr>
+                                <td class="product__cart__item">
+                                    <div class="product__cart__item__pic">
+                                        <img src="/img/shopping-cart/cart-3.jpg" alt="">
+                                    </div>
+                                    <div class="product__cart__item__text">
+                                        <h6>Basic Flowing Scarf</h6>
+                                        <h5>$98.49</h5>
+                                    </div>
+                                </td>
+                                <td class="quantity__item">
+                                    <div class="quantity">
+                                        <div class="pro-qty-2">
+                                            <input type="text" value="1">
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="cart__price">$ 47.00</td>
+                                <td class="cart__close"><i class="fa fa-close"></i></td>
+                            </tr>
+                            <tr>
+                                <td class="product__cart__item">
+                                    <div class="product__cart__item__pic">
+                                        <img src="/img/shopping-cart/cart-4.jpg" alt="">
+                                    </div>
+                                    <div class="product__cart__item__text">
+                                        <h6>Basic Flowing Scarf</h6>
+                                        <h5>$98.49</h5>
+                                    </div>
+                                </td>
+                                <td class="quantity__item">
+                                    <div class="quantity">
+                                        <div class="pro-qty-2">
+                                            <input type="text" value="1">
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="cart__price">$ 30.00</td>
+                                <td class="cart__close"><i class="fa fa-close"></i></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>*@
+
+        <script src="./site.js"></script>
+    </section>
