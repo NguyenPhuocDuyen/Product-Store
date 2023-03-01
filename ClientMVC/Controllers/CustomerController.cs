@@ -39,5 +39,19 @@ namespace ClientMVC.Controllers
         {
             return View();
         }
+
+        public IActionResult OrderProducts()
+        {
+            try
+            {
+                response = GobalVariables.WebAPIClient.GetAsync("Orders/OrderProducts").Result;
+                if (response.IsSuccessStatusCode)
+                {
+                    return RedirectToAction("Cart", "Customer");
+                }
+            } catch { }
+
+            return RedirectToAction("Index", "Home");
+        }
     }
 }

@@ -19,90 +19,90 @@ namespace ServerAPI.Controllers
             _db = db;
         }
 
-        // GET: api/OrderDetails
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<OrderDetail>>> GetOrderDetails()
-        {
-            return Ok(await _db.OrderDetail.GetAllAsync());
-        }
+        //// GET: api/OrderDetails
+        //[HttpGet]
+        //public async Task<ActionResult<IEnumerable<OrderDetail>>> GetOrderDetails()
+        //{
+        //    return Ok(await _db.OrderDetail.GetAllAsync());
+        //}
 
-        // GET: api/OrderDetails/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<OrderDetail>> GetOrderDetail(int id)
-        {
-            var orderDetail = await _db.OrderDetail.GetFirstOrDefaultAsync(filter: x => x.Id == id, includeProperties: "Order,Product");
+        //// GET: api/OrderDetails/5
+        //[HttpGet("{id}")]
+        //public async Task<ActionResult<OrderDetail>> GetOrderDetail(int id)
+        //{
+        //    var orderDetail = await _db.OrderDetail.GetFirstOrDefaultAsync(filter: x => x.Id == id, includeProperties: "Order,Product");
 
-            if (orderDetail == null)
-            {
-                return NotFound();
-            }
+        //    if (orderDetail == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            return orderDetail;
-        }
+        //    return orderDetail;
+        //}
 
-        // PUT: api/OrderDetails/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutOrderDetail(int id, OrderDetail orderDetail)
-        {
-            if (id != orderDetail.Id)
-            {
-                return BadRequest();
-            }
+        //// PUT: api/OrderDetails/5
+        //[HttpPut("{id}")]
+        //public async Task<IActionResult> PutOrderDetail(int id, OrderDetail orderDetail)
+        //{
+        //    if (id != orderDetail.Id)
+        //    {
+        //        return BadRequest();
+        //    }
 
-            try
-            {
-                _db.OrderDetail.Update(orderDetail);
-                await _db.SaveAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!await OrderDetailExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+        //    try
+        //    {
+        //        _db.OrderDetail.Update(orderDetail);
+        //        await _db.SaveAsync();
+        //    }
+        //    catch (DbUpdateConcurrencyException)
+        //    {
+        //        if (!await OrderDetailExists(id))
+        //        {
+        //            return NotFound();
+        //        }
+        //        else
+        //        {
+        //            throw;
+        //        }
+        //    }
 
-            return NoContent();
-        }
+        //    return NoContent();
+        //}
 
-        // POST: api/OrderDetails
-        [HttpPost]
-        public async Task<ActionResult<OrderDetail>> PostOrderDetail(OrderDetail orderDetail)
-        {
-            _db.OrderDetail.Add(orderDetail);
-            await _db.SaveAsync();
+        //// POST: api/OrderDetails
+        //[HttpPost]
+        //public async Task<ActionResult<OrderDetail>> PostOrderDetail(OrderDetail orderDetail)
+        //{
+        //    _db.OrderDetail.Add(orderDetail);
+        //    await _db.SaveAsync();
 
-            return CreatedAtAction("GetOrderDetail", new { id = orderDetail.Id }, orderDetail);
-        }
+        //    return CreatedAtAction("GetOrderDetail", new { id = orderDetail.Id }, orderDetail);
+        //}
 
-        // DELETE: api/OrderDetails/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteOrderDetail(int id)
-        {
-            var orderDetail = await _db.OrderDetail.GetFirstOrDefaultAsync(x => x.Id == id);
-            if (orderDetail == null)
-            {
-                return NotFound();
-            }
+        //// DELETE: api/OrderDetails/5
+        //[HttpDelete("{id}")]
+        //public async Task<IActionResult> DeleteOrderDetail(int id)
+        //{
+        //    var orderDetail = await _db.OrderDetail.GetFirstOrDefaultAsync(x => x.Id == id);
+        //    if (orderDetail == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            _db.OrderDetail.Remove(orderDetail);
-            await _db.SaveAsync();
+        //    _db.OrderDetail.Remove(orderDetail);
+        //    await _db.SaveAsync();
 
-            return NoContent();
-        }
+        //    return NoContent();
+        //}
 
-        private async Task<bool> OrderDetailExists(int id)
-        {
-            var orderDetail = await _db.OrderDetail.GetFirstOrDefaultAsync(x => x.Id == id);
-            if (orderDetail == null)
-            {
-                return false;
-            }
-            return true;
-        }
+        //private async Task<bool> OrderDetailExists(int id)
+        //{
+        //    var orderDetail = await _db.OrderDetail.GetFirstOrDefaultAsync(x => x.Id == id);
+        //    if (orderDetail == null)
+        //    {
+        //        return false;
+        //    }
+        //    return true;
+        //}
     }
 }
