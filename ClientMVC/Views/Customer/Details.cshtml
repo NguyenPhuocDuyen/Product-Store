@@ -1,0 +1,88 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="text-center">User Information</h3>
+                </div>
+                <div class="card-body">
+                    <form>
+                        <div class="form-group row">
+                            <label for="fullname" class="col-md-4 col-form-label">Full Name</label>
+                            <div class="col-md-8">
+                                <input type="text" class="form-control-plaintext" id="fullname" value="John Doe" readonly>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="email" class="col-md-4 col-form-label">Email</label>
+                            <div class="col-md-8">
+                                <input type="email" class="form-control-plaintext" id="email" value="johndoe@example.com" readonly>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="phone" class="col-md-4 col-form-label">Phone</label>
+                            <div class="col-md-8">
+                                <input type="tel" class="form-control-plaintext" id="phone" value="+1 (555) 123-4567" readonly>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="address" class="col-md-4 col-form-label">Address</label>
+                            <div class="col-md-8">
+                                <textarea class="form-control-plaintext" id="address" rows="3" readonly>123 Main St, Anytown USA</textarea>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-12 text-center">
+                                <button type="button" id="edit-btn" class="btn btn-primary">Edit</button>
+                                <button type="submit" id="save-btn" class="btn btn-success d-none">Save</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    // get form fields and buttons
+    const fullnameField = document.getElementById('fullname');
+    const emailField = document.getElementById('email');
+    const phoneField = document.getElementById('phone');
+    const addressField = document.getElementById('address');
+    const editBtn = document.getElementById('edit-btn');
+    const saveBtn = document.getElementById('save-btn');
+    // add click event to edit button
+    editBtn.addEventListener('click', () => {
+        // enable editing for all fields
+        fullnameField.removeAttribute('readonly');
+        emailField.removeAttribute('readonly');
+        phoneField.removeAttribute('readonly');
+        addressField.removeAttribute('readonly');
+
+        // change button text and style
+        editBtn.classList.add('d-none');
+        saveBtn.classList.remove('d-none');
+    });
+
+    // add submit event to form
+    // you can replace this with your own form submission logic
+    document.querySelector('form').addEventListener('submit', (event) => {
+        // prevent form from submitting and reloading the page
+        event.preventDefault();
+
+        // disable editing for all fields
+        fullnameField.setAttribute('readonly', true);
+        emailField.setAttribute('readonly', true);
+        phoneField.setAttribute('readonly', true);
+        addressField.setAttribute('readonly', true);
+
+        // change button text and style
+        saveBtn.classList.add('d-none');
+        editBtn.classList.remove('d-none');
+    });
+</script>
