@@ -16,6 +16,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace ServerAPI
 {
@@ -31,6 +34,23 @@ namespace ServerAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //add Configure JWT authentication
+            var key = Encoding.ASCII.GetBytes(Configuration["Jwt:Key"]);
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                {
+                    options.RequireHttpsMetadata = false;
+                    options.SaveToken = true;
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(key),
+                        ValidateIssuer = false,
+                        ValidateAudience = false
+                    };
+                });
+
+            //service Database
             services.AddDbContext<TKDecorContext>(options => options.UseSqlServer(
                 Configuration.GetConnectionString("DefaultConnection")));
 
@@ -74,6 +94,7 @@ namespace ServerAPI
 
             app.UseRouting();
 
+            //create database if it dont exist
             using (IServiceScope scope = app.ApplicationServices.CreateScope())
             {
                 var services = scope.ServiceProvider;
@@ -81,11 +102,12 @@ namespace ServerAPI
                 var context = services.GetRequiredService<TKDecorContext>();
                 context.Database.EnsureCreated();
 
-                var a = new DbInitializer(context);
-                a.Initialize();
+                var db = new DbInitializer(context);
+                db.Initialize();
             }
             app.UseCors("AllowAllOrigins");
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

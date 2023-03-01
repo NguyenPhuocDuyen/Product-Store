@@ -2,24 +2,10 @@
 // for details on configuring this project to bundle and minify static web assets.
 
 // Write your JavaScript code.
-
-
-
-
 var productApi = 'https://localhost:44362/api/Products';
 
 
 
-function start() {
-    getProduct(renderProduct);
-    handleCreateForm();
-}
-
-
-start();
-
-
-//Function
 
 function getProduct(callback) {
     fetch(productApi).then(function (response) {
@@ -38,7 +24,6 @@ function createProduct(data , callback) {
     fetch(productApi, opsiton).then(function (response) {
         response.json();
     }).then(callback);
-
 }
 
 
@@ -129,5 +114,4 @@ function UpdateQuantityProduct() {
             });
         });
     });
-
 }

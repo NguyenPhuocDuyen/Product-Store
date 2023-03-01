@@ -22,23 +22,20 @@ namespace ClientMVC.Controllers
         {
             try
             {
-                var id = HttpContext.Session.GetInt32("userId");
-                response = GobalVariables.WebAPIClient.GetAsync($"Carts/GetCartsUser/{id}").Result;
+                response = GobalVariables.WebAPIClient.GetAsync($"Carts/GetCartsUser").Result;
                 if (response.IsSuccessStatusCode)
                 {
                     responseString = response.Content.ReadAsStringAsync().Result;
                     List<Cart> products = JsonConvert.DeserializeObject<List<Cart>>(responseString);
-                return View(products);
+                    return View(products);
                 }
             }
-            catch
-            {
-            } 
+            catch {}
 
-            return RedirectToAction("Index","Home");
+            return RedirectToAction("Index", "Home");
         }
 
-        public IActionResult Details() 
+        public IActionResult Details()
         {
             return View();
         }

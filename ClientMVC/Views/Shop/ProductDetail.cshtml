@@ -1,9 +1,12 @@
-﻿<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+﻿@using Microsoft.AspNetCore.Http
+@model Models.Product
+@{
+    string token = Context.Session.GetString("token");
+}
+
 @if (Model != null)
 {
-    <h2>@Model.Id</h2>
+    @*<h2>@Model.Id</h2>*@
     @*<p>@Model.Description</p>*@
 
     <!-- Shop Details Section Begin -->
@@ -82,7 +85,7 @@
                 <div class="row d-flex justify-content-center">
                     <div class="col-lg-8">
                         <div class="product__details__text">
-                            <h4>Hooded thermal anorak</h4>
+                            <h4>@Model.Title</h4>
                             <div class="rating">
                                 <i class="fa fa-star"></i>
                                 <i class="fa fa-star"></i>
@@ -91,13 +94,11 @@
                                 <i class="fa fa-star-o"></i>
                                 <span> - 5 Reviews</span>
                             </div>
-                            <h3>$270.00 <span>70.00</span></h3>
+                            <h3>$@Model.RecentPrice <span>70.00</span></h3>
                             <p>
-                                Coat with quilted lining and an adjustable hood. Featuring long sleeves with adjustable
-                                cuff tabs, adjustable asymmetric hem with elastic side tabs and a front zip fastening
-                                with placket.
+                                @Model.Description
                             </p>
-                            <div class="product__details__option">
+                            @*<div class="product__details__option">
                                 <div class="product__details__option__size">
                                     <span>Size:</span>
                                     <label for="xxl">
@@ -135,15 +136,21 @@
                                         <input type="radio" id="sp-9">
                                     </label>
                                 </div>
-                            </div>
+                            </div>*@
                             <div class="product__details__cart__option">
                                 <div class="quantity">
                                     <div class="pro-qty">
-                                        <input id="quatity" type="text" value="1">
+                                        <input id="quatity" type="text" min="1" value="1">
                                     </div>
                                 </div>
-                                <button id="addCart" data-id="@Model.Id" class="primary-btn pointer-event">add to cart</button>
-
+                                @if (String.IsNullOrEmpty(token))
+                                {
+                                    <a asp-action="Login" asp-controller="Account" class="primary-btn pointer-event">Login to buy</a>
+                                } 
+                                else
+                                {
+                                    <button id="addCart" data-id="@Model.Id" class="primary-btn pointer-event">add to cart</button>
+                                }
                             </div>
                             <div class="product__details__btns__option">
                                 <a href="#"><i class="fa fa-heart"></i> add to wishlist</a>
@@ -161,7 +168,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="row">
+                @*<div class="row">
                     <div class="col-lg-12">
                         <div class="product__details__tab">
                             <ul class="nav nav-tabs" role="tablist">
@@ -306,7 +313,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div>*@
             </div>
         </div>
     </section>
@@ -471,10 +478,17 @@
                 button.addEventListener('click', function () {
                     var productId = this.dataset.id;
                     var quantity = $('#quatity').val();
+
+                    // Lấy chuỗi token từ cookie hoặc local storage (nếu đã đăng nhập)
+                    var token = 'Bearer @Html.Raw(token)';
+
                     $.ajax({
                         url: 'https://localhost:44362/api/Carts/AddProductToCart',
                         type: 'POST',
-                        data: JSON.stringify({ UserId: '1', ProductId: productId, quantity: quantity }),
+                        beforeSend: function(xhr) {
+                            xhr.setRequestHeader('Authorization', token);
+                        },
+                        data: JSON.stringify({ ProductId: productId, quantity: quantity }),
                         contentType: 'application/json; charset=utf-8',
                         dataType: 'json',
                         success: function (data) {

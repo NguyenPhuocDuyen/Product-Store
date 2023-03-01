@@ -117,7 +117,7 @@ namespace ClientMVC.Controllers
         {
             Product product = new();
             // Get product from database based on ID
-            response = GobalVariables.WebAPIClient.GetAsync("Products/" + id).Result;
+            response = GobalVariables.WebAPIClient.GetAsync($"Products/{id}").Result;
             if (response.IsSuccessStatusCode)
             {
                 responseString = response.Content.ReadAsStringAsync().Result;
