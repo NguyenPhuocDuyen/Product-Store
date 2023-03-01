@@ -115,21 +115,36 @@ namespace ClientMVC.Controllers
 
         public IActionResult ProductDetail(int id)
         {
-            Product product = new();
-            // Get product from database based on ID
-            response = GobalVariables.WebAPIClient.GetAsync($"Products/{id}").Result;
-            if (response.IsSuccessStatusCode)
+            try
             {
-                responseString = response.Content.ReadAsStringAsync().Result;
-                product = JsonConvert.DeserializeObject<Product>(responseString);
-                ViewBag.ProductDetail = product;
-                if (product == null)
+                // Get product from database based on ID
+                response = GobalVariables.WebAPIClient.GetAsync($"Products/{id}").Result;
+                if (response.IsSuccessStatusCode)
                 {
-                    return RedirectToAction("Index");
+                    responseString = response.Content.ReadAsStringAsync().Result;
+                    Product product = JsonConvert.DeserializeObject<Product>(responseString);
+
+                    //get Related Product list
+                    response = GobalVariables.WebAPIClient.GetAsync("Products").Result;
+                    List<Product> products = new();
+                    if (response.IsSuccessStatusCode)
+                    {
+                        responseString = response.Content.ReadAsStringAsync().Result;
+                        products = JsonConvert.DeserializeObject<List<Product>>(responseString);
+                        products = products.Where(x 
+                            => x.Category.Description.Equals(product.Category.Description)
+                            || x.Title.ToLower().Contains(product.Title.ToLower()))
+                            .OrderByDescending(x=>x.UpdateAt)
+                            .Take(4).ToList();
+                        ViewBag.Products = products;
+                    }
+
+                    return View(product);
                 }
             }
+            catch { }
 
-            return View(product);
+            return RedirectToAction("Index");
         }
 
         public IActionResult CheckOut()

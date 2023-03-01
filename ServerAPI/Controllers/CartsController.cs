@@ -23,33 +23,35 @@ namespace ServerAPI.Controllers
             _db = db;
         }
 
-        // GET: api/Carts
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Cart>>> GetCarts()
-        {
-            return Ok(await _db.Cart.GetAllAsync());
-        }
+        //// GET: api/Carts
+        //[HttpGet]
+        //public async Task<ActionResult<IEnumerable<Cart>>> GetCarts()
+        //{
+        //    return Ok(await _db.Cart.GetAllAsync());
+        //}
 
-        // GET: api/Carts/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Cart>> GetCart(int id)
-        {
-            var cart = await _db.Cart.GetFirstOrDefaultAsync(x => x.Id == id);
+        //// GET: api/Carts/5
+        //[HttpGet("{id}")]
+        //public async Task<ActionResult<Cart>> GetCart(int id)
+        //{
+        //    var cart = await _db.Cart.GetFirstOrDefaultAsync(x => x.Id == id);
 
-            if (cart == null)
-            {
-                return NotFound();
-            }
+        //    if (cart == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            return cart;
-        }
+        //    return cart;
+        //}
 
         // PUT: api/Carts/5
+        [Authorize]
         [HttpPut]
         public async Task<IActionResult> PutCart(Cart cart)
         {
-            var c = await _db.Cart.GetFirstOrDefaultAsync(x=>x.Id == cart.Id);
-            if(c == null)
+            var c = await _db.Cart.GetFirstOrDefaultAsync(x => x.Id == cart.Id,
+                includeProperties: "Product");
+            if (c == null)
             {
                 return NotFound();
             }
@@ -57,6 +59,12 @@ namespace ServerAPI.Controllers
             try
             {
                 c.Quantity = cart.Quantity;
+
+                if (c.Quantity > c.Product.Amount)
+                {
+                    c.Quantity = c.Product.Amount;
+                }
+
                 c.UpdateAt = DateTime.Now;
                 _db.Cart.Update(c);
                 await _db.SaveAsync();
@@ -72,19 +80,19 @@ namespace ServerAPI.Controllers
                     throw;
                 }
             }
-            var c2 = await _db.Cart.GetFirstOrDefaultAsync(x => x.Id == cart.Id, includeProperties: "Product");
-            return Ok(c2);
+
+            return Ok(c);
         }
 
-        // POST: api/Carts
-        [HttpPost]
-        public async Task<ActionResult<Cart>> PostCart(Cart cart)
-        {
-            _db.Cart.Add(cart);
-            await _db.SaveAsync();
+        //// POST: api/Carts
+        //[HttpPost]
+        //public async Task<ActionResult<Cart>> PostCart(Cart cart)
+        //{
+        //    _db.Cart.Add(cart);
+        //    await _db.SaveAsync();
 
-            return CreatedAtAction("GetCart", new { id = cart.Id }, cart);
-        }
+        //    return CreatedAtAction("GetCart", new { id = cart.Id }, cart);
+        //}
 
         // DELETE: api/Carts/5
         [Authorize]
@@ -127,7 +135,11 @@ namespace ServerAPI.Controllers
                 user = await _db.User.GetFirstOrDefaultAsync(x => x.Id == int.Parse(userId));
             }
 
-            var oldCart = await _db.Cart.GetFirstOrDefaultAsync(x => x.UserId == user.Id && x.ProductId == cart.ProductId);
+            var oldCart = await _db.Cart.GetFirstOrDefaultAsync(x
+                => x.UserId == user.Id
+                && x.ProductId == cart.ProductId,
+                includeProperties: "Product");
+
             // Check cart is exist in database to create cart or upadate quantity
             if (oldCart == null)
             {
@@ -178,6 +190,40 @@ namespace ServerAPI.Controllers
             }
 
             return carts.ToList();
+        }
+
+        // GET: api/Carts/CheckQuantity
+        [Authorize]
+        [HttpGet("CheckQuantity")]
+        public async Task<ActionResult> CheckQuantity()
+        {
+            User user = new();
+            var currentUser = HttpContext.User;
+            if (currentUser.HasClaim(c => c.Type == ClaimTypes.Name))
+            {
+                var userId = currentUser.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name).Value;
+                // Lấy thông tin người dùng dựa vào userId
+                user = await _db.User.GetFirstOrDefaultAsync(x => x.Id == int.Parse(userId));
+            }
+
+            var carts = await _db.Cart.GetAllAsync(x => x.UserId == user.Id,
+                includeProperties: "Product");
+
+            foreach (var item in carts)
+            {
+                if (item.Product.Amount == 0)
+                {
+                    _db.Cart.Remove(item);
+                }
+                else if (item.Quantity > item.Product.Amount)
+                {
+                    item.Quantity = item.Product.Amount;
+                    _db.Cart.Update(item);
+                }
+            }
+            await _db.SaveAsync();
+
+            return Ok(carts);
         }
     }
 }

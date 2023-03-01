@@ -31,14 +31,16 @@
                                             <img src="/img/shopping-cart/cart-1.jpg" alt="">
                                         </div>
                                         <div class="product__cart__item__text">
-                                            <h6>@item.Product.Title</h6>
-                                            <h5>$@item.Product.RecentPrice</h5>
+                                            <a asp-action="ProductDetail" asp-controller="Shop" asp-route-id="@item.Product.Id">
+                                                <h6>@item.Product.Title</h6>
+                                            </a>
+                                            <h5>@item.Product.RecentPrice</h5>
                                         </div>
                                     </td>
                                     <td class="quantity__item">
                                         <div class="quantity">
                                             <div class="pro-qty-2">
-                                                <input class="quantity-input" type="number" min="1" value="@item.Quantity" onchange="updateTotalPrice(@item.Id)">
+                                                <input class="quantity-input" type="number" min="1" value="@item.Quantity">
                                             </div>
                                         </div>
                                     </td>
@@ -61,7 +63,7 @@
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-6">
                         <div class="continue__btn update__btn">
-                            <a href="#"><i class="fa fa-spinner"></i> Update cart</a>
+                            <a id="checkQuantity" style="cursor: pointer"><i class="fa fa-spinner"></i>Check Quantity</a>
                         </div>
                     </div>
                 </div>
@@ -77,9 +79,10 @@
                 <div class="cart__total">
                     <h6>Cart total</h6>
                     <ul>
+                        <li>SubTotal <span>$0</span></li>
                         <li>Total <span id="total">$ @totalPrice</span></li>
                     </ul>
-                    <a href="#" class="primary-btn">Proceed to checkout</a>
+                    <a asp-action="OrderProducts" asp-controller="Customer" class="primary-btn">Place an order</a>
                 </div>
             </div>
         </div>
@@ -105,6 +108,7 @@ $(document).ready(function() {
             },
             success: function(result) {
                 console.log("success", id);
+                calculateTotalPrice();
                 toastr.success('Product removed from cart successfully!');
             },
             error: function(xhr, textStatus, errorThrown) {
@@ -115,7 +119,6 @@ $(document).ready(function() {
     });
 
     // Gọi tới API để cập nhật số lượng sản phẩm
-    // ...
     $(document).on('change', '.quantity-input', function() {
         var inputValue = $(this).val();
         if (!Number.isInteger(parseInt(inputValue)) || parseInt(inputValue) < 1) {
@@ -142,11 +145,52 @@ $(document).ready(function() {
             success: function(result) {
                 console.log('Sản phẩm đã được cập nhật số lượng trong giỏ hàng');
                 $('tr[data-id="' + id + '"] .cart__price').text('$' + (result.product.recentPrice * quantity));
-                //toastr.success('Product added to cart successfully!');
+                $('tr[data-id="' + id + '"] .quantity-input').val(result.quantity);
+                calculateTotalPrice();
+                if (quantity != result.quantity){
+                    toastr.error('Số lượng đạt tới giới hạn!');
+                }
+
             },
             error: function(xhr, textStatus, errorThrown) {
                 console.log('Đã xảy ra lỗi khi cập nhật số lượng sản phẩm trong giỏ hàng');
                 //toastr.error('Error occurred while adding product to cart!');
+            }
+        });
+    });
+
+    //total price
+    function calculateTotalPrice() {
+        var totalPrice = 0;
+        $('.product_cart').each(function() {
+            var quantity = $(this).find('.quantity-input').val();
+            var price = $(this).find('.product__cart__item__text h5').text().replace('$', '');
+            var total = quantity * price;
+            $(this).find('.cart__price').text('$' + total);
+            totalPrice += total;
+        });
+        $('#total').text('$ ' + totalPrice.toFixed(0));
+    }
+
+    //check quantity
+    $(document).on('click', '#checkQuantity', function() {
+        // Lấy chuỗi token từ cookie hoặc local storage (nếu đã đăng nhập)
+        var token = 'Bearer @Html.Raw(token)';
+        // Gửi yêu cầu DELETE đến API để xóa sản phẩm khỏi giỏ hàng
+        $.ajax({
+            url: 'https://localhost:44362/api/Carts/CheckQuantity',
+            type: 'GET',
+            beforeSend: function(xhr) {
+                xhr.setRequestHeader('Authorization', token);
+            },
+            success: function(result) {
+                toastr.success('Check success and web will reload page!');
+                setTimeout(function() {
+                    location.reload();
+                }, 3000);
+            },
+            error: function(xhr, textStatus, errorThrown) {
+                toastr.error('Check Error!');
             }
         });
     });
