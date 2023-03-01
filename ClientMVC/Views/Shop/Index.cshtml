@@ -1,10 +1,8 @@
-﻿<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<!-- Include toastr CSS and JS files -->
-<link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-
+﻿@using Microsoft.AspNetCore.Http
 @model Utility.PaginatedList<Models.Product>
 @{
+    var idUser = Context.Session.GetInt32("userId");
+    string token = Context.Session.GetString("token");
     string searchContent = ViewBag.searchContent;
     int min = ViewBag.min;
     int max = ViewBag.max;
@@ -14,24 +12,6 @@
     List<Models.Category> categories = ViewBag.Categories;
 }
 
-<!-- Breadcrumb Section Begin -->
-@*<section class="breadcrumb-option">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="breadcrumb__text">
-                    <h4>Shop</h4>
-                    <div class="breadcrumb__links">
-                        <a href="./index.html">Home</a>
-                        <span>Shop</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>*@
-<!-- Breadcrumb Section End -->
-<hr />
 <!-- Shop Section Begin -->
 <section class="shop spad">
     <div class="container">
@@ -152,7 +132,14 @@
                                 </div>
                                 <div class="product__item__text">
                                     <h6>@item.Title</h6>
-                                    <a style="cursor: pointer" id="addCart" class="add-cart" data-id="@item.Id">+ Add To Cart</a>
+                                    @if(idUser is null)
+                                    {
+                                        <a asp-action="Login" asp-controller="Account">Login o buy</a>
+                                    }
+                                    else
+                                    {
+                                        <a style="cursor: pointer" id="addCart" class="add-cart" data-id="@item.Id">+ Add To Cart</a>
+                                    }
                                     <div class="rating">
                                         <i class="fa fa-star"></i>
                                         <i class="fa fa-star"></i>
@@ -205,6 +192,8 @@
         </div>
     </div>
 </section>
+<!-- Shop Section End -->
+
 <script>
     const selectElement = document.getElementById('sort-order');
     const sortLink = document.getElementById('sort-link');
@@ -216,19 +205,23 @@
         sortLink.href = newHref;
     }
 
-</script>
-
-<script>
     $(document).ready(function () {
         var id = $(this).closest('.product__item').data('id');
         var buttons = document.querySelectorAll('#addCart');
         buttons.forEach(function (button) {
             button.addEventListener('click', function () {
                 var productId = this.dataset.id;
+
+                // Lấy chuỗi token từ cookie hoặc local storage (nếu đã đăng nhập)
+                var token = 'Bearer @Html.Raw(token)';
+
                 $.ajax({
                     url: 'https://localhost:44362/api/Carts/AddProductToCart',
                     type: 'POST',
-                    data: JSON.stringify({ UserId: '1', ProductId: productId }),
+                    beforeSend: function(xhr) {
+                        xhr.setRequestHeader('Authorization', token);
+                    },
+                    data: JSON.stringify({ ProductId: productId }),
                     contentType: 'application/json; charset=utf-8',
                     dataType: 'json',
                     success: function (data) {
@@ -242,8 +235,5 @@
                 });
             });
         });
-
     });
 </script>
-<!-- Shop Section End -->
-@*<script src="~/js/search.js"></script>*@

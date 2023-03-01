@@ -3,10 +3,11 @@ using Microsoft.AspNetCore.Mvc;
 using Models;
 using Models.ViewModel;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
-using System.Data;
 using System.Net.Http;
 using System.Net.Http.Json;
+
 
 namespace ClientMVC.Controllers
 {
@@ -43,6 +44,10 @@ namespace ClientMVC.Controllers
                     HttpContext.Session.SetString("role", user.Role.Description);
                     HttpContext.Session.SetInt32("userId", user.Id);
                     HttpContext.Session.SetString("email", user.Email);
+
+                    //set token by password becasue password = token return from api
+                    HttpContext.Session.SetString("token", user.Password);
+                    GobalVariables.WebAPIClient.AddAuthorizationHeader(user.Password);
 
                     return RedirectToAction("Index", "Home");
                 }

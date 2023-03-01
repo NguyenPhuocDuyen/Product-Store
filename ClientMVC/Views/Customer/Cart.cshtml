@@ -1,308 +1,154 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@using Microsoft.AspNetCore.Http
 @model List<Models.Cart>
 @{
+    string token = Context.Session.GetString("token");
 }
-<!-- Breadcrumb Section Begin -->
-    @*<section class="breadcrumb-option">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="breadcrumb__text">
-                        <h4>Shopping Cart</h4>
-                        <div class="breadcrumb__links">
-                            <a href="./index.html">Home</a>
-                            <a href="./shop.html">Shop</a>
-                            <span>Shopping Cart</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>*@
-    <!-- Breadcrumb Section End -->
 
-    <!-- Shopping Cart Section Begin -->
-    <section class="shopping-cart spad">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-8">
-                    <div class="shopping__cart__table">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Product</th>
-                                    <th>Quantity</th>
-                                    <th>Total</th>
-                                    <th></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                
-                                @foreach(var item in Model)
-                                {<tr id="ProductItem">
-                                    <td class="product__cart__item">
-                                        <div class="product__cart__item__pic">
-                                            <img src="/img/shopping-cart/cart-1.jpg" alt="">
-                                        </div>
-                                        <div class="product__cart__item__text">
-                                            <h6>@item.Product.Title</h6>
-                                            <h5>@item.Product.RecentPrice</h5>
-                                        </div>
-                                    </td>
-                                    <td class="quantity__item">
-                                        <div class="quantity">
-                                            <div class="pro-qty-2">
-                                                <input type="text" id="UpdateQuantityProduct" min="1" value="@item.Quantity">
-                                            </div>
-                                        </div>
-                                    </td>
-                                    
-                                    @*<td class="cart__close"><i id="handleDeleteProduct" data-id="${product.id}">Delete</i></td>*@
-                                    <td><button onclick="handleDeleteProduct" data-id="@item.Product.Id">Delete</button></td>
-                                </tr>
-                                }
-                                
-                                
-                               @* <tr>
-                                    <td class="product__cart__item">
-                                        <div class="product__cart__item__pic">
-                                            <img src="/img/shopping-cart/cart-2.jpg" alt="">
-                                        </div>
-                                        <div class="product__cart__item__text">
-                                            <h6>Diagonal Textured Cap</h6>
-                                            <h5>$98.49</h5>
-                                        </div>
-                                    </td>
-                                    <td class="quantity__item">
-                                        <div class="quantity">
-                                            <div class="pro-qty-2">
-                                                <input type="text" value="1">
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td class="cart__price">$ 32.50</td>
-                                    <td class="cart__close"><i class="fa fa-close"></i></td>
-                                </tr>
-                                <tr>
-                                    <td class="product__cart__item">
-                                        <div class="product__cart__item__pic">
-                                            <img src="/img/shopping-cart/cart-3.jpg" alt="">
-                                        </div>
-                                        <div class="product__cart__item__text">
-                                            <h6>Basic Flowing Scarf</h6>
-                                            <h5>$98.49</h5>
-                                        </div>
-                                    </td>
-                                    <td class="quantity__item">
-                                        <div class="quantity">
-                                            <div class="pro-qty-2">
-                                                <input type="text" value="1">
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td class="cart__price">$ 47.00</td>
-                                    <td class="cart__close"><i class="fa fa-close"></i></td>
-                                </tr>
-                                <tr>
-                                    <td class="product__cart__item">
-                                        <div class="product__cart__item__pic">
-                                            <img src="/img/shopping-cart/cart-4.jpg" alt="">
-                                        </div>
-                                        <div class="product__cart__item__text">
-                                            <h6>Basic Flowing Scarf</h6>
-                                            <h5>$98.49</h5>
-                                        </div>
-                                    </td>
-                                    <td class="quantity__item">
-                                        <div class="quantity">
-                                            <div class="pro-qty-2">
-                                                <input type="text" value="1">
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td class="cart__price">$ 30.00</td>
-                                    <td class="cart__close"><i class="fa fa-close"></i></td>
-                                </tr>*@
-                            </tbody>
-                        </table>
-                    </div>
-               
-                    <div class="row">
-                        <div class="col-lg-6 col-md-6 col-sm-6">
-                            <div class="continue__btn">
-                                <a href="#">Continue Shopping</a>
-                            </div>
-                        </div>
-                        <div class="col-lg-6 col-md-6 col-sm-6">
-                            <div class="continue__btn update__btn">
-                                @*<a href="#"><i class="fa fa-spinner"></i> Update cart</a>*@
-                            <a style="cursor: pointer" id="addCart" class="add-cart" >+ Update Cart</a>
-                            </div>
-                        </div>
-                    </div>
-                    
-                </div>
-                
-
-                <div class="col-lg-4">
-                    <div class="cart__discount">
-                        <h6>Discount codes</h6>
-                        <form action="#">
-                            <input type="text" placeholder="Coupon code">
-                            <button type="submit">Apply</button>
-                        </form>
-                    </div>
-                    <div class="cart__total">
-                        <h6>Cart total</h6>
-                        <ul>
-                            <li>Subtotal <span>$ 169.50</span></li>
-                            <li>Total <span>$ 169.50</span></li>
-                        </ul>
-                        <a href="#" class="primary-btn">Proceed to checkout</a>
-                    </div>
-                </div>
-            </div>
-        </div>
- @*   </section>*@
-    <!-- Shopping Cart Section End -->
-    @*<section class="shopping__product">
-        <h2>Danh sach san pham</h2>
-        <ul id="list-product"></ul>
-
-       <div>
-            
-            <div>
-                <label>Title</label>
-                <input type="text" name="title"/>
-            </div>
-            <div>
-                <label>Price</label>
-                <input type="text" name="recent_price"/>
-            </div>
-            <div>
-                <label>Amount</label>
-                <input type="text" name="amount"/>
-            </div>
-
-            <div>
-                <button id="create">Create</button>
-            </div>
-        </div>*@
-
-    @*<div class="container">
+<!-- Shopping Cart Section Begin -->
+<section class="shopping-cart spad">
+    <div class="container">
         <div class="row">
             <div class="col-lg-8">
                 <div class="shopping__cart__table">
                     <table>
                         <thead>
                             <tr>
-                                <th>Image</th>
                                 <th>Product</th>
-                                <th>Price</th>
-                                <th>Amount</th>
+                                <th>Quantity</th>
+                                <th>Total</th>
                                 <th></th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td class="product__cart__item">
-                                    
-                                    <div>
-
-                                        
-                                       
-                                    </div>
-                                </td>
-                                <td class="quantity__item">
-                                    <div class="quantity">
-                                        <div class="pro-qty-2">
-                                            <input type="text" value="1">
+                            @{
+                                int? totalPrice = 0;
+                            }
+                            @foreach(var item in Model)
+                            {
+                                <tr class="product_cart" data-id="@item.Id">
+                                    <td class="product__cart__item">
+                                        <div class="product__cart__item__pic">
+                                            <img src="/img/shopping-cart/cart-1.jpg" alt="">
                                         </div>
-                                    </div>
-                                </td>
-                                <td class="cart__price"></td>
-                                <td class="cart__close">
-                                    <button onclick="handleDeleteproduct(${product.id})">Delete</button>
+                                        <div class="product__cart__item__text">
+                                            <h6>@item.Product.Title</h6>
+                                            <h5>$@item.Product.RecentPrice</h5>
+                                        </div>
                                     </td>
-                                
-                                <td class="quantity__item">
-                                    <div class="quantity">
-                                        <div class="pro-qty-2">
-                                            <input type="text" value="1">
+                                    <td class="quantity__item">
+                                        <div class="quantity">
+                                            <div class="pro-qty-2">
+                                                <input class="quantity-input" type="number" min="1" value="@item.Quantity" onchange="updateTotalPrice(@item.Id)">
+                                            </div>
                                         </div>
-                                    </div>
-                                </td>
-                                <td class="cart__price">$ 30.00</td>
-                                <td class="cart__close"><i class="fa fa-close"></i></td>
-                            </tr>
-                            <tr>
-                                <td class="product__cart__item">
-                                    <div class="product__cart__item__pic">
-                                        <img src="/img/shopping-cart/cart-2.jpg" alt="">
-                                    </div>
-                                    <div class="product__cart__item__text">
-                                        <h6>Diagonal Textured Cap</h6>
-                                        <h5>$98.49</h5>
-                                    </div>
-                                </td>
-                                <td class="quantity__item">
-                                    <div class="quantity">
-                                        <div class="pro-qty-2">
-                                            <input type="text" value="1">
-                                        </div>
-                                    </div>
-                                </td>
-                                <td class="cart__price">$ 32.50</td>
-                                <td class="cart__close"><i class="fa fa-close"></i></td>
-                            </tr>
-                            <tr>
-                                <td class="product__cart__item">
-                                    <div class="product__cart__item__pic">
-                                        <img src="/img/shopping-cart/cart-3.jpg" alt="">
-                                    </div>
-                                    <div class="product__cart__item__text">
-                                        <h6>Basic Flowing Scarf</h6>
-                                        <h5>$98.49</h5>
-                                    </div>
-                                </td>
-                                <td class="quantity__item">
-                                    <div class="quantity">
-                                        <div class="pro-qty-2">
-                                            <input type="text" value="1">
-                                        </div>
-                                    </div>
-                                </td>
-                                <td class="cart__price">$ 47.00</td>
-                                <td class="cart__close"><i class="fa fa-close"></i></td>
-                            </tr>
-                            <tr>
-                                <td class="product__cart__item">
-                                    <div class="product__cart__item__pic">
-                                        <img src="/img/shopping-cart/cart-4.jpg" alt="">
-                                    </div>
-                                    <div class="product__cart__item__text">
-                                        <h6>Basic Flowing Scarf</h6>
-                                        <h5>$98.49</h5>
-                                    </div>
-                                </td>
-                                <td class="quantity__item">
-                                    <div class="quantity">
-                                        <div class="pro-qty-2">
-                                            <input type="text" value="1">
-                                        </div>
-                                    </div>
-                                </td>
-                                <td class="cart__price">$ 30.00</td>
-                                <td class="cart__close"><i class="fa fa-close"></i></td>
-                            </tr>
+                                    </td>
+                                    @{
+                                        var totalPriceofProduct = item.Product.RecentPrice * item.Quantity;
+                                        totalPrice += totalPriceofProduct;
+                                    }
+                                    <td class="cart__price" id="price-@item.Id">$@totalPriceofProduct</td>
+                                    <td class="cart__close"><i style="cursor: pointer" data-id="@item.Id" class="deleteProduct fa fa-close"></i></td>
+                                </tr>
+                            }
                         </tbody>
                     </table>
                 </div>
+                <div class="row">
+                    <div class="col-lg-6 col-md-6 col-sm-6">
+                        <div class="continue__btn">
+                            <a asp-action="Index" asp-controller="Shop">Continue Shopping</a>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-6">
+                        <div class="continue__btn update__btn">
+                            <a href="#"><i class="fa fa-spinner"></i> Update cart</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="cart__discount">
+                    <h6>Discount codes</h6>
+                    <form action="#">
+                        <input type="text" placeholder="Coupon code">
+                        <button type="submit">Apply</button>
+                    </form>
+                </div>
+                <div class="cart__total">
+                    <h6>Cart total</h6>
+                    <ul>
+                        <li>Total <span id="total">$ @totalPrice</span></li>
+                    </ul>
+                    <a href="#" class="primary-btn">Proceed to checkout</a>
+                </div>
             </div>
         </div>
-    </div>*@
+    </div>
+</section>
+<!-- Shopping Cart Section End -->
 
-        <script src="./site.js"></script>
-    </section>
+
+<script>
+$(document).ready(function() {
+    $(document).on('click', 'i[data-id]', function() {
+        var id = $(this).data('id');
+        $('tr[data-id="' + id + '"]').remove();
+
+        // Lấy chuỗi token từ cookie hoặc local storage (nếu đã đăng nhập)
+        var token = 'Bearer @Html.Raw(token)';
+        // Gửi yêu cầu DELETE đến API để xóa sản phẩm khỏi giỏ hàng
+        $.ajax({
+            url: 'https://localhost:44362/api/Carts/' + id,
+            type: 'DELETE',
+            beforeSend: function(xhr) {
+                xhr.setRequestHeader('Authorization', token);
+            },
+            success: function(result) {
+                console.log("success", id);
+                toastr.success('Product removed from cart successfully!');
+            },
+            error: function(xhr, textStatus, errorThrown) {
+                console.log('Error: ' + textStatus + ' - ' + errorThrown);
+                toastr.error('Error occurred while removing the product from the cart!');
+            }
+        });
+    });
+
+    // Gọi tới API để cập nhật số lượng sản phẩm
+    // ...
+    $(document).on('change', '.quantity-input', function() {
+        var inputValue = $(this).val();
+        if (!Number.isInteger(parseInt(inputValue)) || parseInt(inputValue) < 1) {
+            alert('Vui lòng nhập số lượng hợp lệ');
+            $(this).val($(this).attr('value'));
+            return;
+        }
+
+        // Lấy chuỗi token từ cookie hoặc local storage (nếu đã đăng nhập)
+        var token = 'Bearer @Html.Raw(token)';
+
+        var id = $(this).closest('tr').data('id');
+        var quantity = parseInt(inputValue);
+
+        // Gửi yêu cầu PUT đến API để cập nhật số lượng sản phẩm trong giỏ hàng
+        $.ajax({
+            url: 'https://localhost:44362/api/Carts',
+            type: 'PUT',
+            data: JSON.stringify({ Id: id, Quantity: quantity }),
+            contentType: 'application/json',
+            beforeSend: function(xhr) {
+                xhr.setRequestHeader('Authorization', token);
+            },
+            success: function(result) {
+                console.log('Sản phẩm đã được cập nhật số lượng trong giỏ hàng');
+                $('tr[data-id="' + id + '"] .cart__price').text('$' + (result.product.recentPrice * quantity));
+                //toastr.success('Product added to cart successfully!');
+            },
+            error: function(xhr, textStatus, errorThrown) {
+                console.log('Đã xảy ra lỗi khi cập nhật số lượng sản phẩm trong giỏ hàng');
+                //toastr.error('Error occurred while adding product to cart!');
+            }
+        });
+    });
+});
+</script>
