@@ -37,7 +37,18 @@ namespace ClientMVC.Controllers
 
         public IActionResult Details()
         {
-            return View();
+            try
+            {
+                response = GobalVariables.WebAPIClient.GetAsync("Users/GetUserInfo").Result;
+                if (response.IsSuccessStatusCode)
+                {
+                    responseString = response.Content.ReadAsStringAsync().Result;
+                    User user = JsonConvert.DeserializeObject<User>(responseString);
+                    return View(user);
+                }
+            } catch { }
+
+            return RedirectToAction("Index", "Home");
         }
 
         public IActionResult OrderProducts()
