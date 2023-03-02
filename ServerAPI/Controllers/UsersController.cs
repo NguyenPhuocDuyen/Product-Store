@@ -9,6 +9,7 @@ using Models;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
@@ -36,19 +37,27 @@ namespace ServerAPI.Controllers
             return Ok(await _db.User.GetAllAsync());
         }
 
-        //// GET: api/Users/5s
-        //[HttpGet("{id}")]
-        //public async Task<ActionResult<User>> GetUser(int id)
-        //{
-        //    var user = await _db.User.GetFirstOrDefaultAsync(filter: x => x.Id == id, includeProperties: "Role");
+        // GET: api/Users/5s
+        [Authorize]
+        [HttpGet("GetUserInfo")]
+        public async Task<ActionResult<User>> GetUserInfo()
+        {
+            User user = new();
+            var currentUser = HttpContext.User;
+            if (currentUser.HasClaim(c => c.Type == ClaimTypes.Name))
+            {
+                var userId = currentUser.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name).Value;
+                // Lấy thông tin người dùng dựa vào userId
+                user = await _db.User.GetFirstOrDefaultAsync(x => x.Id == int.Parse(userId));
+            }
 
-        //    if (user == null)
-        //    {
-        //        return NotFound();
-        //    }
+            if (user == null)
+            {
+                return NotFound();
+            }
 
-        //    return user;
-        //}
+            return user;
+        }
 
         //// PUT: api/Users/5
         //[HttpPut("{id}")]
