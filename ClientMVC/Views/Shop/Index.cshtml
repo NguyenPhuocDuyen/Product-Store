@@ -9,6 +9,7 @@
     int sort_order = ViewBag.sort_order;
     int TotalProduct = ViewBag.TotalProduct;
 
+    List<int> filterPrices = ViewBag.FilterPrices;
     List<Models.Category> categories = ViewBag.Categories;
 }
 
@@ -52,29 +53,36 @@
                                         <div class="shop__sidebar__price">
                                             <ul>
                                                 @{
+                                                    int quantityFilterPrice = filterPrices.Count();
                                                     int minPrice = 0;
-                                                    int maxPrice = 1000000;
+                                                    int maxPrice = 0;
+                                                    string priceDisplay = "";
 
-                                                    for (int i = 0; i < 5; i++)
+                                                    if (quantityFilterPrice > 1)
                                                     {
-                                                        string priceDisplay = $"{minPrice/1000} - {maxPrice / 1000}";
-                                                        if (i == 4)
+                                                        @for(int i = 0; i < quantityFilterPrice; i++)
                                                         {
-                                                            maxPrice = int.MaxValue;    
-                                                            priceDisplay = $"{minPrice/1000}+";
+                                                            minPrice = filterPrices[i];
+                                                            if (i < quantityFilterPrice - 1)
+                                                            {
+                                                                maxPrice = filterPrices[i + 1];
+                                                                priceDisplay = $"{minPrice / 1000} - {maxPrice / 1000} K VND";
+                                                            }
+                                                            else
+                                                            {
+                                                                maxPrice = int.MaxValue;
+                                                                priceDisplay = $"{minPrice / 1000}+ K VND";
+                                                            }
+
+                                                            var parms = new Dictionary<string, string>
+                                                            {
+                                                                { "searchContent", searchContent },
+                                                                { "min", minPrice.ToString() },
+                                                                { "max", maxPrice.ToString() },
+                                                                { "sort_order", sort_order.ToString() },
+                                                            };
+                                                            <li><a asp-action="Index" asp-all-route-data="@parms">@priceDisplay</a></li>
                                                         }
-
-                                                        var parms = new Dictionary<string, string>
-                                                        {
-                                                            { "searchContent", searchContent },
-                                                            { "min", minPrice.ToString() },
-                                                            { "max", maxPrice.ToString() },
-                                                            { "sort_order", sort_order.ToString() },
-                                                        };
-                                                        <li><a asp-action="Index" asp-all-route-data="@parms">@priceDisplay  K VND</a></li>
-
-                                                        minPrice = maxPrice;
-                                                        maxPrice += 1000000 * (i + 1);
                                                     }
                                                 }
                                             </ul>
