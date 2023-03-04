@@ -1,0 +1,68 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+<style>
+    /* Thiết lập style cho nút điều khiển */
+    .btn-sm {
+        padding: 0.2rem 0.5rem;
+        font-size: 0.875rem;
+    }
+
+    .view-order-btn {
+        margin-right: 0.5rem;
+    }
+
+    /* Thiết lập style cho dòng được chọn */
+    tr.selected {
+        background-color: #e2e2e2;
+    }
+</style>
+<div class="container-fluid p-5">
+<table id="orderTable" class="table table-striped table-bordered">
+    <thead>
+        <tr>
+            <th>Tên người đặt hàng</th>
+            <th>Địa chỉ</th>
+            <th>Trạng thái đơn hàng</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Nguyễn Văn A</td>
+            <td>123 Đường ABC, Quận 1, TP. HCM</td>
+            <td>Đã nhận hàng</td>
+            <td>
+                <button class="btn btn-primary btn-sm view-order-btn">Xem chi tiết</button>
+                <button class="btn btn-danger btn-sm cancel-order-btn">Hủy đơn hàng</button>
+                <button class="btn btn-success btn-sm receive-order-btn">Đã nhận hàng</button>
+            </td>
+        </tr>
+        <tr>
+            <td>Trần Thị B</td>
+            <td>456 Đường DEF, Quận 2, TP. HCM</td>
+            <td>Chưa xử lý</td>
+            <td>
+                <button class="btn btn-primary btn-sm view-order-btn">Xem chi tiết</button>
+                <button class="btn btn-danger btn-sm cancel-order-btn">Hủy đơn hàng</button>
+                <button class="btn btn-success btn-sm receive-order-btn">Đã nhận hàng</button>
+            </td>
+        </tr>
+        <!-- Các dòng khác của bảng -->
+    </tbody>
+</table>
+</div>
+<script>
+    // Xử lý khi người dùng nhấn vào nút "Xem chi tiết"
+    $(document).on('click', '.view-order-btn', function () {
+        var row = $(this).closest('tr');
+        var name = row.find('td:eq(0)').text();
+        var address = row.find('td:eq(1)').text();
+        var status = row.find('td:eq(2)').text();
+
+        // Hiển thị thông tin đơn hàng
+        alert('Tên người đặt hàng: ' + name + '\nĐịa chỉ: ' + address + '\nTrạng thái đơn hàng: ' + status);
+    })
+</script>
