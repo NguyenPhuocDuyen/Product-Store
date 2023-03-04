@@ -4,6 +4,7 @@
     string token = Context.Session.GetString("token");
 }
 
+
 <!-- Shopping Cart Section Begin -->
 <section class="shopping-cart spad">
     <div class="container">
@@ -23,7 +24,7 @@
                             @{
                                 int? totalPrice = 0;
                             }
-                            @foreach(var item in Model)
+                            @foreach (var item in Model)
                             {
                                 <tr class="product_cart" data-id="@item.Id">
                                     <td class="product__cart__item">
@@ -39,8 +40,8 @@
                                     </td>
                                     <td class="quantity__item">
                                         <div class="quantity">
-                                            <div class="pro-qty-2">
-                                                <input class="quantity-input" type="number" min="1" value="@item.Quantity">
+                                            <div class="w-auto">
+                                                <input class="quantity-input w-25" type="number" min="1" value="@item.Quantity">
                                             </div>
                                         </div>
                                     </td>
@@ -49,7 +50,11 @@
                                         totalPrice += totalPriceofProduct;
                                     }
                                     <td class="cart__price" id="price-@item.Id">$@totalPriceofProduct</td>
-                                    <td class="cart__close"><i style="cursor: pointer" data-id="@item.Id" class="deleteProduct fa fa-close"></i></td>
+                                    <td class="cart__close">
+                                        <button class="btn btn-default" data-href="@item.Product.Title" runat="server" data-id="@item.Id" data-toggle="modal" data-target="#confirm-delete">
+                                            <i style="cursor: pointer" class="deleteProduct fa fa-close"></i>
+                                        </button>
+                                    </td>
                                 </tr>
                             }
                         </tbody>
@@ -82,117 +87,195 @@
                         <li>SubTotal <span>$0</span></li>
                         <li>Total <span id="total">$ @totalPrice</span></li>
                     </ul>
-                    <a asp-action="OrderProducts" asp-controller="Customer" class="primary-btn">Place an order</a>
+                    <a data-toggle="modal" data-target="#confirm-order" class="primary-btn text-white">Place an order</a>
                 </div>
             </div>
         </div>
     </div>
+
+    <div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel">Confirm Delete</h4>
+                </div>
+
+                <div class="modal-body">
+                    <p>You are about to delete one track, this procedure is irreversible.</p>
+                    <p>Do you want to proceed?</p>
+                    <p class="debug-url"></p>
+                </div>
+
+                <div class="modal-footer">
+                    <button id="confirm-delete-no" type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                    <button id="confirm-delete-yes" class="btn btn-danger btn-ok">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="confirm-order" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel">Confirm Order</h4>
+                </div>
+
+                <div class="modal-body">
+                    <p>You are about to delete one track, this procedure is irreversible.</p>
+                    <p>Do you want to proceed?</p>
+                    <p class="debug-url"></p>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                    <button class="btn btn-danger btn-ok">Confirm</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </section>
 <!-- Shopping Cart Section End -->
 
 
 <script>
-$(document).ready(function() {
-    $(document).on('click', 'i[data-id]', function() {
-        var id = $(this).data('id');
-        $('tr[data-id="' + id + '"]').remove();
+    $(document).ready(function () {
+        $('#confirm-delete').on('show.bs.modal', function (e) {
+            var token = 'Bearer @Html.Raw(token)';
+            var id = $(e.relatedTarget).data('id');
 
-        // Lấy chuỗi token từ cookie hoặc local storage (nếu đã đăng nhập)
-        var token = 'Bearer @Html.Raw(token)';
-        // Gửi yêu cầu DELETE đến API để xóa sản phẩm khỏi giỏ hàng
-        $.ajax({
-            url: 'https://localhost:44362/api/Carts/' + id,
-            type: 'DELETE',
-            beforeSend: function(xhr) {
-                xhr.setRequestHeader('Authorization', token);
-            },
-            success: function(result) {
-                console.log("success", id);
-                calculateTotalPrice();
-                toastr.success('Product removed from cart successfully!');
-            },
-            error: function(xhr, textStatus, errorThrown) {
-                console.log('Error: ' + textStatus + ' - ' + errorThrown);
-                toastr.error('Error occurred while removing the product from the cart!');
-            }
+            $(this).find('.btn-ok').off('click').on('click', function () {
+                $('tr[data-id="' + id + '"]').remove();
+                $.ajax({
+                    url: 'https://localhost:44362/api/Carts/' + id,
+                    type: 'DELETE',
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader('Authorization', token);
+                    },
+                    success: function (result) {
+                        console.log("success", id);
+                        calculateTotalPrice();
+                        toastr.success('Product removed from cart successfully!');
+                        $('#confirm-delete').modal('hide');
+
+                    },
+                    error: function (xhr, textStatus, errorThrown) {
+                        console.log('Error: ' + textStatus + ' - ' + errorThrown);
+                        toastr.error('Error occurred while removing the product from the cart!');
+                    }
+                });
+            });
+            $('#confirm-delete').modal('hide');
+            $('.modal-backdrop').remove();
         });
-    });
 
-    // Gọi tới API để cập nhật số lượng sản phẩm
-    $(document).on('change', '.quantity-input', function() {
-        var inputValue = $(this).val();
-        if (!Number.isInteger(parseInt(inputValue)) || parseInt(inputValue) < 1) {
-            alert('Vui lòng nhập số lượng hợp lệ');
-            $(this).val($(this).attr('value'));
-            return;
+
+        $('#confirm-order').on('show.bs.modal', function (e) {
+            var token = 'Bearer @Html.Raw(token)';
+            var id = $(e.relatedTarget).data('id');
+
+            $(this).find('.btn-ok').off('click').on('click', function () {
+                $.ajax({
+                    url: 'https://localhost:44362/api/Orders/OrderProducts/',
+                    type: 'GET',
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader('Authorization', token);
+                    },
+                    success: function (result) {
+                        toastr.info('Order Success', '', { timeOut: 5000 });
+                        $('#confirm-order').modal('hide');
+                        $('.product_cart').remove();
+                        // Update cart item prices to 0
+                        $('#total').text('$ 0');
+                    },
+                    error: function (xhr, textStatus, errorThrown) {
+                        console.log('Error: ' + textStatus + ' - ' + errorThrown);
+                        toastr.error('Error occurred while order cart!');
+                    }
+                });
+            });
+            $('#confirm-order').modal('hide');
+            $('.modal-backdrop').remove();
+        });
+
+        // Gọi tới API để cập nhật số lượng sản phẩm
+        $(document).on('change', '.quantity-input', function () {
+            var inputValue = $(this).val();
+            if (!Number.isInteger(parseInt(inputValue)) || parseInt(inputValue) < 1) {
+                alert('Vui lòng nhập số lượng hợp lệ');
+                $(this).val($(this).attr('value'));
+                return;
+            }
+
+            // Lấy chuỗi token từ cookie hoặc local storage (nếu đã đăng nhập)
+            var token = 'Bearer @Html.Raw(token)';
+
+            var id = $(this).closest('tr').data('id');
+            var quantity = parseInt(inputValue);
+
+            // Gửi yêu cầu PUT đến API để cập nhật số lượng sản phẩm trong giỏ hàng
+            $.ajax({
+                url: 'https://localhost:44362/api/Carts',
+                type: 'PUT',
+                data: JSON.stringify({ Id: id, Quantity: quantity }),
+                contentType: 'application/json',
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader('Authorization', token);
+                },
+                success: function (result) {
+                    console.log('Sản phẩm đã được cập nhật số lượng trong giỏ hàng');
+                    $('tr[data-id="' + id + '"] .cart__price').text('$' + (result.product.recentPrice * quantity));
+                    $('tr[data-id="' + id + '"] .quantity-input').val(result.quantity);
+                    calculateTotalPrice();
+                    if (quantity != result.quantity) {
+                        toastr.error('Số lượng đạt tới giới hạn!');
+                    }
+
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                    console.log('Đã xảy ra lỗi khi cập nhật số lượng sản phẩm trong giỏ hàng');
+                    //toastr.error('Error occurred while adding product to cart!');
+                }
+            });
+        });
+
+        //total price
+        function calculateTotalPrice() {
+            var totalPrice = 0;
+            $('.product_cart').each(function () {
+                var quantity = $(this).find('.quantity-input').val();
+                var price = $(this).find('.product__cart__item__text h5').text().replace('$', '');
+                var total = quantity * price;
+                $(this).find('.cart__price').text('$' + total);
+                totalPrice += total;
+            });
+            $('#total').text('$ ' + totalPrice.toFixed(0));
         }
 
-        // Lấy chuỗi token từ cookie hoặc local storage (nếu đã đăng nhập)
-        var token = 'Bearer @Html.Raw(token)';
-
-        var id = $(this).closest('tr').data('id');
-        var quantity = parseInt(inputValue);
-
-        // Gửi yêu cầu PUT đến API để cập nhật số lượng sản phẩm trong giỏ hàng
-        $.ajax({
-            url: 'https://localhost:44362/api/Carts',
-            type: 'PUT',
-            data: JSON.stringify({ Id: id, Quantity: quantity }),
-            contentType: 'application/json',
-            beforeSend: function(xhr) {
-                xhr.setRequestHeader('Authorization', token);
-            },
-            success: function(result) {
-                console.log('Sản phẩm đã được cập nhật số lượng trong giỏ hàng');
-                $('tr[data-id="' + id + '"] .cart__price').text('$' + (result.product.recentPrice * quantity));
-                $('tr[data-id="' + id + '"] .quantity-input').val(result.quantity);
-                calculateTotalPrice();
-                if (quantity != result.quantity){
-                    toastr.error('Số lượng đạt tới giới hạn!');
+        //check quantity
+        $(document).on('click', '#checkQuantity', function () {
+            // Lấy chuỗi token từ cookie hoặc local storage (nếu đã đăng nhập)
+            var token = 'Bearer @Html.Raw(token)';
+            // Gửi yêu cầu DELETE đến API để xóa sản phẩm khỏi giỏ hàng
+            $.ajax({
+                url: 'https://localhost:44362/api/Carts/CheckQuantity',
+                type: 'GET',
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader('Authorization', token);
+                },
+                success: function (result) {
+                    toastr.success('Check success and web will reload page!');
+                    setTimeout(function () {
+                        location.reload();
+                    }, 3000);
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                    toastr.error('Check Error!');
                 }
-
-            },
-            error: function(xhr, textStatus, errorThrown) {
-                console.log('Đã xảy ra lỗi khi cập nhật số lượng sản phẩm trong giỏ hàng');
-                //toastr.error('Error occurred while adding product to cart!');
-            }
+            });
         });
     });
-
-    //total price
-    function calculateTotalPrice() {
-        var totalPrice = 0;
-        $('.product_cart').each(function() {
-            var quantity = $(this).find('.quantity-input').val();
-            var price = $(this).find('.product__cart__item__text h5').text().replace('$', '');
-            var total = quantity * price;
-            $(this).find('.cart__price').text('$' + total);
-            totalPrice += total;
-        });
-        $('#total').text('$ ' + totalPrice.toFixed(0));
-    }
-
-    //check quantity
-    $(document).on('click', '#checkQuantity', function() {
-        // Lấy chuỗi token từ cookie hoặc local storage (nếu đã đăng nhập)
-        var token = 'Bearer @Html.Raw(token)';
-        // Gửi yêu cầu DELETE đến API để xóa sản phẩm khỏi giỏ hàng
-        $.ajax({
-            url: 'https://localhost:44362/api/Carts/CheckQuantity',
-            type: 'GET',
-            beforeSend: function(xhr) {
-                xhr.setRequestHeader('Authorization', token);
-            },
-            success: function(result) {
-                toastr.success('Check success and web will reload page!');
-                setTimeout(function() {
-                    location.reload();
-                }, 3000);
-            },
-            error: function(xhr, textStatus, errorThrown) {
-                toastr.error('Check Error!');
-            }
-        });
-    });
-});
 </script>
