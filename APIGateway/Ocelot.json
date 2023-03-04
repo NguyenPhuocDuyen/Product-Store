@@ -6,23 +6,11 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 44353
+          "Port": 44397
         }
       ],
       "UpstreamPathTemplate": "/apigateway/api/FilterPrices",
-      "UpstreamHttpMethod": [ "GET"]
-    },
-    {
-      "DownstreamPathTemplate": "/api/Products",
-      "DownstreamScheme": "https",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 44362
-        }
-      ],
-      "UpstreamPathTemplate": "/apigateway/api/Products",
-      "UpstreamHttpMethod": [ "GET", "PUT", "POST" ]
+      "UpstreamHttpMethod": ["GET"]
     }
   ]
 }

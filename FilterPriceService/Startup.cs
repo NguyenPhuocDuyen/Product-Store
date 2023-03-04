@@ -12,7 +12,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ServerAPITwo
+namespace FilterPriceService
 {
     public class Startup
     {
@@ -30,7 +30,7 @@ namespace ServerAPITwo
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "ServerAPITwo", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "FilterPriceService", Version = "v1" });
             });
         }
 
@@ -41,7 +41,7 @@ namespace ServerAPITwo
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "ServerAPITwo v1"));
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "FilterPriceService v1"));
             }
 
             app.UseHttpsRedirection();

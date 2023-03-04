@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 
-namespace ServerAPITwo.Controllers
+namespace FilterPriceService.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

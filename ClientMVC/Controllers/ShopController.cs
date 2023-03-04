@@ -48,8 +48,8 @@ namespace ClientMVC.Controllers
                     ViewBag.FilterPrices = filterPrices;
                 }
 
-                //get product list by gateway
-                response = GobalGatewayVariables.WebAPIClient.GetAsync("Products").Result;
+                //get product list
+                response = GobalVariables.WebAPIClient.GetAsync("Products").Result;
                 if (response.IsSuccessStatusCode)
                 {
                     responseString = response.Content.ReadAsStringAsync().Result;
