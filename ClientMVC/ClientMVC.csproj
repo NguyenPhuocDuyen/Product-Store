@@ -5,7 +5,121 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="wwwroot\images\products\ban-cafe.jpg" />
+    <Content Remove="wwwroot\images\products\Ban-chu-z.jpg" />
+    <Content Remove="wwwroot\images\products\ban-lam-viec.jpg" />
+    <Content Remove="wwwroot\images\products\ban-nhua.jpg" />
+    <Content Remove="wwwroot\images\products\ban-phan.jpg" />
+    <Content Remove="wwwroot\images\products\ban-tra.jpg" />
+    <Content Remove="wwwroot\images\products\ban-tron.jpg" />
+    <Content Remove="wwwroot\images\products\banan.jpg" />
+    <Content Remove="wwwroot\images\products\binh-hoa-ve-tay.jpg" />
+    <Content Remove="wwwroot\images\products\binh-ruou-ngam-trang-tri.jpg" />
+    <Content Remove="wwwroot\images\products\binh-ruou-vang.jpg" />
+    <Content Remove="wwwroot\images\products\binh-thuy-tinh.jpg" />
+    <Content Remove="wwwroot\images\products\den-ban.jpg" />
+    <Content Remove="wwwroot\images\products\den-tran.jpg" />
+    <Content Remove="wwwroot\images\products\dia-chim-cong.jpg" />
+    <Content Remove="wwwroot\images\products\dia-su-trang-tri-gia-co-ve-hoa-cuc.jpg" />
+    <Content Remove="wwwroot\images\products\dia-trang-tri.jpg" />
+    <Content Remove="wwwroot\images\products\dong-ho-trang-tri-giot-nuoc.jpg" />
+    <Content Remove="wwwroot\images\products\dong-ho-treo-tuong-3d.jpg" />
+    <Content Remove="wwwroot\images\products\dong-ho-treo-tuong-con-thuyen.jpg" />
+    <Content Remove="wwwroot\images\products\dong-ho-treo-tuong-decor-vuon-chim.jpg" />
+    <Content Remove="wwwroot\images\products\ghe-3-chan.jpg" />
+    <Content Remove="wwwroot\images\products\ghe-an.jpg" />
+    <Content Remove="wwwroot\images\products\ghe-dau.jpg" />
+    <Content Remove="wwwroot\images\products\ghe-sofa.jpg" />
+    <Content Remove="wwwroot\images\products\ghe-tron.jpg" />
+    <Content Remove="wwwroot\images\products\ghe-van-phong.jpg" />
+    <Content Remove="wwwroot\images\products\giay-dan-tuong-den-nham.jpg" />
+    <Content Remove="wwwroot\images\products\giay-dan-tuong-gia-gach.jpg" />
+    <Content Remove="wwwroot\images\products\giay-dan-tuong-retro.jpg" />
+    <Content Remove="wwwroot\images\products\giuong-doi.jpg" />
+    <Content Remove="wwwroot\images\products\giuong-go.jpg" />
+    <Content Remove="wwwroot\images\products\giuong-tron.jpg" />
+    <Content Remove="wwwroot\images\products\guong-treo-tuong.jpg" />
+    <Content Remove="wwwroot\images\products\guong-tron-nghe-thuat.jpg" />
+    <Content Remove="wwwroot\images\products\guong-tron.jpg" />
+    <Content Remove="wwwroot\images\products\ho-ca-mini.jpg" />
+    <Content Remove="wwwroot\images\products\ho-ca-thuy-sinh.jpg" />
+    <Content Remove="wwwroot\images\products\ho-ca-xi-mang.jpg" />
+    <Content Remove="wwwroot\images\products\ke-go.jpg" />
+    <Content Remove="wwwroot\images\products\ke-kho-hang.jpg" />
+    <Content Remove="wwwroot\images\products\ke-sach.jpg" />
+    <Content Remove="wwwroot\images\products\ke-trang-tri.jpg" />
+    <Content Remove="wwwroot\images\products\ke-tron.jpg" />
+    <Content Remove="wwwroot\images\products\ly-su-trang-tri.jpg" />
+    <Content Remove="wwwroot\images\products\ly-trang-tri.jpg" />
+    <Content Remove="wwwroot\images\products\quat-nan-treo-tuong.jpg" />
+    <Content Remove="wwwroot\images\products\quat-vai-treo-tuong.jpg" />
+    <Content Remove="wwwroot\images\products\rem-cua.jpg" />
+    <Content Remove="wwwroot\images\products\tham-trai-san.jpg" />
+    <Content Remove="wwwroot\images\products\tu-3-ngan.jpg" />
+    <Content Remove="wwwroot\images\products\tu-quan-ao.jpg" />
+    <Content Remove="wwwroot\images\products\tu-tai-lieu.jpg" />
+    <Content Remove="wwwroot\images\products\tu-tron.jpg" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="wwwroot\fonts\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\images\products\ban-cafe.jpg" />
+    <None Include="wwwroot\images\products\Ban-chu-z.jpg" />
+    <None Include="wwwroot\images\products\ban-lam-viec.jpg" />
+    <None Include="wwwroot\images\products\ban-nhua.jpg" />
+    <None Include="wwwroot\images\products\ban-phan.jpg" />
+    <None Include="wwwroot\images\products\ban-tra.jpg" />
+    <None Include="wwwroot\images\products\ban-tron.jpg" />
+    <None Include="wwwroot\images\products\banan.jpg" />
+    <None Include="wwwroot\images\products\binh-hoa-ve-tay.jpg" />
+    <None Include="wwwroot\images\products\binh-ruou-ngam-trang-tri.jpg" />
+    <None Include="wwwroot\images\products\binh-ruou-vang.jpg" />
+    <None Include="wwwroot\images\products\binh-thuy-tinh.jpg" />
+    <None Include="wwwroot\images\products\den-ban.jpg" />
+    <None Include="wwwroot\images\products\den-tran.jpg" />
+    <None Include="wwwroot\images\products\dia-chim-cong.jpg" />
+    <None Include="wwwroot\images\products\dia-su-trang-tri-gia-co-ve-hoa-cuc.jpg" />
+    <None Include="wwwroot\images\products\dia-trang-tri.jpg" />
+    <None Include="wwwroot\images\products\dong-ho-trang-tri-giot-nuoc.jpg" />
+    <None Include="wwwroot\images\products\dong-ho-treo-tuong-3d.jpg" />
+    <None Include="wwwroot\images\products\dong-ho-treo-tuong-con-thuyen.jpg" />
+    <None Include="wwwroot\images\products\dong-ho-treo-tuong-decor-vuon-chim.jpg" />
+    <None Include="wwwroot\images\products\ghe-3-chan.jpg" />
+    <None Include="wwwroot\images\products\ghe-an.jpg" />
+    <None Include="wwwroot\images\products\ghe-dau.jpg" />
+    <None Include="wwwroot\images\products\ghe-sofa.jpg" />
+    <None Include="wwwroot\images\products\ghe-tron.jpg" />
+    <None Include="wwwroot\images\products\ghe-van-phong.jpg" />
+    <None Include="wwwroot\images\products\giay-dan-tuong-den-nham.jpg" />
+    <None Include="wwwroot\images\products\giay-dan-tuong-gia-gach.jpg" />
+    <None Include="wwwroot\images\products\giay-dan-tuong-retro.jpg" />
+    <None Include="wwwroot\images\products\giuong-doi.jpg" />
+    <None Include="wwwroot\images\products\giuong-go.jpg" />
+    <None Include="wwwroot\images\products\giuong-tron.jpg" />
+    <None Include="wwwroot\images\products\guong-treo-tuong.jpg" />
+    <None Include="wwwroot\images\products\guong-tron-nghe-thuat.jpg" />
+    <None Include="wwwroot\images\products\guong-tron.jpg" />
+    <None Include="wwwroot\images\products\ho-ca-mini.jpg" />
+    <None Include="wwwroot\images\products\ho-ca-thuy-sinh.jpg" />
+    <None Include="wwwroot\images\products\ho-ca-xi-mang.jpg" />
+    <None Include="wwwroot\images\products\ke-go.jpg" />
+    <None Include="wwwroot\images\products\ke-kho-hang.jpg" />
+    <None Include="wwwroot\images\products\ke-sach.jpg" />
+    <None Include="wwwroot\images\products\ke-trang-tri.jpg" />
+    <None Include="wwwroot\images\products\ke-tron.jpg" />
+    <None Include="wwwroot\images\products\ly-su-trang-tri.jpg" />
+    <None Include="wwwroot\images\products\ly-trang-tri.jpg" />
+    <None Include="wwwroot\images\products\quat-nan-treo-tuong.jpg" />
+    <None Include="wwwroot\images\products\quat-vai-treo-tuong.jpg" />
+    <None Include="wwwroot\images\products\rem-cua.jpg" />
+    <None Include="wwwroot\images\products\tham-trai-san.jpg" />
+    <None Include="wwwroot\images\products\tu-3-ngan.jpg" />
+    <None Include="wwwroot\images\products\tu-quan-ao.jpg" />
+    <None Include="wwwroot\images\products\tu-tai-lieu.jpg" />
+    <None Include="wwwroot\images\products\tu-tron.jpg" />
   </ItemGroup>
 
   <ItemGroup>
