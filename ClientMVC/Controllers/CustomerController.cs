@@ -64,5 +64,11 @@ namespace ClientMVC.Controllers
 
             return RedirectToAction("Index", "Home");
         }
+
+        public IActionResult Orders()
+        {
+            return View();
+        }
+
     }
 }
