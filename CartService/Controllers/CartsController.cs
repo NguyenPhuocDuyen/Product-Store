@@ -25,7 +25,7 @@ namespace CartService.Controllers
 
         // PUT: api/Carts/5
         [Authorize]
-        [HttpPut]
+        [HttpPut("PutCart")]
         public async Task<IActionResult> PutCart(Cart cart)
         {
             var c = await _db.Cart.GetFirstOrDefaultAsync(x => x.Id == cart.Id,

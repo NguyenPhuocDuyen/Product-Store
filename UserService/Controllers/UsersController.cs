@@ -30,7 +30,7 @@ namespace UserService.Controllers
 
         //GET: api/Users
         [Authorize(Roles = "Admin")]
-        [HttpGet]
+        [HttpGet("GetUsers")]
         public async Task<ActionResult<IEnumerable<User>>> GetUsers()
         {
             return Ok(await _db.User.GetAllAsync());
@@ -59,7 +59,7 @@ namespace UserService.Controllers
         }
 
         // POST: api/Users
-        [HttpPost]
+        [HttpPost("PostUser")]
         public async Task<ActionResult<User>> PostUser(User user)
         {
             var u = await _db.User.GetFirstOrDefaultAsync(
@@ -67,6 +67,7 @@ namespace UserService.Controllers
                 .Equals(user.Email.ToLower().Trim()));
             if (u == null)
             {
+                user.RoleId = 2;
                 _db.User.Add(user);
                 await _db.SaveAsync();
                 return u;

@@ -24,7 +24,7 @@ namespace ClientMVC.Controllers
         {
             try
             {
-                response = GobalVariables.WebAPIClient.GetAsync("Products").Result;
+                response = GobalVariables.WebAPIClient.GetAsync("Products/GetProducts").Result;
                 if (response.IsSuccessStatusCode)
                 {
                     responseString = response.Content.ReadAsStringAsync().Result;

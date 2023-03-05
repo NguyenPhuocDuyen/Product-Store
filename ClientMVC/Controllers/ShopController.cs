@@ -38,8 +38,8 @@ namespace ClientMVC.Controllers
                     ViewBag.Categories = categories;
                 }
 
-                //get sort price list by gateway
-                response = GobalGatewayVariables.WebAPIClient.GetAsync("FilterPrices").Result;
+                //get sort price list
+                response = GobalVariables.WebAPIClient.GetAsync("FilterPrices").Result;
                 List<int> filterPrices = new();
                 if (response.IsSuccessStatusCode)
                 {
@@ -49,7 +49,7 @@ namespace ClientMVC.Controllers
                 }
 
                 //get product list
-                response = GobalVariables.WebAPIClient.GetAsync("Products").Result;
+                response = GobalVariables.WebAPIClient.GetAsync("Products/GetProducts").Result;
                 if (response.IsSuccessStatusCode)
                 {
                     responseString = response.Content.ReadAsStringAsync().Result;
@@ -135,7 +135,7 @@ namespace ClientMVC.Controllers
                     Product product = JsonConvert.DeserializeObject<Product>(responseString);
 
                     //get Related Product list
-                    response = GobalVariables.WebAPIClient.GetAsync("Products").Result;
+                    response = GobalVariables.WebAPIClient.GetAsync("Products/GetProducts").Result;
                     List<Product> products = new();
                     if (response.IsSuccessStatusCode)
                     {

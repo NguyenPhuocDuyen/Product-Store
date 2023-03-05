@@ -76,7 +76,7 @@ namespace ClientMVC.Controllers
             try
             {
                 User user = userRegister;
-                response = GobalVariables.WebAPIClient.PostAsJsonAsync("Users", user).Result;
+                response = GobalVariables.WebAPIClient.PostAsJsonAsync("Users/PostUser", user).Result;
                 if (response.IsSuccessStatusCode)
                 {
                     return RedirectToAction(nameof(Login));

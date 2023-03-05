@@ -128,7 +128,7 @@ namespace OrderService.Controllers
                 {
                     UserId = user.Id,
                     OrderAddress = user.Address,
-                    StatusId = 4
+                    StatusId = 1
                 };
                 _db.Order.Add(order);
                 await _db.SaveAsync();

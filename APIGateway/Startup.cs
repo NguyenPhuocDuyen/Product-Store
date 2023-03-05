@@ -1,3 +1,4 @@
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -6,12 +7,14 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Ocelot.DependencyInjection;
 using Ocelot.Middleware;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace APIGateway
@@ -28,10 +31,40 @@ namespace APIGateway
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //add Configure JWT authentication
+            var key = Encoding.ASCII.GetBytes(Configuration["Jwt:Key"]);
+            services.AddAuthentication()
+                .AddJwtBearer("Bearer", options =>
+                {
+                    options.Authority = "https://localhost:44384"; // Địa chỉ IDP
+                    options.RequireHttpsMetadata = false; // Sử dụng HTTP để request đến IDP
+                    options.Audience = "api_gateway"; // Tên của API Gateway trong IDP
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(key),
+                        ValidateIssuer = false,
+                        ValidateAudience = false,
+                        ClockSkew = TimeSpan.Zero
+                    };
+                });
+
+
             services.AddControllers();
 
             //add
             services.AddOcelot();
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAllOrigins",
+                    builder =>
+                    {
+                        builder.AllowAnyOrigin()
+                               .AllowAnyMethod()
+                               .AllowAnyHeader();
+                    });
+            });
 
             services.AddSwaggerGen(c =>
             {
@@ -53,6 +86,9 @@ namespace APIGateway
 
             app.UseRouting();
 
+            app.UseCors("AllowAllOrigins");
+
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
