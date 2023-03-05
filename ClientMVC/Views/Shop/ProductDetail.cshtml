@@ -273,7 +273,7 @@
                 var token = 'Bearer @Html.Raw(token)';
 
                 $.ajax({
-                    url: 'https://localhost:44362/api/Carts/AddProductToCart',
+                    url: 'https://localhost:44364/api/apigateway/Carts/AddProductToCart',
                     type: 'POST',
                     beforeSend: function(xhr) {
                         xhr.setRequestHeader('Authorization', token);
@@ -301,7 +301,7 @@
                 var token = 'Bearer @Html.Raw(token)';
 
                 $.ajax({
-                    url: 'https://localhost:44362/api/Carts/AddProductToCart',
+                    url: 'https://localhost:44364/api/apigateway/Carts/AddProductToCart',
                     type: 'POST',
                     beforeSend: function(xhr) {
                         xhr.setRequestHeader('Authorization', token);

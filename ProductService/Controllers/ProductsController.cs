@@ -19,8 +19,8 @@ namespace ProductService.Controllers
             _db = db;
         }
 
-        // GET: api/Products
-        [HttpGet]
+        // GET: api/Products/GetProducts
+        [HttpGet("GetProducts")]
         public async Task<ActionResult<IEnumerable<Product>>> GetProducts()
         {
             return Ok(await _db.Product.GetAllAsync(includeProperties: "Category,Reviews"));

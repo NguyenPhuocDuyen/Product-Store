@@ -51,8 +51,7 @@ namespace UserService
                 });
 
             //service Database
-            services.AddDbContext<TKDecorContext>(options => options.UseSqlServer(
-                Configuration.GetConnectionString("DefaultConnection")));
+            services.AddDbContext<TKDecorContext>();
 
             services.AddScoped<IDbInitializer, DbInitializer>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();

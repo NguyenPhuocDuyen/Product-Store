@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 #nullable disable
 
@@ -11,8 +13,8 @@ namespace Models
         {
             Products = new HashSet<Product>();
         }
-
-        public int Id { get; set; }
+        [Key]
+        public int? Id { get; set; }
         public string Description { get; set; } = string.Empty;
         public DateTime? CreateAt { get; set; } = DateTime.Now;
         public DateTime? UpdateAt { get; set; } = DateTime.Now;

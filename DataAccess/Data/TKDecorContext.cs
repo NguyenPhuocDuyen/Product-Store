@@ -23,14 +23,13 @@ namespace Models
         public virtual DbSet<Status> Statuses { get; set; }
         public virtual DbSet<User> Users { get; set; }
 
-        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        //{
-        //    //    if (!optionsBuilder.IsConfigured)
-        //    //    {
-        //    //        optionsBuilder.UseSqlServer("Server=(local);Uid=sa;Pwd=123456;DataBase=TKDecor;Integrated Security=true;TrustServerCertificate=True");
-        //    //    }
-        //    //optionsBuilder.UseLazyLoadingProxies();
-        //}
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            if (!optionsBuilder.IsConfigured)
+            {
+                optionsBuilder.UseSqlServer("Server=(local);DataBase=TKDecor;Integrated Security=true;TrustServerCertificate=True");
+            }
+        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

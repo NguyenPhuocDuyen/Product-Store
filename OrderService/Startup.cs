@@ -51,10 +51,7 @@ namespace OrderService
                 });
 
             //service Database
-            services.AddDbContext<TKDecorContext>(options => options.UseSqlServer(
-                Configuration.GetConnectionString("DefaultConnection")));
-
-            services.AddScoped<IDbInitializer, DbInitializer>();
+            services.AddDbContext<TKDecorContext>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             services.AddControllersWithViews()
@@ -93,17 +90,7 @@ namespace OrderService
             app.UseHttpsRedirection();
 
             app.UseRouting();
-            //create database if it dont exist
-            using (IServiceScope scope = app.ApplicationServices.CreateScope())
-            {
-                var services = scope.ServiceProvider;
 
-                var context = services.GetRequiredService<TKDecorContext>();
-                context.Database.EnsureCreated();
-
-                var db = new DbInitializer(context);
-                db.Initialize();
-            }
             app.UseCors("AllowAllOrigins");
 
             app.UseAuthentication();

@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 #nullable disable
 
@@ -16,6 +18,7 @@ namespace Models
 
         public int Id { get; set; }
         public string Title { get; set; } = string.Empty;
+        [Column(TypeName = "text")]
         public string Description { get; set; } = string.Empty;
         public int? RecentPrice { get; set; } = 0;
         public string Thumbnail { get; set; } = string.Empty;
