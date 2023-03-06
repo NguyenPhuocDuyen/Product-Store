@@ -30,7 +30,7 @@ namespace ClientMVC.Controllers
                     return View(products);
                 }
             }
-            catch {}
+            catch { }
 
             return RedirectToAction("Index", "Home");
         }
@@ -46,7 +46,8 @@ namespace ClientMVC.Controllers
                     User user = JsonConvert.DeserializeObject<User>(responseString);
                     return View(user);
                 }
-            } catch { }
+            }
+            catch { }
 
             return RedirectToAction("Index", "Home");
         }
@@ -67,7 +68,19 @@ namespace ClientMVC.Controllers
 
         public IActionResult Orders()
         {
-            return View();
+            try
+            {
+                response = GobalVariables.WebAPIClient.GetAsync("Orders/GetOrdersOfUser").Result;
+                if (response.IsSuccessStatusCode)
+                {
+                    responseString = response.Content.ReadAsStringAsync().Result;
+                    List<Order> orders = JsonConvert.DeserializeObject<List<Order>>(responseString);
+                    return View(orders);
+                }
+            }
+            catch { }
+
+            return RedirectToAction("Index", "Home");
         }
 
     }

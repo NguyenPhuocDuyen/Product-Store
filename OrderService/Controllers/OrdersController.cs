@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Models;
+using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -11,6 +12,7 @@ namespace OrderService.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class OrdersController : ControllerBase
     {
         private readonly IUnitOfWork _db;
@@ -20,26 +22,44 @@ namespace OrderService.Controllers
             _db = db;
         }
 
-        //// GET: api/Orders
-        //[HttpGet]
-        //public async Task<ActionResult<IEnumerable<Order>>> GetOrders()
-        //{
-        //    return Ok(await _db.Order.GetAllAsync());
-        //}
+        // GET: api/Orders
+        [Authorize(Roles = "Admin")]
+        [HttpGet("GetOrders")]
+        public async Task<ActionResult<List<Order>>> GetOrders()
+        {
+            var listOrder = await _db.Order.GetAllAsync(includeProperties: "Status,User");
+            listOrder = listOrder.OrderByDescending(x => x.CreateAt)
+                .ThenBy(x => x.StatusId).ToList();
 
-        //// GET: api/Orders/5
-        //[HttpGet("{id}")]
-        //public async Task<ActionResult<Order>> GetOrder(int id)
-        //{
-        //    var order = await _db.Order.GetFirstOrDefaultAsync(filter: x => x.Id == id,includeProperties: "Status,User");
+            return listOrder.ToList();
+        }
 
-        //    if (order == null)
-        //    {
-        //        return NotFound();
-        //    }
+        // GET: api/Orders/5
+        [HttpGet("GetOrdersOfUser")]
+        public async Task<ActionResult<List<Order>>> GetOrdersOfUser()
+        {
+            User user = new();
+            var currentUser = HttpContext.User;
+            if (currentUser.HasClaim(c => c.Type == ClaimTypes.Name))
+            {
+                var userId = currentUser.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name).Value;
+                // Lấy thông tin người dùng dựa vào userId
+                user = await _db.User.GetFirstOrDefaultAsync(x => x.Id == int.Parse(userId));
+            }
 
-        //    return order;
-        //}
+            var orders = await _db.Order.GetAllAsync(
+                filter: x => x.UserId == user.Id, 
+                includeProperties: "Status,User");
+
+            if (orders == null)
+            {
+                return NotFound();
+            }
+            
+            orders = orders.OrderByDescending(x=>x.CreateAt).ThenBy(x=>x.StatusId).ToList();
+
+            return orders.ToList();
+        }
 
         //// PUT: api/Orders/5
         //[HttpPut("{id}")]
@@ -80,22 +100,6 @@ namespace OrderService.Controllers
         //    return CreatedAtAction("GetOrder", new { id = order.Id }, order);
         //}
 
-        //// DELETE: api/Orders/5
-        //[HttpDelete("{id}")]
-        //public async Task<IActionResult> DeleteOrder(int id)
-        //{
-        //    var order = await _db.Order.GetFirstOrDefaultAsync(x => x.Id == id);
-        //    if (order == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    _db.Order.Remove(order);
-        //    await _db.SaveAsync();
-
-        //    return NoContent();
-        //}
-
         //private async Task<bool> OrderExists(int id)
         //{
         //    var order = await _db.Order.GetFirstOrDefaultAsync(x => x.Id == id);
@@ -105,7 +109,7 @@ namespace OrderService.Controllers
         //    }
         //    return true;
         //}
-        [Authorize]
+
         [HttpGet("OrderProducts")]
         public async Task<IActionResult> OrderProducts()
         {
@@ -157,6 +161,39 @@ namespace OrderService.Controllers
             }
 
             return NotFound();
+        }
+
+        [HttpPost("ConfirmOrder/{id}")]
+        public async Task<IActionResult> ConfirmOrder(int id, int statusId)
+        {
+            User user = new();
+            var currentUser = HttpContext.User;
+            if (currentUser.HasClaim(c => c.Type == ClaimTypes.Name))
+            {
+                var userId = currentUser.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name).Value;
+                // Lấy thông tin người dùng dựa vào userId
+                user = await _db.User.GetFirstOrDefaultAsync(x => x.Id == int.Parse(userId));
+            }
+
+            var order = await _db.Order.GetFirstOrDefaultAsync(x=>x.Id == id);
+            if (user.RoleId != 1)
+            {
+                if (order.UserId != user.Id)
+                {
+                    return NotFound();
+                }
+                statusId = 4;
+            }
+            
+            order.StatusId = statusId;
+            try
+            {
+                _db.Order.Update(order);
+                await _db.SaveAsync();
+                return Ok();
+            }
+            catch { }
+            return BadRequest();
         }
     }
 }
