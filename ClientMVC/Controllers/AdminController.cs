@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Models;
 
 namespace ClientMVC.Controllers
 {
@@ -13,6 +14,13 @@ namespace ClientMVC.Controllers
         [HttpGet]
         public IActionResult Create()
         {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult Create(Product product)
+        {
+
             return View();
         }
 

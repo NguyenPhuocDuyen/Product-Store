@@ -149,3 +149,37 @@
         }
     }
 </script>
+
+<script type="module">
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.17.2/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.17.2/firebase-analytics.js";
+
+  import { * } from "https://www.gstatic.com/firebasejs/9.17.2/firebase-storage.js";
+
+  // Your web app's Firebase configuration
+  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+  const firebaseConfig = {
+    apiKey: "AIzaSyACkOl09oaIRsvZBdKMdrHCo2u1MK72ybk",
+    authDomain: "tkdecor-75bf8.firebaseapp.com",
+    projectId: "tkdecor-75bf8",
+    storageBucket: "tkdecor-75bf8.appspot.com",
+    messagingSenderId: "977528772546",
+    appId: "1:977528772546:web:1b6043aee5a9dcf97f285b",
+    measurementId: "G-ESJYE9TC6V"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+  
+  const storageRef = firebase.storage().ref();
+
+  const file = document.querySelector('#thumnail').files[0];
+
+    const fileName = file.name;
+    const fileRef = storageRef.child(`images/${fileName}`);
+    fileRef.put(file).then(() => {
+      console.log('Upload thành công!');
+    });
+</script>
