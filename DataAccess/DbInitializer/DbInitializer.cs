@@ -224,10 +224,10 @@ namespace DataAccess.DbInitializer
             //add status of order
             List<Status> statuses = new()
             {
-                new Status { Title = "Khách đặt đơn hàng"},
-                new Status { Title = "Khách hàng đã huỷ đơn hàng"},
-                new Status { Title = "Đã chấp nhận đơn hàng và giao hàng"},
-                new Status { Title = "Khách đã nhận hàng"},
+                new Status { Title = "Đã đặt đơn hàng"},
+                new Status { Title = "Đã huỷ đơn hàng"},
+                new Status { Title = "Đang giao hàng"},
+                new Status { Title = "Đã nhận hàng"},
             };
             foreach (var item in statuses)
             {
