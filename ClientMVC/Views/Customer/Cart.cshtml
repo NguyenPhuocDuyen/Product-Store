@@ -4,7 +4,6 @@
     string token = Context.Session.GetString("token");
 }
 
-
 <!-- Shopping Cart Section Begin -->
 <section class="shopping-cart spad">
     <div class="container">
@@ -29,7 +28,8 @@
                                 <tr class="product_cart" data-id="@item.Id">
                                     <td class="product__cart__item">
                                         <div class="product__cart__item__pic">
-                                            <img src="/img/shopping-cart/cart-1.jpg" alt="">
+                                            <img src="@item.Product.Thumbnail" alt="">
+                                            @*<img src="/img/shopping-cart/cart-1.jpg" alt="">*@
                                         </div>
                                         <div class="product__cart__item__text">
                                             <a asp-action="ProductDetail" asp-controller="Shop" asp-route-id="@item.Product.Id">
@@ -139,143 +139,141 @@
 
 </section>
 <!-- Shopping Cart Section End -->
-
-
 <script>
-    $(document).ready(function () {
-        $('#confirm-delete').on('show.bs.modal', function (e) {
-            var token = 'Bearer @Html.Raw(token)';
-            var id = $(e.relatedTarget).data('id');
+$(document).ready(function () {
+    $('#confirm-delete').on('show.bs.modal', function (e) {
+        var token = 'Bearer @Html.Raw(token)';
+        var id = $(e.relatedTarget).data('id');
 
-            $(this).find('.btn-ok').off('click').on('click', function () {
-                $('tr[data-id="' + id + '"]').remove();
-                $.ajax({
-                    url: 'https://localhost:44362/api/Carts/' + id,
-                    type: 'DELETE',
-                    beforeSend: function (xhr) {
-                        xhr.setRequestHeader('Authorization', token);
-                    },
-                    success: function (result) {
-                        console.log("success", id);
-                        calculateTotalPrice();
-                        toastr.success('Product removed from cart successfully!');
-                        $('#confirm-delete').modal('hide');
-
-                    },
-                    error: function (xhr, textStatus, errorThrown) {
-                        console.log('Error: ' + textStatus + ' - ' + errorThrown);
-                        toastr.error('Error occurred while removing the product from the cart!');
-                    }
-                });
-            });
-            $('#confirm-delete').modal('hide');
-            $('.modal-backdrop').remove();
-        });
-
-
-        $('#confirm-order').on('show.bs.modal', function (e) {
-            var token = 'Bearer @Html.Raw(token)';
-            var id = $(e.relatedTarget).data('id');
-
-            $(this).find('.btn-ok').off('click').on('click', function () {
-                $.ajax({
-                    url: 'https://localhost:44362/api/Orders/OrderProducts/',
-                    type: 'GET',
-                    beforeSend: function (xhr) {
-                        xhr.setRequestHeader('Authorization', token);
-                    },
-                    success: function (result) {
-                        toastr.info('Order Success', '', { timeOut: 5000 });
-                        $('#confirm-order').modal('hide');
-                        $('.product_cart').remove();
-                        // Update cart item prices to 0
-                        $('#total').text('$ 0');
-                    },
-                    error: function (xhr, textStatus, errorThrown) {
-                        console.log('Error: ' + textStatus + ' - ' + errorThrown);
-                        toastr.error('Error occurred while order cart!');
-                    }
-                });
-            });
-            $('#confirm-order').modal('hide');
-            $('.modal-backdrop').remove();
-        });
-
-        // Gọi tới API để cập nhật số lượng sản phẩm
-        $(document).on('change', '.quantity-input', function () {
-            var inputValue = $(this).val();
-            if (!Number.isInteger(parseInt(inputValue)) || parseInt(inputValue) < 1) {
-                alert('Vui lòng nhập số lượng hợp lệ');
-                $(this).val($(this).attr('value'));
-                return;
-            }
-
-            // Lấy chuỗi token từ cookie hoặc local storage (nếu đã đăng nhập)
-            var token = 'Bearer @Html.Raw(token)';
-
-            var id = $(this).closest('tr').data('id');
-            var quantity = parseInt(inputValue);
-
-            // Gửi yêu cầu PUT đến API để cập nhật số lượng sản phẩm trong giỏ hàng
+        $(this).find('.btn-ok').off('click').on('click', function () {
+            $('tr[data-id="' + id + '"]').remove();
             $.ajax({
-                url: 'https://localhost:44362/api/Carts',
-                type: 'PUT',
-                data: JSON.stringify({ Id: id, Quantity: quantity }),
-                contentType: 'application/json',
+                url: 'https://localhost:44364/api/apigateway/Carts/' + id,
+                type: 'DELETE',
                 beforeSend: function (xhr) {
                     xhr.setRequestHeader('Authorization', token);
                 },
                 success: function (result) {
-                    console.log('Sản phẩm đã được cập nhật số lượng trong giỏ hàng');
-                    $('tr[data-id="' + id + '"] .cart__price').text('$' + (result.product.recentPrice * quantity));
-                    $('tr[data-id="' + id + '"] .quantity-input').val(result.quantity);
+                    console.log("success", id);
                     calculateTotalPrice();
-                    if (quantity != result.quantity) {
-                        toastr.error('Số lượng đạt tới giới hạn!');
-                    }
+                    toastr.success('Product removed from cart successfully!');
+                    $('#confirm-delete').modal('hide');
 
                 },
                 error: function (xhr, textStatus, errorThrown) {
-                    console.log('Đã xảy ra lỗi khi cập nhật số lượng sản phẩm trong giỏ hàng');
-                    //toastr.error('Error occurred while adding product to cart!');
+                    console.log('Error: ' + textStatus + ' - ' + errorThrown);
+                    toastr.error('Error occurred while removing the product from the cart!');
                 }
             });
         });
+        $('#confirm-delete').modal('hide');
+        $('.modal-backdrop').remove();
+    });
 
-        //total price
-        function calculateTotalPrice() {
-            var totalPrice = 0;
-            $('.product_cart').each(function () {
-                var quantity = $(this).find('.quantity-input').val();
-                var price = $(this).find('.product__cart__item__text h5').text().replace('$', '');
-                var total = quantity * price;
-                $(this).find('.cart__price').text('$' + total);
-                totalPrice += total;
-            });
-            $('#total').text('$ ' + totalPrice.toFixed(0));
-        }
 
-        //check quantity
-        $(document).on('click', '#checkQuantity', function () {
-            // Lấy chuỗi token từ cookie hoặc local storage (nếu đã đăng nhập)
-            var token = 'Bearer @Html.Raw(token)';
-            // Gửi yêu cầu DELETE đến API để xóa sản phẩm khỏi giỏ hàng
+    $('#confirm-order').on('show.bs.modal', function (e) {
+        var token = 'Bearer @Html.Raw(token)';
+        var id = $(e.relatedTarget).data('id');
+
+        $(this).find('.btn-ok').off('click').on('click', function () {
             $.ajax({
-                url: 'https://localhost:44362/api/Carts/CheckQuantity',
+                url: 'https://localhost:44364/api/apigateway/Orders/OrderProducts',
                 type: 'GET',
                 beforeSend: function (xhr) {
                     xhr.setRequestHeader('Authorization', token);
                 },
                 success: function (result) {
-                    toastr.success('Check success and web will reload page!');
-                    setTimeout(function () {
-                        location.reload();
-                    }, 3000);
+                    toastr.info('Order Success', '', { timeOut: 5000 });
+                    $('#confirm-order').modal('hide');
+                    $('.product_cart').remove();
+                    // Update cart item prices to 0
+                    $('#total').text('$ 0');
                 },
                 error: function (xhr, textStatus, errorThrown) {
-                    toastr.error('Check Error!');
+                    console.log('Error: ' + textStatus + ' - ' + errorThrown);
+                    toastr.error('Error occurred while order cart!');
                 }
             });
         });
+        $('#confirm-order').modal('hide');
+        $('.modal-backdrop').remove();
     });
+
+    // Gọi tới API để cập nhật số lượng sản phẩm
+    $(document).on('change', '.quantity-input', function () {
+        var inputValue = $(this).val();
+        if (!Number.isInteger(parseInt(inputValue)) || parseInt(inputValue) < 1) {
+            alert('Vui lòng nhập số lượng hợp lệ');
+            $(this).val($(this).attr('value'));
+            return;
+        }
+
+        // Lấy chuỗi token từ cookie hoặc local storage (nếu đã đăng nhập)
+        var token = 'Bearer @Html.Raw(token)';
+
+        var id = $(this).closest('tr').data('id');
+        var quantity = parseInt(inputValue);
+
+        // Gửi yêu cầu PUT đến API để cập nhật số lượng sản phẩm trong giỏ hàng
+        $.ajax({
+            url: 'https://localhost:44364/api/apigateway/Carts/PutCart',
+            type: 'PUT',
+            data: JSON.stringify({ Id: id, Quantity: quantity }),
+            contentType: 'application/json',
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader('Authorization', token);
+            },
+            success: function (result) {
+                console.log('Sản phẩm đã được cập nhật số lượng trong giỏ hàng');
+                $('tr[data-id="' + id + '"] .cart__price').text('$' + (result.product.recentPrice * quantity));
+                $('tr[data-id="' + id + '"] .quantity-input').val(result.quantity);
+                calculateTotalPrice();
+                if (quantity != result.quantity) {
+                    toastr.error('Số lượng đạt tới giới hạn!');
+                }
+
+            },
+            error: function (xhr, textStatus, errorThrown) {
+                console.log('Đã xảy ra lỗi khi cập nhật số lượng sản phẩm trong giỏ hàng');
+                //toastr.error('Error occurred while adding product to cart!');
+            }
+        });
+    });
+
+    //total price
+    function calculateTotalPrice() {
+        var totalPrice = 0;
+        $('.product_cart').each(function () {
+            var quantity = $(this).find('.quantity-input').val();
+            var price = $(this).find('.product__cart__item__text h5').text().replace('$', '');
+            var total = quantity * price;
+            $(this).find('.cart__price').text('$' + total);
+            totalPrice += total;
+        });
+        $('#total').text('$ ' + totalPrice.toFixed(0));
+    }
+
+    //check quantity
+    $(document).on('click', '#checkQuantity', function () {
+        // Lấy chuỗi token từ cookie hoặc local storage (nếu đã đăng nhập)
+        var token = 'Bearer @Html.Raw(token)';
+        // Gửi yêu cầu DELETE đến API để xóa sản phẩm khỏi giỏ hàng
+        $.ajax({
+            url: 'https://localhost:44364/api/apigateway/Carts/CheckQuantity',
+            type: 'GET',
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader('Authorization', token);
+            },
+            success: function (result) {
+                toastr.success('Check success and web will reload page!');
+                setTimeout(function () {
+                    location.reload();
+                }, 3000);
+            },
+            error: function (xhr, textStatus, errorThrown) {
+                toastr.error('Check Error!');
+            }
+        });
+    });
+});
 </script>

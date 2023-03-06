@@ -18,7 +18,7 @@ namespace Models
 
         public int Id { get; set; }
         public string Title { get; set; } = string.Empty;
-        [Column(TypeName = "text")]
+        [Column(TypeName = "nvarchar(max)")]
         public string Description { get; set; } = string.Empty;
         public int? RecentPrice { get; set; } = 0;
         public string Thumbnail { get; set; } = string.Empty;

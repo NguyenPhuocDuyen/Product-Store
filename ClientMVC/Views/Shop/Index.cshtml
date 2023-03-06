@@ -1,7 +1,6 @@
 ﻿@using Microsoft.AspNetCore.Http
 @model Utility.PaginatedList<Models.Product>
 @{
-    var idUser = Context.Session.GetInt32("userId");
     string token = Context.Session.GetString("token");
     string searchContent = ViewBag.searchContent;
     int min = ViewBag.min;
@@ -129,19 +128,22 @@
                     {
                         <div class="col-lg-4 col-md-6 col-sm-6">
                             <div class="product__item sale">
-                                <div class="product__item__pic set-bg" data-setbg="/img/product/product-1.jpg">
-                                    <span class="label">Sale</span>
+                                <div class="product__item__pic set-bg" data-setbg="@item.Thumbnail">
+                                    @if (item.CreateAt >= DateTime.Now.AddDays(-7))
+                                    {
+                                        <span class="label">New</span>
+                                    }
                                     <ul class="product__hover">
-                                        <li><a href="#"><img src="~/img/icon/heart.png" alt=""></a></li>
-                                        <li><a href="#"><img src="~/img/icon/compare.png" alt=""> <span>Compare</span></a></li>
-                                        <li><a href="@Url.Action("ProductDetail", "Shop", new { id = item.Id })"><img src="~/img/icon/search.png" alt=""></a></li>
+                                        @*<li><a href="#"><img src="~/img/icon/heart.png" alt=""></a></li>
+                                        <li><a href="#"><img src="~/img/icon/compare.png" alt=""> <span>Compare</span></a></li>*@
+                                        <li><a href="@Url.Action("ProductDetail", "Shop", new { id = item.Id })"><img src="~/img/icon/search.png" alt="@item.Title"></a></li>
                                     </ul>
                                 </div>
                                 <div class="product__item__text">
                                     <h6>@item.Title</h6>
-                                    @if(idUser is null)
+                                    @if(String.IsNullOrEmpty(token))
                                     {
-                                        <a asp-action="Login" asp-controller="Account">Login o buy</a>
+                                        <a asp-action="Login" asp-controller="Account">Login to buy</a>
                                     }
                                     else
                                     {
@@ -172,17 +174,6 @@
                                     </div>
 
                                     <h5>$@item.RecentPrice</h5>
-                                    @*<div class="product__color__select">
-                                        <label for="pc-7">
-                                            <input type="radio" id="pc-7">
-                                        </label>
-                                        <label class="active black" for="pc-8">
-                                            <input type="radio" id="pc-8">
-                                        </label>
-                                        <label class="grey" for="pc-9">
-                                            <input type="radio" id="pc-9">
-                                        </label>
-                                    </div>*@
                                 </div>
                             </div>
                         </div>
@@ -240,7 +231,7 @@
                 var token = 'Bearer @Html.Raw(token)';
 
                 $.ajax({
-                    url: 'https://localhost:44362/api/Carts/AddProductToCart',
+                    url: 'https://localhost:44364/api/apigateway/Carts/AddProductToCart',
                     type: 'POST',
                     beforeSend: function(xhr) {
                         xhr.setRequestHeader('Authorization', token);

@@ -122,7 +122,7 @@ namespace OrderService.Controllers
                 x => x.UserId == user.Id,
                 includeProperties: "Product");
 
-            if (carts.Count() > 0 && !string.IsNullOrEmpty(user.Address))
+            if (carts.Any() && !string.IsNullOrEmpty(user.Address))
             {
                 Order order = new()
                 {
