@@ -10,19 +10,19 @@
         <div class="signin-content">
             <div class="signin-image">
                 <figure><img src="/images/đăng nhập.jpg" alt="sing up image"></figure>
-                <a asp-action="Register" asp-controller="Account" class="signup-image-link">Create an account</a>
-                <a asp-action="Index" asp-controller="Home" class="signup-image-link">Back To Home</a>
+                <a asp-action="Register" asp-controller="Account" class="signup-image-link">Đăng ký tài khoản</a>
+                <a asp-action="Index" asp-controller="Home" class="signup-image-link">Về trang chủ</a>
             </div>
             <div class="signin-form">
-                <h2 class="form-title">Sign in</h2>
+                <h2 class="form-title">Dang Nhap</h2>
                 <form asp-action="Login" method="POST" class="register-form" id="login-form">
                     <div class="form-group">
                         <label asp-for="Email"><i class="zmdi zmdi-account material-icons-name"></i></label>
-                        <input asp-for="Email" placeholder="Your Name"/>
+                        <input asp-for="Email" placeholder="Email của bạn..."/>
                     </div>
                     <div class="form-group">
                         <label asp-for="Password"><i class="zmdi zmdi-lock"></i></label>
-                        <input asp-for="Password" type="password" placeholder="Password"/>
+                        <input asp-for="Password" type="password" placeholder="Mật khẩu..."/>
                     </div>
                     @*<div class="form-group">
                         <input type="checkbox" name="remember-me" id="remember-me" class="agree-term" />
@@ -30,17 +30,17 @@
                     </div>*@
                     <span style="color: red">@ViewBag.error</span>
                     <div class="form-group form-button">
-                        <input type="submit" name="signin" id="signin" class="form-submit" value="Log in"/>
+                        <input type="submit" name="signin" id="signin" class="form-submit" value="Đăng nhập"/>
                     </div>
                 </form>
-                <div class="social-login">
-                    <span class="social-label">Or login with</span>
+                @*<div class="social-login">
+                    <span class="social-label">Hoặc đăng nhậ</span>
                     <ul class="socials">
                         <li><a href="#"><i class="display-flex-center zmdi zmdi-facebook"></i></a></li>
                         <li><a href="#"><i class="display-flex-center zmdi zmdi-twitter"></i></a></li>
                         <li><a href="#"><i class="display-flex-center zmdi zmdi-google"></i></a></li>
                     </ul>
-                </div>
+                </div>*@
             </div>
         </div>
     </div>

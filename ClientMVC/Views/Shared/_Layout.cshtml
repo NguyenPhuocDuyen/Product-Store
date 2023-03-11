@@ -7,12 +7,11 @@
     <meta name="keywords" content="Male_Fashion, unica, creative, html">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Male-Fashion | Template</title>
+    <title>@ViewData["Title"] - TKDecor</title>
     @*<title>@ViewData["Title"] - ClientMVC</title>*@
     <link rel="icon" href="/img/icon/iconhome.png" type="image/icon type">
     <!-- Google Font -->
-    <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;600;700;800;900&display=swap"
-    rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
 
     <!-- Css Styles -->
     <link rel="stylesheet" href="~/css/bootstrap.min.css" type="text/css">
@@ -66,13 +65,13 @@
             <div class="offcanvas__links">
                 @if (isLogin == null)
                 {
-                    <a asp-action="Login" asp-controller="Account">Sign in</a>
-                    <a asp-action="Register" asp-controller="Account">Sign up</a>
+                    <a asp-action="Login" asp-controller="Account">Đăng Nhập</a>
+                    <a asp-action="Register" asp-controller="Account">Đăng Ký</a>
                 }
                 else
                 {
                     <a asp-action="Details" asp-controller="Customer">@email</a>
-                    <a asp-action="Logout" asp-controller="Account">Logout</a>
+                    <a asp-action="Logout" asp-controller="Account">Đăng Xuất</a>
                 }
             </div>
         </div>
@@ -84,7 +83,7 @@
         </div>
         <div id="mobile-menu-wrap"></div>
         <div class="offcanvas__text">
-            <p>Free shipping, 30-day return or refund guarantee.</p>
+            <p>Miễn phí vận chuyển, 30 ngày hoàn trả nếu có lỗi.</p>
         </div>
     </div>
     <!-- Offcanvas Menu End -->
@@ -96,7 +95,7 @@
                 <div class="row">
                     <div class="col-lg-6 col-md-7">
                         <div class="header__top__left">
-                            <p>Free shipping, 30-day return or refund guarantee.</p>
+                            <p>Miễn phí vận chuyển, 30 ngày hoàn trả nếu có lỗi.</p>
                         </div>
                     </div>
                     <div class="col-lg-6 col-md-5">
@@ -104,13 +103,13 @@
                             <div class="header__top__links">
                                 @if (isLogin == null)
                                 {
-                                    <a asp-action="Login" asp-controller="Account">Sign in</a>
-                                    <a asp-action="Register" asp-controller="Account">Sign up</a>
+                                    <a asp-action="Login" asp-controller="Account">Đăng Nhập</a>
+                                    <a asp-action="Register" asp-controller="Account">Đăng Ký</a>
                                 }
                                 else
                                 {
                                     <a asp-action="Details" asp-controller="Customer">@email</a>
-                                    <a asp-action="Logout" asp-controller="Account">Logout</a>
+                                    <a asp-action="Logout" asp-controller="Account">Đăng Xuất</a>
                                 }
                             </div>
                             @*<div class="header__top__hover">
@@ -137,12 +136,12 @@
                     <nav class="header__menu mobile-menu">
                         <ul>
                             @*<li class="active"><a asp-action="Index" asp-controller="Home">Home</a></li>*@
-                            <li class=""><a asp-action="Index" asp-controller="Home">Home</a></li>
+                            <li class=""><a asp-action="Index" asp-controller="Home">Trang Chủ</a></li>
                             <li><a asp-controller="Shop" asp-action="Index">Shop</a></li>
                             <li><a href="#">Thông tin</a>
                                 <ul class="dropdown">
-                                    <li><a asp-controller="Shop" asp-action="About">About Us</a></li>
-                                    <li><a asp-controller="Shop" asp-action="Blog">Blog</a></li>
+                                    <li><a asp-controller="Shop" asp-action="About">Thông tin</a></li>
+                                    @*<li><a asp-controller="Shop" asp-action="Blog">Blog</a></li>*@
                                     <li><a asp-controller="Shop" asp-action="Contact">Liên Lạc</a></li>
                                 </ul>
                             </li>
@@ -168,7 +167,7 @@
                         <a href="#" class="search-switch"><img src="/img/icon/search.png" alt=""></a>
                         @*<a href="#"><img src="/img/icon/heart.png" alt=""></a>*@
                         <a asp-action="Cart" asp-controller="Customer"><img src="/img/icon/cart.png" alt=""> <span>+</span></a>
-                        @*<div class="price">$0.00</div>*@
+                        <div class="price">Giỏ Hàng</div>
                     </div>
                 </div>
             </div>
@@ -189,37 +188,33 @@
                         <div class="footer__logo">
                             <a href="#"><img src="/img/logotkdecorfooter.png" alt=""></a>
                         </div>
-                        <p>The customer is at the heart of our unique business model, which includes design.</p>
-                        <a href="#"><img src="/img/payment.png" alt=""></a>
+                        <p>Niềm vui của là cũng là niềm vui của chúng tôi. Rất hân hạnh được phụ vụ cho quý khách.</p>
+                        @*<a href="#"><img src="/img/payment.png" alt=""></a>*@
                     </div>
                 </div>
                 <div class="col-lg-2 offset-lg-1 col-md-3 col-sm-6">
                     <div class="footer__widget">
-                        <h6>Shopping</h6>
+                        <h6>Mua Sắm</h6>
                         <ul>
-                            <li><a href="#">Clothing Store</a></li>
-                            <li><a href="#">Trending Shoes</a></li>
-                            <li><a href="#">Accessories</a></li>
-                            <li><a href="#">Sale</a></li>
+                            <li><a asp-controller="Home" asp-action="Index">Trang Chủ</a></li>
+                            <li><a asp-controller="Shop" asp-action="Index">Shop</a></li>
                         </ul>
                     </div>
                 </div>
                 <div class="col-lg-2 col-md-3 col-sm-6">
                     <div class="footer__widget">
-                        <h6>Shopping</h6>
+                        <h6>Thông Tin</h6>
                         <ul>
-                            <li><a href="#">Contact Us</a></li>
-                            <li><a href="#">Payment Methods</a></li>
-                            <li><a href="#">Delivary</a></li>
-                            <li><a href="#">Return & Exchanges</a></li>
+                            <li><a asp-controller="Shop" asp-action="About">Thông Tin</a></li>
+                            <li><a asp-controller="Shop" asp-action="Contact">Liên Lạc</a></li>
                         </ul>
                     </div>
                 </div>
                 <div class="col-lg-3 offset-lg-1 col-md-6 col-sm-6">
                     <div class="footer__widget">
-                        <h6>NewLetter</h6>
+                        <h6>Liên Lạc</h6>
                         <div class="footer__newslatter">
-                            <p>Be the first to know about new arrivals, look books, sales & promos!</p>
+                            <p>Nhận thông báo mới nhất!</p>
                             <form action="#">
                                 <input type="text" placeholder="Your email">
                                 <button type="submit"><span class="icon_mail_alt"></span></button>
@@ -237,12 +232,11 @@
         <div class="h-100 d-flex align-items-center justify-content-center">
             <div class="search-close-switch">+</div>
             <form asp-action="Index" asp-controller="Shop" class="search-model-form">
-                <input type="text" id="search-input" name="searchContent" placeholder="Search here.....">
+                <input type="text" id="search-input" name="searchContent" placeholder="Tìm kiếm sản phẩm.....">
                 @*<button type="submit"><span class="icon_search"></span></button>*@
             </form>
         </div>
     </div>
-    
     
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>

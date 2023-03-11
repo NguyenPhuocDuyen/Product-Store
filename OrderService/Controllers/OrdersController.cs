@@ -49,7 +49,7 @@ namespace OrderService.Controllers
 
             var orders = await _db.Order.GetAllAsync(
                 filter: x => x.UserId == user.Id, 
-                includeProperties: "Status,User");
+                includeProperties: "Status,User,OrderDetails");
 
             if (orders == null)
             {
@@ -57,6 +57,7 @@ namespace OrderService.Controllers
             }
             
             orders = orders.OrderByDescending(x=>x.CreateAt).ThenBy(x=>x.StatusId).ToList();
+            var products = _db.Product;
 
             return orders.ToList();
         }
