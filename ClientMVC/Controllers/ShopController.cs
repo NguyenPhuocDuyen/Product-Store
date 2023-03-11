@@ -78,11 +78,11 @@ namespace ClientMVC.Controllers
                                         && x.RecentPrice <= max).ToList();
                     }
                     //sort price
-                    if (sort_order == 1)
+                    if (sort_order == 2)
                     {
                         products = products.OrderBy(x => x.RecentPrice).ToList();
                     }
-                    else
+                    else if (sort_order == 3)
                     {
                         products = products.OrderByDescending(x => x.RecentPrice).ToList();
                     }
@@ -110,18 +110,49 @@ namespace ClientMVC.Controllers
 
         public IActionResult About()
         {
+            try
+            {
+                //get Category list
+                response = GobalVariables.WebAPIClient.GetAsync("Users/TotalUser").Result;
+                if (response.IsSuccessStatusCode)
+                {
+                    responseString = response.Content.ReadAsStringAsync().Result;
+                    int totalUser = JsonConvert.DeserializeObject<int>(responseString);
+                    ViewBag.TotalUser = totalUser;
+                }
+
+                //get Category list
+                response = GobalVariables.WebAPIClient.GetAsync("Categorys").Result;
+                if (response.IsSuccessStatusCode)
+                {
+                    responseString = response.Content.ReadAsStringAsync().Result;
+                    List<Category>  categories = JsonConvert.DeserializeObject<List<Category>>(responseString);
+                    ViewBag.TotalCategory = categories.Count;
+                }
+
+                //get product list
+                response = GobalVariables.WebAPIClient.GetAsync("Products/GetProducts").Result;
+                if (response.IsSuccessStatusCode)
+                {
+                    responseString = response.Content.ReadAsStringAsync().Result;
+                    List<Product> products = JsonConvert.DeserializeObject<List<Product>>(responseString);
+                    ViewBag.TotalProduct = products.Count;
+                }
+            }
+            catch { }
+
             return View();
         }
 
-        public IActionResult Blog()
-        {
-            return View();
-        }
+        //public IActionResult Blog()
+        //{
+        //    return View();
+        //}
 
-        public IActionResult BlogDetail()
-        {
-            return View();
-        }
+        //public IActionResult BlogDetail()
+        //{
+        //    return View();
+        //}
 
         public IActionResult ProductDetail(int id)
         {
@@ -157,10 +188,10 @@ namespace ClientMVC.Controllers
             return RedirectToAction("Index");
         }
 
-        public IActionResult CheckOut()
-        {
-            return View();
-        }
+        //public IActionResult CheckOut()
+        //{
+        //    return View();
+        //}
 
         public IActionResult Contact()
         {

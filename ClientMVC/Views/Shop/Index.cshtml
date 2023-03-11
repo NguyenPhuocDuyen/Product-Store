@@ -20,7 +20,7 @@
                 <div class="shop__sidebar">
                     <div class="shop__sidebar__search">
                         <form asp-action="Index">
-                            <input type="text" name="searchContent" value="@searchContent" placeholder="Search...">
+                            <input type="text" name="searchContent" value="@searchContent" placeholder="Tìm kiếm...">
                             <button type="submit"><span class="icon_search"></span></button>
                         </form>
                     </div>
@@ -28,7 +28,7 @@
                         <div class="accordion" id="accordionExample">
                             <div class="card">
                                 <div class="card-heading">
-                                    <a data-toggle="collapse" data-target="#collapseOne">Categories</a>
+                                    <a data-toggle="collapse" data-target="#collapseOne">Danh Mục</a>
                                 </div>
                                 <div id="collapseOne" class="collapse show" data-parent="#accordionExample">
                                     <div class="card-body">
@@ -45,7 +45,7 @@
                             </div>
                             <div class="card">
                                 <div class="card-heading">
-                                    <a data-toggle="collapse" data-target="#collapseTwo">Filter Price</a>
+                                    <a data-toggle="collapse" data-target="#collapseTwo">Sắp Xếp Theo Giá</a>
                                 </div>
                                 <div id="collapseTwo" class="collapse show" data-parent="#accordionExample">
                                     <div class="card-body">
@@ -98,15 +98,16 @@
                     <div class="row">
                         <div class="col-lg-6 col-md-6 col-sm-6">
                             <div class="shop__product__option__left">
-                                <p>Showing 1–12 of @Model.TotalItem results</p>
+                                <p>Đang hiển thị 1–12 của @Model.TotalItem kết quả</p>
                             </div>
                         </div>
                         <div class="col-lg-6 col-md-6 col-sm-6">
                             <div class="shop__product__option__right">
-                                <p>Sort by Price:</p>
+                                <p>Sắp xếp theo giá:</p>
                                 <select id="sort-order" onchange="sortProductByPrice()">
-                                    <option value="1">Low To High</option>
-                                    <option value="2">High To Low</option>
+                                    <option value="1">Không</option>
+                                    <option value="2">Tăng dần</option>
+                                    <option value="3">Giảm dần</option>
                                 </select>
 
                                 @{
@@ -118,7 +119,7 @@
                                             { "sort_order", sort_order.ToString() },
                                         };
                                 }
-                                <a id="sort-link" class="btn btn-primary" asp-action="Index" asp-all-route-data="@parms2">Sort</a>
+                                <a id="sort-link" class="btn btn-primary" asp-action="Index" asp-all-route-data="@parms2">Sắp xếp</a>
                             </div>
                         </div>
                     </div>
@@ -131,7 +132,7 @@
                                 <div class="product__item__pic set-bg" data-setbg="@item.Thumbnail">
                                     @if (item.CreateAt >= DateTime.Now.AddDays(-7))
                                     {
-                                        <span class="label">New</span>
+                                        <span class="label">Mới</span>
                                     }
                                     <ul class="product__hover">
                                         @*<li><a href="#"><img src="~/img/icon/heart.png" alt=""></a></li>
@@ -147,7 +148,7 @@
                                     }
                                     else
                                     {
-                                        <a style="cursor: pointer" id="addCart" class="add-cart" data-id="@item.Id">+ Add To Cart</a>
+                                        <a style="cursor: pointer" id="addCart" class="add-cart" data-id="@item.Id">+ Thêm vào giỏ hàng</a>
                                     }
 
                                     @{
@@ -240,12 +241,10 @@
                     contentType: 'application/json; charset=utf-8',
                     dataType: 'json',
                     success: function (data) {
-                        console.log("success", productId);
-                        toastr.success('Product added to cart successfully!');
+                        toastr.success('Thêm sản phẩm thành công!');
                     },
                     error: function (jqXHR, textStatus, errorThrown) {
-                        console.log('Error: ' + textStatus + ' - ' + errorThrown);
-                        toastr.error('Error occurred while adding product to cart!');
+                        toastr.error('Có lỗi xảy ra vui lòng thử lại sau!');
                     }
                 });
             });

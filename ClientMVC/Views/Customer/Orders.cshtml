@@ -1,6 +1,5 @@
 ﻿@model List<Models.Order>
-@{
-}
+
 <style>
     /* Thiết lập style cho nút điều khiển */
     .btn-sm {
@@ -17,12 +16,27 @@
         background-color: #e2e2e2;
     }
 </style>
+
 <div class="container-fluid p-5">
-<table id="orderTable" class="table table-striped table-bordered">
+    @foreach (var item in Model)
+    {
+        <div>
+            <h4>
+                Mã Đơn Hàng: @item.Id, Ngày đặt: @item.CreateAt, Trạng Thái: @item.Status.Title
+            </h4>
+            <button class="btn btn-primary btn-sm view-order-btn">Xem chi tiết</button>
+            @if (item.StatusId == 1){
+                <button class="btn btn-danger btn-sm cancel-order-btn">Hủy đơn hàng</button>
+                <button class="btn btn-success btn-sm receive-order-btn">Nhận hàng</button>
+            }
+        </div>
+    }
+</div>
+@*<table id="orderTable" class="table table-striped table-bordered">
     <thead>
         <tr>
-            <th>Mã Đơn Hàng</th>
-            <th>Địa Chỉ</th>
+            <th>Sản Phẩm</th>
+            <th>Giá</th>
             <th>Ngày Đặt</th>
             <th>Trạng Thái Đơn Hàng</th>
             <th></th>
@@ -47,8 +61,8 @@
         }
         <!-- Các dòng khác của bảng -->
     </tbody>
-</table>
-</div>
+</table>*@
+
 <script>
     // Xử lý khi người dùng nhấn vào nút "Xem chi tiết"
     $(document).on('click', '.view-order-btn', function () {

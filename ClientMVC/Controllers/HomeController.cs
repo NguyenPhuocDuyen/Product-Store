@@ -39,7 +39,7 @@ namespace ClientMVC.Controllers
                         ViewBag.ProductsTopSale = products.Where(x => idProducts.Contains(x.Id)).ToList();
                     }
 
-                    return View(products.Take(4).ToList());
+                    return View(products.OrderByDescending(x => x.CreateAt).Take(4).ToList());
                 }
             }
             catch { }

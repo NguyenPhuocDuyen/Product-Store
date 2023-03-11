@@ -45,7 +45,7 @@
                                 <img src="@Model.Thumbnail" alt="">
                             </div>
                         </div>
-                        <div class="tab-pane" id="tabs-2" role="tabpanel">
+                        @*<div class="tab-pane" id="tabs-2" role="tabpanel">
                             <div class="product__details__pic__item">
                                 <img src="/img/shop-details/product-big-3.png" alt="">
                             </div>
@@ -60,7 +60,7 @@
                                 <img src="/img/shop-details/product-big-4.png" alt="">
                                 <a href="https://www.youtube.com/watch?v=8PJ3_p7VqHw&list=RD8PJ3_p7VqHw&start_radio=1" class="video-popup"><i class="fa fa-play"></i></a>
                             </div>
-                        </div>
+                        </div>*@
                     </div>
                 </div>
             </div>
@@ -95,9 +95,11 @@
                                 }
                                 <i hidden class="fa fa-star"></i>
                             </div>
-                            <span> - @Model.Reviews.Count() Reviews</span>
+                            <span>@Model.Reviews.Count() Đánh Giá</span>
                         </div>
-                        <h3>@Model.RecentPrice VND<span>70.00</span></h3>
+                        
+                        <h3>@string.Format("{0:#,##0} VND", Model.RecentPrice) <span>@string.Format("{0:#,##0} VND", Model.RecentPrice * 1.1)</span></h3>
+
                         <p>
                             @Model.Description
                         </p>
@@ -109,14 +111,14 @@
                             </div>
                             @if (String.IsNullOrEmpty(token))
                             {
-                                <a asp-action="Login" asp-controller="Account" class="primary-btn pointer-event">Login to buy</a>
+                                <a asp-action="Login" asp-controller="Account" class="primary-btn pointer-event">Đăng nhập để mua</a>
                             } 
                             else
                             {
-                                <button id="addCartDetail" data-id="@Model.Id" class="primary-btn pointer-event">add to cart</button>
+                                <button id="addCartDetail" data-id="@Model.Id" class="primary-btn pointer-event">Thêm Vào Giỏ Hàng</button>
                             }
                         </div>
-                        <div class="product__details__btns__option">
+                        @*<div class="product__details__btns__option">
                             <a href="#"><i class="fa fa-heart"></i> add to wishlist</a>
                             <a href="#"><i class="fa fa-exchange"></i> Add To Compare</a>
                         </div>
@@ -128,7 +130,7 @@
                                 <li><span>Categories:</span> Clothes</li>
                                 <li><span>Tag:</span> Clothes, Skin, Body</li>
                             </ul>
-                        </div>
+                        </div>*@
                     </div>
                 </div>
             </div>
@@ -136,6 +138,7 @@
     </div>
 </section>
 <!-- Shop Details Section End -->
+<h3>Đánh Giá ở đây và danh sách đánh giá. Tự coi mấy thẻ div dưới gòi copy vào cho nó css đẹp sẵn</h3>
 <!-- Related Section Begin -->
 <section class="related spad">
     <div class="container">
@@ -164,11 +167,11 @@
                             <h6>@item.Title</h6>
                             @if (String.IsNullOrEmpty(token))
                             {
-                                <a asp-action="Login" asp-controller="Account" class="add-cart">Login to buy</a>
+                                <a asp-action="Login" asp-controller="Account" class="add-cart">Đăng nhập để mua</a>
                             } 
                             else
                             {
-                                <a style="cursor: pointer" id="addCart" class="add-cart" data-id="@item.Id">+ Add To Cart</a>
+                                <a style="cursor: pointer" id="addCart" class="add-cart" data-id="@item.Id">+ Thêm vào giỏ hàng</a>
                             }
 
                             @{
@@ -193,8 +196,9 @@
                                 }
                                 <i hidden class="fa fa-star"></i>
                             </div>
-                            <h5>@item.RecentPrice</h5>
-                            <div class="product__color__select">
+
+                            <h5>@string.Format("{0:#,##0} VND", item.RecentPrice)</h5>
+                            @*<div class="product__color__select">
                                 <label for="pc-1">
                                     <input type="radio" id="pc-1">
                                 </label>
@@ -204,7 +208,7 @@
                                 <label class="grey" for="pc-3">
                                     <input type="radio" id="pc-3">
                                 </label>
-                            </div>
+                            </div>*@
                         </div>
                     </div>
                 </div>

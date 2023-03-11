@@ -132,6 +132,8 @@ namespace DataAccess.DbInitializer
                 item.RoleId = 2;
                 item.Email = $"Customer{i}@gmail.com";
                 item.Password = $"Customer{i}@gmail.com";
+                item.FullName = $"Customer {i}";
+                item.Phone = $"0788223{i}{i*2}";
             }
             _db.Users.AddRange(users);
             _db.SaveChanges();

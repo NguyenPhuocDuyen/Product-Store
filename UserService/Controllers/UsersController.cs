@@ -36,6 +36,15 @@ namespace UserService.Controllers
             return Ok(await _db.User.GetAllAsync());
         }
 
+
+        //GET: api/Users
+        [HttpGet("TotalUser")]
+        public async Task<ActionResult<int>> TotalUser()
+        {
+            var list = await _db.User.GetAllAsync();
+            return Ok(list.Count());
+        }
+
         // GET: api/Users/5s
         [Authorize]
         [HttpGet("GetUserInfo")]
