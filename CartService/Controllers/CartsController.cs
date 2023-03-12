@@ -14,6 +14,7 @@ namespace CartService.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class CartsController : ControllerBase
     {
         private readonly IUnitOfWork _db;
@@ -24,7 +25,6 @@ namespace CartService.Controllers
         }
 
         // PUT: api/Carts/5
-        [Authorize]
         [HttpPut("PutCart")]
         public async Task<IActionResult> PutCart(Cart cart)
         {
@@ -64,7 +64,6 @@ namespace CartService.Controllers
         }
 
         // DELETE: api/Carts/5
-        [Authorize]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCart(int id)
         {
@@ -91,7 +90,6 @@ namespace CartService.Controllers
         }
 
         // Khang - Post: AddProductToCart
-        [Authorize]
         [HttpPost("AddProductToCart")]
         public async Task<IActionResult> AddCart([FromBody] Cart cart)
         {
@@ -137,7 +135,6 @@ namespace CartService.Controllers
         }
 
         // GET: api/Carts/5
-        [Authorize]
         [HttpGet("GetCartsUser")]
         public async Task<ActionResult<List<Cart>>> GetCartsUser()
         {
@@ -162,7 +159,6 @@ namespace CartService.Controllers
         }
 
         // GET: api/Carts/CheckQuantity
-        [Authorize]
         [HttpGet("CheckQuantity")]
         public async Task<ActionResult> CheckQuantity()
         {

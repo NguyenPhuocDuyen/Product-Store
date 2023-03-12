@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using System;
 using Microsoft.AspNetCore.Http;
+using Models;
 
 namespace ClientMVC
 {
@@ -34,7 +35,7 @@ namespace ClientMVC
             }
             else
             {
-                if (!role.Contains("Admin"))
+                if (!role.Contains(RoleContent.Admin))
                 {
                     filterContext.Result = new RedirectResult("/Home/Index");
                 }

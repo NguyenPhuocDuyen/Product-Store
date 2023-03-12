@@ -147,16 +147,19 @@
                             </li>
                             @if(role is not null)
                             {
-                                <li><a asp-controller="Customer" asp-action="Orders">Đơn Hàng</a></li>
                                 if (role.Contains("Admin"))
                                 {
                                     <li><a href="#">Quản Lí</a>
                                         <ul class="dropdown">
-                                            <li><a asp-controller="Admin" asp-action="Create">Thêm Sản Phẩm</a></li>
-                                            <li><a asp-controller="Admin" asp-action="Orders">Đơn Hàng</a></li>
+                                            <li><a asp-controller="Admin" asp-action="CreateProduct">Thêm Sản Phẩm</a></li>
+                                            <li><a asp-controller="Customer" asp-action="Orders">Đơn Hàng</a></li>
                                             <li><a asp-controller="Admin" asp-action="Dashboard">Thống Kê</a></li>
                                         </ul>
                                     </li>
+                                }
+                                else
+                                {
+                                    <li><a asp-controller="Customer" asp-action="Orders">Đơn Hàng</a></li>
                                 }
                             }
                         </ul>
@@ -180,7 +183,7 @@
     @RenderBody()
 
     <!-- Footer Section Begin -->
-    <footer class="footer">
+    <footer class="footer" style="padding-bottom: 70px;">
         <div class="container">
             <div class="row">
                 <div class="col-lg-3 col-md-6 col-sm-6">
