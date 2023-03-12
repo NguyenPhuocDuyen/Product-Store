@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.VisualBasic;
 using Models;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,19 +23,18 @@ namespace OrderService.Controllers
             _db = db;
         }
 
-        // GET: api/Orders
-        [Authorize(Roles = "Admin")]
-        [HttpGet("GetOrders")]
-        public async Task<ActionResult<List<Order>>> GetOrders()
-        {
-            var listOrder = await _db.Order.GetAllAsync(includeProperties: "Status,User");
-            listOrder = listOrder.OrderByDescending(x => x.CreateAt)
-                .ThenBy(x => x.StatusId).ToList();
+        // GET: api/Orders get order list for admin
+        //[Authorize(Roles = RoleContent.Admin)]
+        //[HttpGet("GetOrders")]
+        //public async Task<ActionResult<List<Order>>> GetOrders()
+        //{
+        //    var listOrder = await _db.Order.GetAllAsync(includeProperties: "Status,User");
+        //    listOrder = listOrder.OrderBy(x => x.StatusId).ThenByDescending(x => x.CreateAt).ToList();
 
-            return listOrder.ToList();
-        }
+        //    return listOrder.ToList();
+        //}
 
-        // GET: api/Orders/5
+        // GET: api/Orders/5 get order list of user authentica
         [HttpGet("GetOrdersOfUser")]
         public async Task<ActionResult<List<Order>>> GetOrdersOfUser()
         {
@@ -46,74 +46,38 @@ namespace OrderService.Controllers
                 // Lấy thông tin người dùng dựa vào userId
                 user = await _db.User.GetFirstOrDefaultAsync(x => x.Id == int.Parse(userId));
             }
-
-            var orders = await _db.Order.GetAllAsync(
-                filter: x => x.UserId == user.Id, 
-                includeProperties: "Status,User,OrderDetails");
-
-            if (orders == null)
+            bool isAdmin = false;
+            if (currentUser.HasClaim(c => c.Type == ClaimTypes.Role))
             {
-                return NotFound();
+                var role = currentUser.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role).Value;
+                // Lấy thông tin người dùng dựa vào userId
+                isAdmin = role == RoleContent.Admin;
             }
-            
-            orders = orders.OrderByDescending(x=>x.CreateAt).ThenBy(x=>x.StatusId).ToList();
+
+            IEnumerable<Order> listOrder = new List<Order>();
+
+            if (isAdmin)
+            {
+                listOrder = await _db.Order.GetAllAsync(includeProperties: "Status,User");
+            }
+            else
+            {
+                listOrder = await _db.Order.GetAllAsync(
+                    filter: x => x.UserId == user.Id,
+                    includeProperties: "Status,User");
+            }
+
+            listOrder = listOrder.OrderBy(x => x.StatusId).ThenByDescending(x => x.CreateAt).ToList();
             var products = _db.Product;
 
-            return orders.ToList();
+            return listOrder.ToList();
         }
 
-        //// PUT: api/Orders/5
-        //[HttpPut("{id}")]
-        //public async Task<IActionResult> PutOrder(int id, Order order)
-        //{
-        //    if (id != order.Id)
-        //    {
-        //        return BadRequest();
-        //    }
-
-        //    try
-        //    {
-        //        _db.Order.Update(order);
-        //        await _db.SaveAsync();
-        //    }
-        //    catch (DbUpdateConcurrencyException)
-        //    {
-        //        if (!await OrderExists(id))
-        //        {
-        //            return NotFound();
-        //        }
-        //        else
-        //        {
-        //            throw;
-        //        }
-        //    }
-
-        //    return NoContent();
-        //}
-
-        //// POST: api/Orders
-        //[HttpPost]
-        //public async Task<ActionResult<Order>> PostOrder(Order order)
-        //{
-        //    _db.Order.Add(order);
-        //    await _db.SaveAsync();
-
-        //    return CreatedAtAction("GetOrder", new { id = order.Id }, order);
-        //}
-
-        //private async Task<bool> OrderExists(int id)
-        //{
-        //    var order = await _db.Order.GetFirstOrDefaultAsync(x => x.Id == id);
-        //    if (order == null)
-        //    {
-        //        return false;
-        //    }
-        //    return true;
-        //}
-
+        //order product in cart
         [HttpGet("OrderProducts")]
         public async Task<IActionResult> OrderProducts()
         {
+            //get info user
             User user = new();
             var currentUser = HttpContext.User;
             if (currentUser.HasClaim(c => c.Type == ClaimTypes.Name))
@@ -123,78 +87,152 @@ namespace OrderService.Controllers
                 user = await _db.User.GetFirstOrDefaultAsync(x => x.Id == int.Parse(userId));
             }
 
+            bool isAdmin = false;
+            if (currentUser.HasClaim(c => c.Type == ClaimTypes.Role))
+            {
+                var role = currentUser.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role).Value;
+                // Lấy thông tin người dùng dựa vào userId
+                isAdmin = role == RoleContent.Admin;
+            }
+
+            if (isAdmin) return NotFound();
+
+            //get cart of user
             var carts = await _db.Cart.GetAllAsync(
                 x => x.UserId == user.Id,
                 includeProperties: "Product");
 
+            //check null
             if (carts.Any() && !string.IsNullOrEmpty(user.Address))
             {
-                Order order = new()
-                {
-                    UserId = user.Id,
-                    OrderAddress = user.Address,
-                    StatusId = 1
-                };
-                _db.Order.Add(order);
-                await _db.SaveAsync();
-
-                var orderList = await _db.Order.GetAllAsync();
-                var orderNew = orderList.OrderByDescending(x => x.Id).FirstOrDefault();
-
+                var listProduct = await _db.Product.GetAllAsync();
+                bool isCheckQuantitySuccess = true; // check Amount of product must be geater than quantity in cart
                 foreach (var item in carts)
                 {
-                    var pro = await _db.Product.GetFirstOrDefaultAsync(x => x.Id == item.ProductId);
-                    pro.Amount -= item.Quantity;
-                    _db.Product.Update(pro);
-
-                    _db.OrderDetail.Add(new OrderDetail
+                    var pro = listProduct.Where(x => x.Id == item.ProductId).FirstOrDefault();
+                    if (pro.Amount < item.Quantity)
                     {
-                        ProductId = item.ProductId,
-                        OrderId = orderNew.Id,
-                        Amount = item.Quantity,
-                        PaymentPrice = item.Product.RecentPrice
-                    });
-                    _db.Cart.Remove(item);
+                        isCheckQuantitySuccess = false;
+                        item.Quantity = pro.Amount;
+                        if (pro.Amount == 0) // out of amount product
+                        {
+                            _db.Cart.Remove(item); // remove product in cart when amount product equal 0
+                        }
+                        else
+                        {
+                            _db.Cart.Update(item);
+                        }
+                    }
                 }
                 await _db.SaveAsync();
 
-                return Ok();
+                if (isCheckQuantitySuccess)
+                {
+                    //create order
+                    Order order = new()
+                    {
+                        UserId = user.Id,
+                        OrderAddress = user.Address,
+                        StatusId = 1
+                    };
+                    _db.Order.Add(order);
+                    await _db.SaveAsync();
+
+                    //get order new
+                    var orderList = await _db.Order.GetAllAsync();
+                    var orderNew = orderList.OrderByDescending(x => x.Id).FirstOrDefault();
+
+                    //add product from cart to orderdeatil for order
+                    foreach (var item in carts)
+                    {
+                        //sub quantity of product
+                        var pro = listProduct.Where(x => x.Id == item.ProductId).FirstOrDefault();
+                        pro.Amount -= item.Quantity;
+                        _db.Product.Update(pro);
+
+                        //delete all product by id when amount sold out
+                        if (pro.Amount == 0)
+                        {
+                            var listProductOfOne = await _db.Cart.GetAllAsync(filter: x => x.ProductId == pro.Id);
+                            foreach (var proInCart in listProductOfOne)
+                            {
+                                //remove another obj in cart
+                                if (item.Id != proInCart.Id)
+                                    _db.Cart.Remove(proInCart);
+                            }
+                        }
+
+                        //add orderDeatial and remove product in cart
+                        OrderDetail orderDetail = new()
+                        {
+                            ProductId = item.ProductId,
+                            OrderId = orderNew.Id,
+                            Amount = item.Quantity,
+                            PaymentPrice = item.Product.RecentPrice
+                        };
+                        _db.OrderDetail.Add(orderDetail);
+                        _db.Cart.Remove(item);
+                    }
+                    await _db.SaveAsync();
+
+                    return Ok();
+                }
             }
 
             return NotFound();
         }
 
-        [HttpPost("ConfirmOrder/{id}")]
-        public async Task<IActionResult> ConfirmOrder(int id, int statusId)
+
+        //admin confirm order for user
+        [HttpPost("ConfirmOrder")]
+        public async Task<IActionResult> ConfirmOrder(Order o)
         {
-            User user = new();
+            var order = await _db.Order.GetFirstOrDefaultAsync(x => x.Id == o.Id);
+
+            if (order == null)
+                return NotFound();
+
+            //get info user
+            bool isAdmin = false;
             var currentUser = HttpContext.User;
-            if (currentUser.HasClaim(c => c.Type == ClaimTypes.Name))
+            if (currentUser.HasClaim(c => c.Type == ClaimTypes.Role))
             {
-                var userId = currentUser.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name).Value;
-                // Lấy thông tin người dùng dựa vào userId
-                user = await _db.User.GetFirstOrDefaultAsync(x => x.Id == int.Parse(userId));
+                string role = currentUser.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role).Value;
+                // Sử dụng role ở đây để thực hiện kiểm tra quyền truy cập và thực hiện các hoạt động khác liên quan đến role.
+                isAdmin = role == RoleContent.Admin;
             }
 
-            var order = await _db.Order.GetFirstOrDefaultAsync(x=>x.Id == id);
-            if (user.RoleId != 1)
+            // only admin can be accept order
+            if (!isAdmin)
             {
-                if (order.UserId != user.Id)
+                if (o.StatusId == 2)
                 {
-                    return NotFound();
+                    return BadRequest();
                 }
-                statusId = 4;
             }
-            
-            order.StatusId = statusId;
-            try
+
+            //can not reject order when it not yet accept
+            if (order.StatusId == 1 && o.StatusId == 3)
             {
-                _db.Order.Update(order);
-                await _db.SaveAsync();
-                return Ok();
+                return BadRequest();
             }
-            catch { }
-            return BadRequest();
+
+            //cancel order so amount of product must to increate
+            if (o.StatusId == 4) 
+            { 
+                var listOrder = await _db.OrderDetail.GetAllAsync(filter: x => x.OrderId == o.Id);
+                foreach (var item in listOrder)
+                {
+                    var product = await _db.Product.GetFirstOrDefaultAsync(filter: x => x.Id == item.ProductId);
+                    product.Amount += item.Amount;
+                    _db.Product.Update(product);
+                }
+            }
+
+            order.StatusId = o.StatusId;
+            _db.Order.Update(order);
+            await _db.SaveAsync();
+            return Ok();
         }
     }
 }

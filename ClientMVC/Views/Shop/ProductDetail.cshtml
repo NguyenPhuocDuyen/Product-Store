@@ -241,12 +241,10 @@
                     contentType: 'application/json; charset=utf-8',
                     dataType: 'json',
                     success: function (data) {
-                        console.log("success", productId);
-                        toastr.success('Product added to cart successfully!');
+                        toastr.success('Thêm sản phẩm thành công!');
                     },
                     error: function (jqXHR, textStatus, errorThrown) {
-                        console.log('Error: ' + textStatus + ' - ' + errorThrown);
-                        toastr.error('Error occurred while adding product to cart!');
+                        toastr.error('Có lỗi xảy ra vui lòng thử lại sau!');
                     }
                 });
             });
@@ -270,11 +268,10 @@
                     dataType: 'json',
                     success: function (data) {
                         console.log("success", productId);
-                        toastr.success('Product added to cart successfully!');
+                        toastr.success('Thêm sản phẩm thành công!');
                     },
                     error: function (jqXHR, textStatus, errorThrown) {
-                        console.log('Error: ' + textStatus + ' - ' + errorThrown);
-                        toastr.error('Error occurred while adding product to cart!');
+                        toastr.error('Có lỗi xảy ra vui lòng thử lại sau!');
                     }
                 });
             });

@@ -54,6 +54,7 @@ namespace ClientMVC.Controllers
                 {
                     responseString = response.Content.ReadAsStringAsync().Result;
                     products = JsonConvert.DeserializeObject<List<Product>>(responseString);
+                    products = products.Where(x => x.Amount > 0).ToList();
 
                     //check search by name and price
                     if (searchContent is not null)

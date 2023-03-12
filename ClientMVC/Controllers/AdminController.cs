@@ -12,19 +12,19 @@ namespace ClientMVC.Controllers
         HttpResponseMessage response;
         string responseString;
 
-        public IActionResult Index()
-        {
-            return View();
-        }
+        //public IActionResult Index()
+        //{
+        //    return View();
+        //}
 
         [HttpGet]
-        public IActionResult Create()
+        public IActionResult CreateProduct()
         {
             return View();
         }
 
         [HttpPost]
-        public IActionResult Create(Product product)
+        public IActionResult CreateProduct(Product product)
         {
 
             return View();
@@ -36,22 +36,22 @@ namespace ClientMVC.Controllers
             return View();
         }
 
-        [HttpGet]
-        public IActionResult Orders() 
-        {
-            try
-            {
-                response = GobalVariables.WebAPIClient.GetAsync("Orders/GetOrders").Result;
-                if (response.IsSuccessStatusCode)
-                {
-                    responseString = response.Content.ReadAsStringAsync().Result;
-                    List<Order> orders = JsonConvert.DeserializeObject<List<Order>>(responseString);
-                    return View(orders);
-                }
-            }
-            catch { }
+        //[HttpGet]
+        //public IActionResult Orders() 
+        //{
+        //    try
+        //    {
+        //        response = GobalVariables.WebAPIClient.GetAsync("Orders/GetOrdersOfUser").Result;
+        //        if (response.IsSuccessStatusCode)
+        //        {
+        //            responseString = response.Content.ReadAsStringAsync().Result;
+        //            List<Order> orders = JsonConvert.DeserializeObject<List<Order>>(responseString);
+        //            return View(orders);
+        //        }
+        //    }
+        //    catch { }
 
-            return RedirectToAction("Index", "Home");
-        }
+        //    return RedirectToAction("Index", "Home");
+        //}
     }
 }

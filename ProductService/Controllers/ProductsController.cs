@@ -46,7 +46,7 @@ namespace ProductService.Controllers
         {
             //get order bought
             var order = await _db.Order.GetAllAsync(filter: x => x.StatusId == 4);
-            var orderDetails = await _db.OrderDetail.GetAllAsync(includeProperties: "Product");
+            var orderDetails = await _db.OrderDetail.GetAllAsync(filter: x=>x.Product.Amount > 0, includeProperties: "Product");
 
             var data = (from obj in orderDetails
                         group obj by obj.ProductId into gr

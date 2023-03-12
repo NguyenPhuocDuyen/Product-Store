@@ -28,14 +28,13 @@ namespace UserService.Controllers
             _db = db;
         }
 
-        //GET: api/Users
-        [Authorize(Roles = "Admin")]
-        [HttpGet("GetUsers")]
-        public async Task<ActionResult<IEnumerable<User>>> GetUsers()
-        {
-            return Ok(await _db.User.GetAllAsync());
-        }
-
+        ////GET: api/Users
+        //[Authorize(Roles = RoleContent.Admin)]
+        //[HttpGet("GetUsers")]
+        //public async Task<ActionResult<IEnumerable<User>>> GetUsers()
+        //{
+        //    return Ok(await _db.User.GetAllAsync());
+        //}
 
         //GET: api/Users
         [HttpGet("TotalUser")]
@@ -123,6 +122,36 @@ namespace UserService.Controllers
             u.Password = tokenString;
 
             return u;
+        }
+
+        //update user info
+        [Authorize]
+        [HttpPost("UpdateInfoUser")]
+        public async Task<IActionResult> UpdateInfoUser(User userInput)
+        {
+            User user = new();
+            var currentUser = HttpContext.User;
+            if (currentUser.HasClaim(c => c.Type == ClaimTypes.Name))
+            {
+                var userId = currentUser.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name).Value;
+                // Lấy thông tin người dùng dựa vào userId
+                user = await _db.User.GetFirstOrDefaultAsync(x => x.Id == int.Parse(userId));
+            }
+            if (string.IsNullOrEmpty(userInput.Password))
+            {
+                //update user info not pass
+                user.FullName = userInput.FullName;
+                user.Phone = userInput.Phone;
+                user.Address = userInput.Address;
+                user.UpdateAt = DateTime.Now;
+            } else
+            {
+                user.Password = userInput.Password;
+            }
+            _db.User.Update(user);
+            await _db.SaveAsync();
+
+            return NoContent();
         }
     }
 }

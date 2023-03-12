@@ -49,9 +49,9 @@ namespace DataAccess.DbInitializer
             _db.SaveChanges();
 
             //add role
-            _db.Roles.Add(new Role { Description = "Admin" });
+            _db.Roles.Add(new Role { Description = RoleContent.Admin });
             _db.SaveChanges();
-            _db.Roles.Add(new Role { Description = "Customer" });
+            _db.Roles.Add(new Role { Description = RoleContent.Customer });
             _db.SaveChanges();
 
             //add user
@@ -226,10 +226,10 @@ namespace DataAccess.DbInitializer
             //add status of order
             List<Status> statuses = new()
             {
-                new Status { Title = "Đã đặt đơn hàng"},
-                new Status { Title = "Đã huỷ đơn hàng"},
-                new Status { Title = "Đang giao hàng"},
-                new Status { Title = "Đã nhận hàng"},
+                new Status { Title = StatusContent.Ordered},
+                new Status { Title = StatusContent.DeliveringOrders},
+                new Status { Title = StatusContent.OrderReceived},
+                new Status { Title = StatusContent.OrderCanceled},
             };
             foreach (var item in statuses)
             {
@@ -241,18 +241,15 @@ namespace DataAccess.DbInitializer
             var userList = _db.Users.ToList();
             var statusList = _db.Statuses.ToList();
             List<Order> orders = new();
-            foreach (User user in userList)
+            for (int j=0; j<10; j++)
             {
-                if (user.RoleId != 1)
+                orders.Add(new Order
                 {
-                    orders.Add(new Order
-                    {
-                        UserId = user.Id,
-                        OrderAddress = user.Address,
-                        StatusId = new Random().Next(0, statusList.Count) + 1,
-                        CreateAt = start.AddDays(random.Next(range))
-                    });
-                }
+                    UserId = userList[j].Id,
+                    OrderAddress = userList[j].Address,
+                    StatusId = new Random().Next(0, statusList.Count) + 1,
+                    CreateAt = start.AddDays(random.Next(range))
+                });
             }
             _db.Orders.AddRange(orders);
             _db.SaveChanges();
@@ -263,14 +260,14 @@ namespace DataAccess.DbInitializer
             List<OrderDetail> ordersDetail = new();
             foreach (Order order in listOrder)
             {
-                foreach (Product product in listProduct)
+                for (int j = 0; j < 5; j++)
                 {
                     ordersDetail.Add(new OrderDetail
                     {
-                        ProductId = product.Id,
+                        ProductId = listProduct[j+5].Id,
                         OrderId = order.Id,
                         Amount = new Random().Next(0, 20) + 1,
-                        PaymentPrice = product.RecentPrice
+                        PaymentPrice = listProduct[j + 5].RecentPrice
                     });
                 }
             }
