@@ -1,6 +1,12 @@
 ﻿using DataAccess.Repository.IRepository;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace ReviewService.Controllers
 {
@@ -15,90 +21,50 @@ namespace ReviewService.Controllers
             _db = db;
         }
 
-        //// GET: api/Reviews
-        //[HttpGet]
-        //public async Task<ActionResult<IEnumerable<Review>>> GetReviews()
-        //{
-        //    return Ok(await _db.Review.GetAllAsync());
-        //}
+        // GET: api/Reviews
+        [HttpGet("GetReviewsOfProduct/{id}")]
+        public async Task<ActionResult<List<Review>>> GetReviewsOfProduct(int id)
+        {
+            return (await _db.Review.GetAllAsync(filter: x => x.ProductId == id, includeProperties: "User")).ToList();
+        }
 
-        //// GET: api/Reviews/5
-        //[HttpGet("{id}")]
-        //public async Task<ActionResult<Review>> GetReview(int id)
-        //{
-        //    var review = await _db.Review.GetFirstOrDefaultAsync(filter: x => x.Id == id, includeProperties: "Product,User");
+        // POST: api/Reviews
+        [HttpPost("AddReview")]
+        public async Task<IActionResult> PostReview(Review review)
+        {
+            User user = new();
+            var currentUser = HttpContext.User;
+            if (currentUser.HasClaim(c => c.Type == ClaimTypes.Name))
+            {
+                var userId = currentUser.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name).Value;
+                // Lấy thông tin người dùng dựa vào userId
+                user = await _db.User.GetFirstOrDefaultAsync(x => x.Id == int.Parse(userId));
+            }
 
-        //    if (review == null)
-        //    {
-        //        return NotFound();
-        //    }
+            var oldReview = await _db.Review.GetFirstOrDefaultAsync(x => x.UserId == user.Id && x.ProductId == review.ProductId);
+            //check exist review to add or update
+            if (oldReview == null)
+            {
+                review.UserId = user.Id;
+                _db.Review.Add(review);
+            }
+            else
+            {
+                oldReview.Description = review.Description;
+                oldReview.Rate = review.Rate;
+                oldReview.UpdateAt = DateTime.Now;
+                _db.Review.Update(oldReview);
+            }
 
-        //    return review;
-        //}
-
-        //// PUT: api/Reviews/5
-        //[HttpPut("{id}")]
-        //public async Task<IActionResult> PutReview(int id, Review review)
-        //{
-        //    if (id != review.Id)
-        //    {
-        //        return BadRequest();
-        //    }
-
-        //    try
-        //    {
-        //        _db.Review.Update(review);
-        //        await _db.SaveAsync();
-        //    }
-        //    catch (DbUpdateConcurrencyException)
-        //    {
-        //        if (!await ReviewExists(id))
-        //        {
-        //            return NotFound();
-        //        }
-        //        else
-        //        {
-        //            throw;
-        //        }
-        //    }
-
-        //    return NoContent();
-        //}
-
-        //// POST: api/Reviews
-        //[HttpPost]
-        //public async Task<ActionResult<Review>> PostReview(Review review)
-        //{
-        //    _db.Review.Add(review);
-        //    await _db.SaveAsync();
-
-        //    return CreatedAtAction("GetReview", new { id = review.Id }, review);
-        //}
-
-        //// DELETE: api/Reviews/5
-        //[HttpDelete("{id}")]
-        //public async Task<IActionResult> DeleteReview(int id)
-        //{
-        //    var review = await _db.Review.GetFirstOrDefaultAsync(x => x.Id == id);
-        //    if (review == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    _db.Review.Remove(review);
-        //    await _db.SaveAsync();
-
-        //    return NoContent();
-        //}
-
-        //private async Task<bool> ReviewExists(int id)
-        //{
-        //    var review = await _db.Review.GetFirstOrDefaultAsync(x => x.Id == id);
-        //    if (review == null)
-        //    {
-        //        return false;
-        //    }
-        //    return true;
-        //}
+            try
+            {
+                await _db.SaveAsync();
+                return NoContent();
+            }
+            catch
+            {
+                return BadRequest();
+            }
+        }
     }
 }

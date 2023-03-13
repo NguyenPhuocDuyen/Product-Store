@@ -181,7 +181,7 @@ $(document).ready(function () {
                     xhr.setRequestHeader('Authorization', token);
                 },
                 success: function (result) {
-                    toastr.info('Order Success', '', { timeOut: 5000 });
+                    toastr.success('Đặt hàng thành công', '', { timeOut: 5000 });
                     $('#confirm-order').modal('hide');
                     $('.product_cart').remove();
                     // Update cart item prices to 0
