@@ -85,9 +85,20 @@ namespace ProductService.Controllers
             if (pro == null)
                 return NotFound();
 
+            pro.Title = product.Title;
+            pro.Description = product.Description;
+            pro.RecentPrice = product.RecentPrice;
+            pro.Amount = product.Amount;
+            pro.CategoryId = product.CategoryId;
+
+            if (!string.IsNullOrEmpty(product.Thumbnail))
+            {
+                pro.Thumbnail = product.Thumbnail;
+            }
+
             try
             {
-                _db.Product.Update(product);
+                _db.Product.Update(pro);
                 await _db.SaveAsync();
                 return NoContent();
             }
