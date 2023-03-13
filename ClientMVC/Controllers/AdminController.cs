@@ -70,24 +70,33 @@ namespace ClientMVC.Controllers
             return View(product);
         }
 
-        //[HttpGet]
-        //public IActionResult UpdateProduct(int id)
-        //{
-        //    try
-        //    {
-        //        //get Category list
-        //        response = GobalVariables.WebAPIClient.GetAsync($"Products/{id}").Result;
-        //        if (response.IsSuccessStatusCode)
-        //        {
-        //            responseString = response.Content.ReadAsStringAsync().Result;
-        //            Product product = JsonConvert.DeserializeObject<Product>(responseString);
-        //            return View(product);
-        //        }
-        //    }
-        //    catch { }
+        [HttpGet]
+        public IActionResult UpdateProduct(int id)
+        {
+            try
+            {
+                //get Category list
+                response = GobalVariables.WebAPIClient.GetAsync("Categorys").Result;
+                if (response.IsSuccessStatusCode)
+                {
+                    responseString = response.Content.ReadAsStringAsync().Result;
+                    List<Category> categories = JsonConvert.DeserializeObject<List<Category>>(responseString);
+                    ViewBag.CategoryId = new SelectList(categories, "Id", "Description");
+                }
 
-        //    return View();
-        //}
+                //get product
+                response = GobalVariables.WebAPIClient.GetAsync($"Products/{id}").Result;
+                if (response.IsSuccessStatusCode)
+                {
+                    responseString = response.Content.ReadAsStringAsync().Result;
+                    Product product = JsonConvert.DeserializeObject<Product>(responseString);
+                    return View(product);
+                }
+            }
+            catch { }
+
+            return RedirectToAction("Index", "Home");
+        }
 
         //[HttpPost]
         //public async Task<IActionResult> UpdateProduct(Product product, IFormFile ThumbnailFile)

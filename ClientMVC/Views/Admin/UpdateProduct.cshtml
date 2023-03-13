@@ -1,0 +1,94 @@
+﻿@model Models.Product
+@using Microsoft.AspNetCore.Http
+@{
+    ViewData["Title"] = "Cập Nhật Sản Phẩm";
+    string token = Context.Session.GetString("token");
+}
+<style>
+    label {
+        display: block;
+        margin-bottom: 0.5em;
+    }
+</style>
+<div class="row justify-content-center">
+    <div class="col-md-4">
+        <h3>Cập Nhật Sản Phẩm</h3>
+        <form id="update-product-form" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <input asp-for="Id" type="hidden" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label asp-for="Title" class="control-label"></label>
+                <input asp-for="Title" class="form-control" />
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+            <div class="form-group" style="margin-bottom: 4em;">
+                <label asp-for="CategoryId" class="control-label">Danh Mục Sản Phẩm</label>
+                <select asp-for="CategoryId" class="form-control" asp-items="@ViewBag.CategoryId" ></select>
+                <span asp-validation-for="CategoryId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Description" class="control-label"></label>
+                <input asp-for="Description" class="form-control" />
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="RecentPrice" class="control-label"></label>
+                <input asp-for="RecentPrice" class="form-control" />
+                <span asp-validation-for="RecentPrice" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Amount" class="control-label"></label>
+                <input asp-for="Amount" class="form-control" />
+                <span asp-validation-for="Amount" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Cập nhật thông tin sản phẩm" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+
+<script>
+    $(document).ready(function() {
+        var token = 'Bearer @Html.Raw(token)';
+
+        var titleInput = $("input[name='Title']");
+        var categoryIdInput = $("select[name='CategoryId']");
+        var descriptionInput = $("input[name='Description']");
+        var recentPriceInput = $("input[name='RecentPrice']");
+        var amountInput = $("input[name='Amount']");
+
+        $('#update-product-form').on('submit', function(e) {
+            e.preventDefault();
+            var data = {
+                Id: $("input[name='Id']").val(),
+                Title: titleInput.val(),
+                CategoryId: categoryIdInput.val(),
+                Description: descriptionInput.val(),
+                RecentPrice: recentPriceInput.val(),
+                Amount: amountInput.val()
+            };
+            $.ajax({
+                type: "PUT",
+                url: "https://localhost:44364/api/apigateway/Products/UpdateProduct/" + data.Id,
+                data: JSON.stringify(data),
+                contentType: "application/json",
+                beforeSend: function(xhr) {
+                    xhr.setRequestHeader('Authorization', token);
+                },
+                success: function(response) {
+                    toastr.success('Cập nhật sản phẩm thành công');
+                },
+                error: function(xhr, textStatus, errorThrown) {
+                    toastr.error('Có lỗi xảy ra vui lòng thử lại sau!');
+                }
+            });
+        });
+    });
+</script>
