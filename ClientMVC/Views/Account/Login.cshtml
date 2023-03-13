@@ -1,9 +1,13 @@
-﻿@model Models.User
+﻿@model Models.ViewModel.UserLogin
 @{
     ViewData["Title"] = "Login";
     Layout = "~/Views/Shared/_LayoutAccount.cshtml";
 }
-
+<style>
+    .container {
+    background-color: rgba(255, 255, 255, 0.5);
+}
+</style>
 <!-- Sing in  Form -->
 <section class="sign-in">
     <div class="container">
@@ -17,18 +21,15 @@
                 <h2 class="form-title">Dang Nhap</h2>
                 <form asp-action="Login" method="POST" class="register-form" id="login-form">
                     <div class="form-group">
-                        <label asp-for="Email"><i class="zmdi zmdi-account material-icons-name"></i></label>
-                        <input asp-for="Email" placeholder="Email của bạn..."/>
+                        <label asp-for="Email"  class="form-control"><i class="zmdi zmdi-account material-icons-name"></i></label>
+                        <input asp-for="Email" class="form-control" placeholder="Email của bạn..."/>
+                        <span asp-validation-for="Email" style="color: red" class="alert-danger form-control"></span>
                     </div>
                     <div class="form-group">
                         <label asp-for="Password"><i class="zmdi zmdi-lock"></i></label>
                         <input asp-for="Password" type="password" placeholder="Mật khẩu..."/>
+                        <span asp-validation-for="Password" style="color: red" class="alert-danger form-control"></span>
                     </div>
-                    @*<div class="form-group">
-                        <input type="checkbox" name="remember-me" id="remember-me" class="agree-term" />
-                        <label for="remember-me" class="label-agree-term"><span><span></span></span>Remember me</label>
-                    </div>*@
-                    <span style="color: red">@ViewBag.error</span>
                     <div class="form-group form-button">
                         <input type="submit" name="signin" id="signin" class="form-submit" value="Đăng nhập"/>
                     </div>
@@ -45,3 +46,6 @@
         </div>
     </div>
 </section>
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

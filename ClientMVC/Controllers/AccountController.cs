@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using Models;
 using Models.ViewModel;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Net.Http;
 using System.Net.Http.Json;
@@ -23,17 +22,22 @@ namespace ClientMVC.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Login(User userLogin)
+        public IActionResult Login(UserLogin userLogin)
         {
             if (!ModelState.IsValid)
             {
-                ViewBag.error = "Input blank or email not correct!";
-                return View();
+                //ViewBag.error = "Input blank or email not correct!";
+                return View(userLogin);
             }
 
             try
             {
-                response = GobalVariables.WebAPIClient.PostAsJsonAsync("Users/Login", userLogin).Result;
+                User userTemp = new()
+                {
+                    Email = userLogin.Email,
+                    Password = userLogin.Password
+                };
+                response = GobalVariables.WebAPIClient.PostAsJsonAsync("Users/Login", userTemp).Result;
                 if (response.IsSuccessStatusCode)
                 {
                     responseString = response.Content.ReadAsStringAsync().Result;
@@ -71,13 +75,19 @@ namespace ClientMVC.Controllers
         {
             if (!ModelState.IsValid)
             {
-                ViewBag.error = "Input blank or Email not correct!";
-                return View();
+                return View(userRegister);
             }
 
             try
             {
-                User user = userRegister;
+                User user = new()
+                {
+                    Email = userRegister.Email,
+                    FullName = userRegister.FullName,
+                    Phone = userRegister.Phone,
+                    Password = userRegister.Password,
+                    Address = userRegister.Address
+                };
                 response = GobalVariables.WebAPIClient.PostAsJsonAsync("Users/PostUser", user).Result;
                 if (response.IsSuccessStatusCode)
                 {
@@ -95,10 +105,5 @@ namespace ClientMVC.Controllers
             HttpContext.Session.Clear();
             return RedirectToAction("Index", "Home");
         }
-
-        //public IActionResult FoggotPassword()
-        //{
-        //    return View();
-        //}
     }
 }

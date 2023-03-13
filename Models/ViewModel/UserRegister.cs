@@ -8,16 +8,21 @@ using System.Threading.Tasks;
 
 namespace Models.ViewModel
 {
-    public class UserRegister : User
+    public class UserRegister : UserLogin
     {
-        [NotMapped]
-        [Required]
-        [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
+        [Required(ErrorMessage = "Tên không được bỏ trống")]
+        public string FullName { get; set; } = string.Empty;
+        [Required(ErrorMessage = "Điện thoại không được bỏ trống")]
+        public string Phone { get; set; } = string.Empty;
+        [Required(ErrorMessage = "Địa chỉ không được bỏ trống")]
+        public string Address { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "Mật khẩu không được bỏ trống")] 
+        [Compare("Password", ErrorMessage = "Mật khẩu xác nhận không đúng.")]
         public string ConfirmPassword { get; set; } = string.Empty;
 
-        [NotMapped]
-        [Required]
-        public bool agreeRule { get; set; }
+        //[Required]
+        //public bool agreeRule { get; set; }
 
         public bool IsValid(string confirmPassword)
         {
