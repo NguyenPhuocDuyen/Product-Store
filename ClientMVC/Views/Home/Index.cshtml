@@ -287,9 +287,6 @@
             button.addEventListener('click', function () {
                 var productId = this.dataset.id;
 
-                // Lấy chuỗi token từ cookie hoặc local storage (nếu đã đăng nhập)
-                var token = 'Bearer @Html.Raw(token)';
-
                 $.ajax({
                     url: urlAPIGateway + 'Carts/AddProductToCart',
                     type: 'POST',
