@@ -276,52 +276,9 @@
 </section>
 <!-- Instagram Section End -->
 
-<!-- Latest Blog Section Begin -->
 <section class="latest spad">
-    @*<div class="container">
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="section-title">
-                    <span>Latest News</span>
-                    <h2>Fashion New Trends</h2>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-lg-4 col-md-6 col-sm-6">
-                <div class="blog__item">
-                    <div class="blog__item__pic set-bg" data-setbg="/images/news/news7.jpg"></div>
-                    <div class="blog__item__text">
-                        <span><img src="img/icon/calendar.png" alt=""> 16 February 2020</span>
-                        <h5>What Curling Irons Are The Best Ones</h5>
-                        <a href="#">Read More</a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-4 col-md-6 col-sm-6">
-                <div class="blog__item">
-                    <div class="blog__item__pic set-bg" data-setbg="/images/news/news8.jpg"></div>
-                    <div class="blog__item__text">
-                        <span><img src="img/icon/calendar.png" alt=""> 21 February 2020</span>
-                        <h5>Eternity Bands Do Last Forever</h5>
-                        <a href="#">Read More</a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-4 col-md-6 col-sm-6">
-                <div class="blog__item">
-                    <div class="blog__item__pic set-bg" data-setbg="/images/news/news9.jpg"></div>
-                    <div class="blog__item__text">
-                        <span><img src="img/icon/calendar.png" alt=""> 28 February 2020</span>
-                        <h5>The Health Benefits Of Sunglasses</h5>
-                        <a href="#">Read More</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>*@
 </section>
-<!-- Latest Blog Section End -->
+
 <script>
     $(document).ready(function () {
         var id = $(this).closest('.product__item').data('id');
@@ -334,7 +291,7 @@
                 var token = 'Bearer @Html.Raw(token)';
 
                 $.ajax({
-                    url: 'https://localhost:44364/api/apigateway/Carts/AddProductToCart',
+                    url: urlAPIGateway + 'Carts/AddProductToCart',
                     type: 'POST',
                     beforeSend: function(xhr) {
                         xhr.setRequestHeader('Authorization', token);

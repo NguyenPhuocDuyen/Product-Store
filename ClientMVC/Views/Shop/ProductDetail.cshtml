@@ -4,39 +4,13 @@
     string token = Context.Session.GetString("token");
     List<Models.Product> products = ViewBag.Products;
 }
+
 <!-- Shop Details Section Begin -->
 <section class="shop-details">
     <div class="product__details__pic">
         <div class="container">
             <div class="row">
                 <div class="col-lg-3 col-md-3">
-                    @*<ul class="nav nav-tabs" role="tablist">
-                        <li class="nav-item">
-                            <a class="nav-link active" data-toggle="tab" href="#tabs-1" role="tab">
-                                <div class="product__thumb__pic set-bg" data-setbg="/img/shop-details/thumb-1.png">
-                                </div>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" data-toggle="tab" href="#tabs-2" role="tab">
-                                <div class="product__thumb__pic set-bg" data-setbg="/img/shop-details/thumb-2.png">
-                                </div>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" data-toggle="tab" href="#tabs-3" role="tab">
-                                <div class="product__thumb__pic set-bg" data-setbg="/img/shop-details/thumb-3.png">
-                                </div>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" data-toggle="tab" href="#tabs-4" role="tab">
-                                <div class="product__thumb__pic set-bg" data-setbg="/img/shop-details/thumb-4.png">
-                                    <i class="fa fa-play"></i>
-                                </div>
-                            </a>
-                        </li>
-                    </ul>*@
                 </div>
                 <div class="col-lg-6 col-md-9">
                     <div class="tab-content">
@@ -45,22 +19,6 @@
                                 <img src="@Model.Thumbnail" alt="">
                             </div>
                         </div>
-                        @*<div class="tab-pane" id="tabs-2" role="tabpanel">
-                            <div class="product__details__pic__item">
-                                <img src="/img/shop-details/product-big-3.png" alt="">
-                            </div>
-                        </div>
-                        <div class="tab-pane" id="tabs-3" role="tabpanel">
-                            <div class="product__details__pic__item">
-                                <img src="/img/shop-details/product-big.png" alt="">
-                            </div>
-                        </div>
-                        <div class="tab-pane" id="tabs-4" role="tabpanel">
-                            <div class="product__details__pic__item">
-                                <img src="/img/shop-details/product-big-4.png" alt="">
-                                <a href="https://www.youtube.com/watch?v=8PJ3_p7VqHw&list=RD8PJ3_p7VqHw&start_radio=1" class="video-popup"><i class="fa fa-play"></i></a>
-                            </div>
-                        </div>*@
                     </div>
                 </div>
             </div>
@@ -118,19 +76,6 @@
                                 <button id="addCartDetail" data-id="@Model.Id" class="primary-btn pointer-event">Thêm Vào Giỏ Hàng</button>
                             }
                         </div>
-                        @*<div class="product__details__btns__option">
-                            <a href="#"><i class="fa fa-heart"></i> add to wishlist</a>
-                            <a href="#"><i class="fa fa-exchange"></i> Add To Compare</a>
-                        </div>
-                        <div class="product__details__last__option">
-                            <h5><span>Guaranteed Safe Checkout</span></h5>
-                            <img src="/img/shop-details/details-payment.png" alt="">
-                            <ul>
-                                <li><span>SKU:</span> 3812912</li>
-                                <li><span>Categories:</span> Clothes</li>
-                                <li><span>Tag:</span> Clothes, Skin, Body</li>
-                            </ul>
-                        </div>*@
                     </div>
                 </div>
             </div>
@@ -138,13 +83,73 @@
     </div>
 </section>
 <!-- Shop Details Section End -->
-<h3>Đánh Giá ở đây và danh sách đánh giá. Tự coi mấy thẻ div dưới gòi copy vào cho nó css đẹp sẵn</h3>
+
+<style>
+    .fa-star {  
+        font-size : 50px;  
+        align-content: center;  
+    }  
+    .fa-star:hover {  
+        cursor: pointer;
+    }  
+    #description {
+        max-width: 100%;
+        width: 100%;
+    }
+</style>
+
+<!-- Phần đánh giá -->
+<section class="related spad">
+    <div class="container">
+        <h3>Đánh giá sản phẩm</h3>
+        <form style="margin-bottom: 1em;" id="reviewProduct">
+            <div class="rating">
+                <div class="con">  
+                    <i class="fa fa-star" aria-hidden="true" data-value="1" style="color: #ffc107;"></i>  
+                    <i class="fa fa-star" aria-hidden="true" data-value="2" style="color: #ffc107;"></i>  
+                    <i class="fa fa-star" aria-hidden="true" data-value="3" style="color: #ffc107;"></i>  
+                    <i class="fa fa-star" aria-hidden="true" data-value="4" style="color: #ffc107;"></i>  
+                    <i class="fa fa-star" aria-hidden="true" data-value="5" style="color: #ffc107;"></i>  
+                </div> 
+            </div>
+            <input type="hidden" name="rating" id="rating" value="5">
+            <input type="hidden" asp-for="Id"/>
+            <br>
+            <label for="description">Nhập mô tả đánh giá của bạn:</label><br>
+            <textarea id="description" name="description" rows="4" cols="60" required></textarea>
+            <br><br>
+            <input type="submit" class="btn btn-primary" value="Đăng đánh giá">
+        </form>
+        <hr/>
+        <table id="reviewTable" class="table">
+            <thead>
+                <tr>
+                    <th>
+                        Người dùng
+                    </th>
+                    <th>
+                        Số sao
+                    </th>
+                    <th>
+                        Mô tả đánh giá
+                    </th>
+                    <th>
+                        Ngày đánh giá
+                    </th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+</section>
+<!-- End Phần đánh giá -->
+
 <!-- Related Section Begin -->
 <section class="related spad">
     <div class="container">
         <div class="row">
             <div class="col-lg-12">
-                <h3 class="related-title">Related Product</h3>
+                <h3 class="related-title">Sản Phẩm Liên Quan</h3>
             </div>
         </div>
         <div class="row">
@@ -198,17 +203,6 @@
                             </div>
 
                             <h5>@string.Format("{0:#,##0} VND", item.RecentPrice)</h5>
-                            @*<div class="product__color__select">
-                                <label for="pc-1">
-                                    <input type="radio" id="pc-1">
-                                </label>
-                                <label class="active black" for="pc-2">
-                                    <input type="radio" id="pc-2">
-                                </label>
-                                <label class="grey" for="pc-3">
-                                    <input type="radio" id="pc-3">
-                                </label>
-                            </div>*@
                         </div>
                     </div>
                 </div>
@@ -220,6 +214,62 @@
 
 <script>
     $(document).ready(function () {
+        var token = 'Bearer @Html.Raw(token)';
+        //feed back product 
+        $(".fa-star").click(function() {  
+            $(".fa-star").css("color", "black");  
+            $(this).prevAll().addBack().css("color", "#ffc107");
+            $("#rating").val($(this).data("value"));
+        });
+
+        //review product
+        $('#reviewProduct').submit(function(event) {
+            event.preventDefault();
+            var productId = $('input[name="Id"]').val();
+            var description = $('#description').val();
+            var rate = $('#rating').val();
+
+            $.ajax({
+                url: 'https://localhost:44364/api/apigateway/Reviews/AddReview',
+                method: 'POST',
+                beforeSend: function(xhr) {
+                    xhr.setRequestHeader('Authorization', token);
+                },
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                data: JSON.stringify({
+                    'ProductId': productId,
+                    'Description': description,
+                    'Rate': rate
+                }),
+                success: function(data) {
+                    toastr.success('Đánh giá thành công!');
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    toastr.error('Có lỗi xảy ra vui lòng thử lại sau!');
+                }
+            });
+        });
+
+        reloadTableReview();
+        //list review
+        function reloadTableReview(){
+            var table = $('#reviewTable').DataTable({
+                "ajax": {
+                    "url": "https://localhost:44364/api/apigateway/Reviews/GetReviewsOfProduct/" + @Model.Id,
+                    "type": "GET",
+                    "contentType": "application/json",
+                    "datatype": "json",
+                    "dataSrc": ""
+                },
+                "columns": [
+                    { "data": "user.fullName" },
+                    { "data": "rate" },
+                    { "data": "description" },
+                    { "data": "updateAt" }
+                ]
+            });
+        }
 
         //add cart in list relate
         var buttons = document.querySelectorAll('#addCart');
@@ -228,11 +278,8 @@
                 var productId = this.dataset.id;
                 var quantity = $('#quatity').val();
 
-                // Lấy chuỗi token từ cookie hoặc local storage (nếu đã đăng nhập)
-                var token = 'Bearer @Html.Raw(token)';
-
                 $.ajax({
-                    url: 'https://localhost:44364/api/apigateway/Carts/AddProductToCart',
+                    url: 'https:localhost:44364/api/apigateway/Carts/AddProductToCart',
                     type: 'POST',
                     beforeSend: function(xhr) {
                         xhr.setRequestHeader('Authorization', token);
@@ -252,28 +299,26 @@
 
         //add cart in Product Detail
         var button = document.querySelector('#addCartDetail');
-            button.addEventListener('click', function () {
-                var productId = this.dataset.id;
-                // Lấy chuỗi token từ cookie hoặc local storage (nếu đã đăng nhập)
-                var token = 'Bearer @Html.Raw(token)';
+        button.addEventListener('click', function () {
+            var productId = this.dataset.id;
 
-                $.ajax({
-                    url: 'https://localhost:44364/api/apigateway/Carts/AddProductToCart',
-                    type: 'POST',
-                    beforeSend: function(xhr) {
-                        xhr.setRequestHeader('Authorization', token);
-                    },
-                    data: JSON.stringify({ ProductId: productId }),
-                    contentType: 'application/json; charset=utf-8',
-                    dataType: 'json',
-                    success: function (data) {
-                        console.log("success", productId);
-                        toastr.success('Thêm sản phẩm thành công!');
-                    },
-                    error: function (jqXHR, textStatus, errorThrown) {
-                        toastr.error('Có lỗi xảy ra vui lòng thử lại sau!');
-                    }
-                });
+            $.ajax({
+                url: 'https://localhost:44364/api/apigateway/Carts/AddProductToCart',
+                type: 'POST',
+                beforeSend: function(xhr) {
+                    xhr.setRequestHeader('Authorization', token);
+                },
+                data: JSON.stringify({ ProductId: productId }),
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                success: function (data) {
+                    console.log("success", productId);
+                    toastr.success('Thêm sản phẩm thành công!');
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    toastr.error('Có lỗi xảy ra vui lòng thử lại sau!');
+                }
             });
+        });
     });
 </script>
