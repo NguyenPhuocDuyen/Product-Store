@@ -243,6 +243,7 @@
                     'Rate': rate
                 }),
                 success: function(data) {
+                    reloadTableReview();
                     toastr.success('Đánh giá thành công!');
                 },
                 error: function(jqXHR, textStatus, errorThrown) {

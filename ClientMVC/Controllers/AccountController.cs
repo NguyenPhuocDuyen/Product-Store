@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Models;
 using Models.ViewModel;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Net.Http;
 using System.Net.Http.Json;
@@ -54,6 +55,16 @@ namespace ClientMVC.Controllers
                     //set token by password becasue password = token return from api
                     HttpContext.Session.SetString("token", user.Password);
                     GobalVariables.WebAPIClient.AddAuthorizationHeader(user.Password);
+
+                    // Lưu trữ token vào cookie
+                    Response.Cookies.Append("access_token", user.Password, new CookieOptions
+                    {
+                        HttpOnly = false,
+                        SameSite = SameSiteMode.None,
+                        Secure = true,
+                        Expires = DateTimeOffset.UtcNow.AddDays(1)
+                    });
+
 
                     return RedirectToAction("Index", "Home");
                 }

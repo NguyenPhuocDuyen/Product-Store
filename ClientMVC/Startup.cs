@@ -25,6 +25,7 @@ namespace ClientMVC
         {
             services.AddControllersWithViews();
 
+            //services.AddCookie();
             services.AddDistributedMemoryCache();           // Đăng ký dịch vụ lưu cache trong bộ nhớ (Session sẽ sử dụng nó)
             services.AddSession(cfg => {                    // Đăng ký dịch vụ Session
                 cfg.Cookie.Name = "TKDecor";             // Đặt tên Session - tên này sử dụng ở Browser (Cookie)
