@@ -25,22 +25,5 @@ namespace ProductService.Controllers
         {
             return Ok(await _db.Category.GetAllAsync(includeProperties: "Products"));
         }
-
-        // POST: api/Categorys
-        [HttpPost]
-        public async Task<IActionResult> PostCategory(Category category)
-        {
-            try
-            {
-                _db.Category.Add(category);
-                await _db.SaveAsync();
-            }
-            catch
-            {
-                return BadRequest();
-            }
-
-            return Ok();
-        }
     }
 }

@@ -28,13 +28,13 @@ namespace UserService.Controllers
             _db = db;
         }
 
-        ////GET: api/Users
-        //[Authorize(Roles = RoleContent.Admin)]
-        //[HttpGet("GetUsers")]
-        //public async Task<ActionResult<IEnumerable<User>>> GetUsers()
-        //{
-        //    return Ok(await _db.User.GetAllAsync());
-        //}
+        //GET: api/Users
+        [Authorize(Roles = RoleContent.Admin)]
+        [HttpGet("GetUsers")]
+        public async Task<ActionResult<IEnumerable<User>>> GetUsers()
+        {
+            return Ok(await _db.User.GetAllAsync());
+        }
 
         //GET: api/Users
         [HttpGet("TotalUser")]
@@ -73,15 +73,20 @@ namespace UserService.Controllers
             var u = await _db.User.GetFirstOrDefaultAsync(
                 filter: x => x.Email.ToLower().Trim()
                 .Equals(user.Email.ToLower().Trim()));
+
             if (u == null)
             {
-                user.RoleId = 2;
-                _db.User.Add(user);
-                await _db.SaveAsync();
-                return u;
+                try
+                {
+                    user.RoleId = 2;
+                    _db.User.Add(user);
+                    await _db.SaveAsync();
+                    return u;
+                }
+                catch { }
             }
 
-            return BadRequest(u);
+            return BadRequest();
         }
 
         // POST: api/Users
@@ -144,14 +149,22 @@ namespace UserService.Controllers
                 user.Phone = userInput.Phone;
                 user.Address = userInput.Address;
                 user.UpdateAt = DateTime.Now;
-            } else
+            }
+            else
             {
                 user.Password = userInput.Password;
             }
-            _db.User.Update(user);
-            await _db.SaveAsync();
 
-            return NoContent();
+            try
+            {
+                _db.User.Update(user);
+                await _db.SaveAsync();
+                return NoContent();
+            }
+            catch
+            {
+                return BadRequest();
+            }
         }
     }
 }

@@ -1,7 +1,8 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@using Models;
 @{
+    List<User> listUser = ViewBag.ListUser;    
+    List<Order> listOrder = ViewBag.ListOrder;    
+    List<Product> listProduct = ViewBag.ListProduct;        
 }
 <div class="container-fluid p-5">
     <div class="row py-5">
@@ -9,7 +10,7 @@
             <h2>Số lượng user</h2>
             <div class="card">
                 <div class="card-body">
-                    <h1 id="num-users">0</h1>
+                    <h1 id="num-users">@listUser.Count</h1>
                 </div>
             </div>
         </div>
@@ -17,7 +18,7 @@
             <h2>Số lượng order</h2>
             <div class="card">
                 <div class="card-body">
-                    <h1 id="num-orders">0</h1>
+                    <h1 id="num-orders">@listOrder.Count</h1>
                 </div>
             </div>
         </div>
@@ -25,7 +26,7 @@
             <h2>Số lượng sản phẩm</h2>
             <div class="card">
                 <div class="card-body">
-                    <h1 id="num-products">0</h1>
+                    <h1 id="num-products">@listProduct.Count</h1>
                 </div>
             </div>
         </div>
@@ -165,9 +166,8 @@
     </div>
 </div>
 
-    </div>
 <!-- jQuery và Bootstrap JavaScript -->
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+@*<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>*@
 <!-- Thư viện Chart.js -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.min.js"></script>
 <!-- Script tạo các bảng và biểu đồ -->
@@ -176,9 +176,19 @@
     var users = [
         { id: 1, name: 'Nguyễn Văn A', email: 'nguyenvana@gmail.com', phone: '0987654321', city: 'Hà Nội' },
         { id: 2, name: 'Trần Thị B', email: 'tranthib@gmail.com', phone: '0123456789', city: 'Đà Nẵng' },
-        { id: 3, name: 'Lê Văn C', email: 'levanc@gmail.com', phone: '0911111111', city: 'TP HCM' }
+        { id: 3, name: 'Lê Văn C', email: 'levanc@gmail.com', phone: '0911111111', city: 'TP HCM' },
+        { id: 4, name: 'Lê Văn C', email: 'levanc@gmail.com', phone: '0911111111', city: 'TP HCM' },
+        { id: 5, name: 'Lê Văn C', email: 'levanc@gmail.com', phone: '0911111111', city: 'TP HCM' },
+        { id: 6, name: 'Lê Văn C', email: 'levanc@gmail.com', phone: '0911111111', city: 'TP HCM' },
+        { id: 7, name: 'Lê Văn C', email: 'levanc@gmail.com', phone: '0911111111', city: 'TP HCM' },
+        { id: 8, name: 'Lê Văn C', email: 'levanc@gmail.com', phone: '0911111111', city: 'TP HCM' },
+        { id: 9, name: 'Lê Văn C', email: 'levanc@gmail.com', phone: '0911111111', city: 'TP HCM' },
+        { id: 10, name: 'Lê Văn C', email: 'levanc@gmail.com', phone: '0911111111', city: 'TP HCM' },
+        { id: 10, name: 'Lê Văn C', email: 'levanc@gmail.com', phone: '0911111111', city: 'TP HCM' },
+        { id: 10, name: 'Lê Văn C', email: 'levanc@gmail.com', phone: '0911111111', city: 'TP HCM' },
+        { id: 10, name: 'Lê Văn C', email: 'levanc@gmail.com', phone: '0911111111', city: 'TP HCM' }
     ];
-
+    //var users2 = @listUser
     var usersTable = $('#table-user').DataTable({
         data: users,
         columns: [

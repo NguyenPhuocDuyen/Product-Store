@@ -23,17 +23,6 @@ namespace OrderService.Controllers
             _db = db;
         }
 
-        // GET: api/Orders get order list for admin
-        //[Authorize(Roles = RoleContent.Admin)]
-        //[HttpGet("GetOrders")]
-        //public async Task<ActionResult<List<Order>>> GetOrders()
-        //{
-        //    var listOrder = await _db.Order.GetAllAsync(includeProperties: "Status,User");
-        //    listOrder = listOrder.OrderBy(x => x.StatusId).ThenByDescending(x => x.CreateAt).ToList();
-
-        //    return listOrder.ToList();
-        //}
-
         // GET: api/Orders/5 get order list of user authentica
         [HttpGet("GetOrdersOfUser")]
         public async Task<ActionResult<List<Order>>> GetOrdersOfUser()
@@ -175,7 +164,7 @@ namespace OrderService.Controllers
                     }
                     await _db.SaveAsync();
 
-                    return Ok();
+                    return NoContent();
                 }
             }
 
@@ -218,8 +207,8 @@ namespace OrderService.Controllers
             }
 
             //cancel order so amount of product must to increate
-            if (o.StatusId == 4) 
-            { 
+            if (o.StatusId == 4)
+            {
                 var listOrder = await _db.OrderDetail.GetAllAsync(filter: x => x.OrderId == o.Id);
                 foreach (var item in listOrder)
                 {
@@ -231,8 +220,15 @@ namespace OrderService.Controllers
 
             order.StatusId = o.StatusId;
             _db.Order.Update(order);
-            await _db.SaveAsync();
-            return Ok();
+            try
+            {
+                await _db.SaveAsync();
+                return NoContent();
+            }
+            catch
+            {
+                return BadRequest();
+            }
         }
     }
 }

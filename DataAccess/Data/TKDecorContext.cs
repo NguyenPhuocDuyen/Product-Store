@@ -187,17 +187,17 @@ namespace Models
                     .HasColumnType("datetime")
                     .HasColumnName("update_at");
 
-                entity.Property(e => e.UserId).HasColumnName("user_id");
+                //entity.Property(e => e.UserId).HasColumnName("user_id");
 
                 entity.HasOne(d => d.Category)
                     .WithMany(p => p.Products)
                     .HasForeignKey(d => d.CategoryId)
                     .HasConstraintName("FK__Product__categor__33D4B598");
 
-                entity.HasOne(d => d.User)
-                    .WithMany(p => p.Products)
-                    .HasForeignKey(d => d.UserId)
-                    .HasConstraintName("FK__Product__user_id__34C8D9D1");
+                //entity.HasOne(d => d.User)
+                //    .WithMany(p => p.Products)
+                //    .HasForeignKey(d => d.UserId)
+                //    .HasConstraintName("FK__Product__user_id__34C8D9D1");
             });
 
             modelBuilder.Entity<Review>(entity =>

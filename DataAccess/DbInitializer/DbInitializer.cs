@@ -140,7 +140,7 @@ namespace DataAccess.DbInitializer
 
             //add products
             Random random = new Random();
-            DateTime start = new DateTime(2000, 1, 1);
+            DateTime start = new(2020, 1, 1);
             int range = (DateTime.Today - start).Days;
 
             List<Product> products = new()
@@ -215,7 +215,7 @@ namespace DataAccess.DbInitializer
                         break;
                     }   
                 }
-                item.UserId = 1;
+                //item.UserId = 1;
                 item.RecentPrice = new Random().Next(0, 1000) * 1000;
                 item.Amount = new Random().Next(0, 1000);
                 item.CreateAt = start.AddDays(random.Next(range));
