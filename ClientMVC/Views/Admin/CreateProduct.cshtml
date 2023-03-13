@@ -1,8 +1,4 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
+﻿@model Models.Product
 <style>
     form {
         margin: 0 auto;
@@ -32,42 +28,7 @@
         margin-bottom: 1em;
     }
 
-    /*.custom-file-input {
-        position: relative;
-        display: inline-block;
-        background-color: #fff;
-        border: 1px solid #ccc;
-        border-radius: 3px;
-        padding: 4px 8px;
-        overflow: hidden;
-        font-size: 14px;
-        line-height: 1.5;
-        text-align: center;
-        cursor: pointer;
-    }
-
-        .custom-file-input input[type=file] {
-            position: absolute;
-            font-size: 100px;
-            right: 0;
-            top: 0;
-            opacity: 0;
-            cursor: pointer;
-        }
-
-        .custom-file-input:hover::before {
-            background-color: #ddd;
-        }
-        .custom-file-input::before {
-            content: "Choose File";
-            display: inline-block;
-            background-color: #eee;
-            border-radius: 3px;
-            padding: 4px 8px;
-            cursor: pointer;
-        }
-*/
-    select {
+    /*select {
         margin-bottom: 1em;
     }
 
@@ -80,9 +41,9 @@
         cursor: pointer;
     }
 
-        input[type="submit"]:hover {
-            background-color: #3e8e41;
-        }
+    input[type="submit"]:hover {
+        background-color: #3e8e41;
+    }*/
 
     .preview {
         max-width: 100%;
@@ -90,96 +51,62 @@
     }
 </style>
 <div class="w-100 my-5">
-    <form enctype="multipart/form-data" method="POST">
-        <legend>Add new product</legend>
-        
-        <div class="form-group">
-            <label for="title">Title:</label>
-            <input type="text" id="title" name="title" required>
-        </div>
-
-        <div class="form-group">
-            <label for="description">Description:</label>
-            <textarea id="description" name="description"></textarea>
-        </div>
-
-        <div class="form-group">
-            <label for="price">Price:</label>
-            <input type="text" id="price" name="price" required>
-        </div>
-
-        <div class="form-group">
-            <label for="thumbnail" class="custom-file-input">Thumnail</label>
-            <input type="file" id="thumbnail" name="thumbnail" accept="image/*" onchange="previewImage()" required>
-            <div class="preview">
-                <img id="thumbnail-preview">
+    <div class="col-md-12">
+        <form asp-action="CreateProduct" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Title" class="control-label"></label>
+                <input asp-for="Title" class="form-control" />
+                <span asp-validation-for="Title" class="text-danger"></span>
             </div>
-        </div>
-        <div class="form-group">
-            <label for="amount">Amount:</label>
-            <input type="text" id="amount" name="amount" required>
-        </div>
-        <div class="form-group">
-            <label for="category">Category:</label>
-            <select id="category" name="category">
-                <option value="1">Danh mục 1</option>
-                <option value="2">Danh mục 2</option>
-                <option value="3">Danh mục 3</option>
-            </select>
-        </div>
-        <br/>
-        <br />
-        <input type="submit" value="Add">
-    </form>
+            <div class="form-group">
+                <label asp-for="Description" class="control-label"></label>
+                <textarea asp-for="Description" class="form-control" ></textarea>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="RecentPrice" class="control-label">Giá Sản Phẩm (VND)</label>
+                <input asp-for="RecentPrice" class="form-control" />
+                <span asp-validation-for="RecentPrice" class="text-danger"></span>
+            </div>
+            <div style="margin-bottom: 4em;" class="form-group">
+                <label asp-for="CategoryId" class="control-label"></label>
+                <select asp-for="CategoryId" asp-items="@ViewBag.CategoryId" class="form-control" ></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="Amount" class="control-label"></label>
+                <input asp-for="Amount" class="form-control" />
+                <span asp-validation-for="Amount" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label for="ThumbnailFile" class="control-label"></label>
+                <input id="ThumbnailFile" type="file" name="ThumbnailFile" class="form-control" accept="image/*" onchange="previewImage()" required/>
+                <div class="preview">
+                    <img id="thumbnail-preview">
+                </div>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
 </div>
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+
 <script>
     function previewImage() {
-        var fileInput = document.getElementById("thumbnail");
-        var preview = document.getElementById("thumbnail-preview");
-        if (fileInput.files && fileInput.files[0]) {
-            var reader = new FileReader();
+        var preview = document.querySelector('#thumbnail-preview');
+        var file = document.querySelector('input[type=file]').files[0];
+        var reader = new FileReader();
 
-            reader.onload = function (e) {
-                preview.setAttribute("src", e.target.result);
-                preview.style.width = "100%";
-                preview.style.display = "block";
-            }
+        reader.addEventListener("load", function () {
+            preview.src = reader.result;
+        }, false);
 
-            reader.readAsDataURL(fileInput.files[0]);
+        if (file) {
+            reader.readAsDataURL(file);
         }
     }
-</script>
-
-<script type="module">
-  // Import the functions you need from the SDKs you need
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.17.2/firebase-app.js";
-  import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.17.2/firebase-analytics.js";
-
-  import { * } from "https://www.gstatic.com/firebasejs/9.17.2/firebase-storage.js";
-
-  // Your web app's Firebase configuration
-  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-  const firebaseConfig = {
-    apiKey: "AIzaSyACkOl09oaIRsvZBdKMdrHCo2u1MK72ybk",
-    authDomain: "tkdecor-75bf8.firebaseapp.com",
-    projectId: "tkdecor-75bf8",
-    storageBucket: "tkdecor-75bf8.appspot.com",
-    messagingSenderId: "977528772546",
-    appId: "1:977528772546:web:1b6043aee5a9dcf97f285b",
-    measurementId: "G-ESJYE9TC6V"
-  };
-
-  // Initialize Firebase
-  const app = initializeApp(firebaseConfig);
-  const analytics = getAnalytics(app);
-  
-  const storageRef = firebase.storage().ref();
-
-  const file = document.querySelector('#thumnail').files[0];
-
-    const fileName = file.name;
-    const fileRef = storageRef.child(`images/${fileName}`);
-    fileRef.put(file).then(() => {
-      console.log('Upload thành công!');
-    });
 </script>

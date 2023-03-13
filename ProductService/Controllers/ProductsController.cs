@@ -1,4 +1,5 @@
 ﻿using DataAccess.Repository.IRepository;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Models;
@@ -45,8 +46,8 @@ namespace ProductService.Controllers
         public async Task<IActionResult> GetTopSaleProductId()
         {
             //get order bought
-            var order = await _db.Order.GetAllAsync(filter: x => x.StatusId == 4);
-            var orderDetails = await _db.OrderDetail.GetAllAsync(filter: x=>x.Product.Amount > 0, includeProperties: "Product");
+            var order = await _db.Order.GetAllAsync(filter: x => x.StatusId == 3);
+            var orderDetails = await _db.OrderDetail.GetAllAsync(filter: x => x.Product.Amount > 0, includeProperties: "Product");
 
             var data = (from obj in orderDetails
                         group obj by obj.ProductId into gr
@@ -55,6 +56,45 @@ namespace ProductService.Controllers
                         select gr.Key.Value).Take(4).ToList();
 
             return Ok(data);
+        }
+
+        // GET: api/Products
+        [Authorize(Roles = RoleContent.Admin)]
+        [HttpPost("AddProduct")]
+        public async Task<IActionResult> AddProduct(Product product)
+        {
+            try
+            {
+                //product.UserId = 1;
+                _db.Product.Add(product);
+                await _db.SaveAsync();
+                return NoContent();
+            }
+            catch
+            {
+                return BadRequest();
+            }
+        }
+
+        // GET: api/Products
+        [Authorize(Roles = RoleContent.Admin)]
+        [HttpPut("UpdateProduct/{id}")]
+        public async Task<IActionResult> UpdateProduct(int id, Product product)
+        {
+            var pro = await _db.Product.GetFirstOrDefaultAsync(filter: x => x.Id == id);
+            if (pro == null)
+                return NotFound();
+
+            try
+            {
+                _db.Product.Update(product);
+                await _db.SaveAsync();
+                return NoContent();
+            }
+            catch
+            {
+                return BadRequest();
+            }
         }
     }
 }

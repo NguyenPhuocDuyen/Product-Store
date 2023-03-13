@@ -73,10 +73,16 @@ namespace CartService.Controllers
                 return NotFound();
             }
 
-            _db.Cart.Remove(cart);
-            await _db.SaveAsync();
-
-            return NoContent();
+            try
+            {
+                _db.Cart.Remove(cart);
+                await _db.SaveAsync();
+                return NoContent();
+            }
+            catch
+            {
+                return BadRequest();
+            }
         }
 
         private async Task<bool> CartExists(int id)
@@ -102,6 +108,15 @@ namespace CartService.Controllers
                 user = await _db.User.GetFirstOrDefaultAsync(x => x.Id == int.Parse(userId));
             }
 
+            if (currentUser.HasClaim(c => c.Type == ClaimTypes.Role))
+            {
+                string role = currentUser.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role).Value;
+                if (role == RoleContent.Admin)
+                {
+                    return BadRequest();
+                }
+            }
+
             var oldCart = await _db.Cart.GetFirstOrDefaultAsync(x
                 => x.UserId == user.Id
                 && x.ProductId == cart.ProductId,
@@ -115,7 +130,6 @@ namespace CartService.Controllers
                 cart.CreateAt = DateTime.Now;
                 cart.UpdateAt = DateTime.Now;
                 _db.Cart.Add(cart);
-                await _db.SaveAsync();
             }
             else
             {
@@ -129,9 +143,17 @@ namespace CartService.Controllers
                 }
                 oldCart.UpdateAt = DateTime.Now;
                 _db.Cart.Update(oldCart);
-                await _db.SaveAsync();
             }
-            return NoContent();
+
+            try
+            {
+                await _db.SaveAsync();
+                return NoContent();
+            }
+            catch
+            {
+                return BadRequest();
+            }
         }
 
         // GET: api/Carts/5
@@ -186,9 +208,16 @@ namespace CartService.Controllers
                     _db.Cart.Update(item);
                 }
             }
-            await _db.SaveAsync();
 
-            return Ok(carts);
+            try
+            {
+                await _db.SaveAsync();
+                return Ok(carts);
+            }
+            catch
+            {
+                return BadRequest();
+            }
         }
     }
 }
