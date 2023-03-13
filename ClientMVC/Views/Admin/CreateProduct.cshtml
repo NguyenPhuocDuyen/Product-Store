@@ -91,10 +91,6 @@
         </form>
     </div>
 </div>
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}
-
 <script>
     function previewImage() {
         var preview = document.querySelector('#thumbnail-preview');
@@ -110,3 +106,6 @@
         }
     }
 </script>
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
