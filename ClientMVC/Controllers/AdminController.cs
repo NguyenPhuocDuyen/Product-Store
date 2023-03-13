@@ -98,37 +98,37 @@ namespace ClientMVC.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        //[HttpPost]
-        //public async Task<IActionResult> UpdateProduct(Product product, IFormFile ThumbnailFile)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        if (ThumbnailFile != null && ThumbnailFile.Length > 0)
-        //        {
-        //            var fileName = GetUniqueFileName(ThumbnailFile.FileName);
-        //            var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", "products", fileName);
+        [HttpPost]
+        public async Task<IActionResult> UpdateProduct(Product product, IFormFile ThumbnailFile)
+        {
+            if (ModelState.IsValid)
+            {
+                if (ThumbnailFile != null && ThumbnailFile.Length > 0)
+                {
+                    var fileName = GetUniqueFileName(ThumbnailFile.FileName);
+                    var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", "products", fileName);
 
-        //            using (var stream = new FileStream(filePath, FileMode.Create))
-        //            {
-        //                await ThumbnailFile.CopyToAsync(stream);
-        //            }
-        //            product.Thumbnail = "/images/products/" + fileName;
-        //        }
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await ThumbnailFile.CopyToAsync(stream);
+                    }
+                    product.Thumbnail = "/images/products/" + fileName;
+                }
 
-        //        // call api save product
-        //        try
-        //        {
-        //            response = GobalVariables.WebAPIClient.PostAsJsonAsync("Products/AddProduct", product).Result;
-        //            if (response.IsSuccessStatusCode)
-        //            {
-        //                return RedirectToAction("Index", "Shop");
-        //            }
-        //        }
-        //        catch { }
-        //    }
+                // call api save product
+                try
+                {
+                    response = GobalVariables.WebAPIClient.PostAsJsonAsync($"Products/UpdateProduct/{product.Id}", product).Result;
+                    if (response.IsSuccessStatusCode)
+                    {
+                        return RedirectToAction("Index", "Shop");
+                    }
+                }
+                catch { }
+            }
 
-        //    return View(product);
-        //}
+            return View(product);
+        }
 
         [HttpGet]
         public IActionResult Dashboard()

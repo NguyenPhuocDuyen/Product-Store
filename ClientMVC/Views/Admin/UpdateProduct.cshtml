@@ -11,9 +11,11 @@
     }
 </style>
 <div class="row justify-content-center">
-    <div class="col-md-4">
-        <h3>Cập Nhật Sản Phẩm</h3>
-        <form id="update-product-form" method="post">
+    <h3>Cập Nhật Sản Phẩm</h3>
+</div>
+<form asp-action="UpdateProduct" method="post">
+    <div class="row justify-content-center">
+        <div class="col-md-4">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <input asp-for="Id" type="hidden" class="form-control" />
@@ -44,17 +46,41 @@
                 <span asp-validation-for="Amount" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Cập nhật thông tin sản phẩm" class="btn btn-primary" />
+                <button id="updateInfoProduct" class="btn btn-primary">Cập nhật</button>
             </div>
-        </form>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                <label for="ThumbnailFile" class="control-label"></label>
+                <input id="ThumbnailFile" type="file" name="ThumbnailFile" class="form-control" accept="image/*" onchange="previewImage()" required/>
+                <div class="preview">
+                    <img id="thumbnail-preview">
+                </div>
+                <input type="submit" value="Cập nhật toàn bộ bao gồm ảnh" class="btn btn-primary"/>
+            </div>
+        </div>
     </div>
-</div>
+</form>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
 
 <script>
+    function previewImage() {
+        var preview = document.querySelector('#thumbnail-preview');
+        var file = document.querySelector('input[type=file]').files[0];
+        var reader = new FileReader();
+
+        reader.addEventListener("load", function () {
+            preview.src = reader.result;
+        }, false);
+
+        if (file) {
+            reader.readAsDataURL(file);
+        }
+    }
+
     $(document).ready(function() {
         var token = 'Bearer @Html.Raw(token)';
 
@@ -64,8 +90,8 @@
         var recentPriceInput = $("input[name='RecentPrice']");
         var amountInput = $("input[name='Amount']");
 
-        $('#update-product-form').on('submit', function(e) {
-            e.preventDefault();
+        $('#updateInfoProduct').on('click', function(e) {
+            //e.preventDefault();
             var data = {
                 Id: $("input[name='Id']").val(),
                 Title: titleInput.val(),

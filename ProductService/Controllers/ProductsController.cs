@@ -91,6 +91,11 @@ namespace ProductService.Controllers
             pro.Amount = product.Amount;
             pro.CategoryId = product.CategoryId;
 
+            if (!string.IsNullOrEmpty(product.Thumbnail))
+            {
+                pro.Thumbnail = product.Thumbnail;
+            }
+
             try
             {
                 _db.Product.Update(pro);
