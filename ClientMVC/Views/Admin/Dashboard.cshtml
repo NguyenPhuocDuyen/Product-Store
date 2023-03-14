@@ -2,10 +2,6 @@
 @using Microsoft.AspNetCore.Http
 @{
     ViewData["Title"] = "Thống Kê";
-
-    List<User> listUser = ViewBag.ListUser;    
-    List<Order> listOrder = ViewBag.ListOrder;
-    List<Product> listProduct = ViewBag.ListProduct;
 }
 <div class="container-fluid p-5">
     <div class="row py-5">
@@ -13,7 +9,7 @@
             <h2>Số lượng user</h2>
             <div class="card">
                 <div class="card-body">
-                    <h1 id="num-users">@listUser.Count</h1>
+                    <h1 id="num-users">0</h1>
                 </div>
             </div>
         </div>
@@ -21,7 +17,7 @@
             <h2>Số lượng order</h2>
             <div class="card">
                 <div class="card-body">
-                    <h1 id="num-orders">@listOrder.Count</h1>
+                    <h1 id="num-orders">0</h1>
                 </div>
             </div>
         </div>
@@ -29,12 +25,15 @@
             <h2>Số lượng sản phẩm</h2>
             <div class="card">
                 <div class="card-body">
-                    <h1 id="num-products">@listProduct.Count</h1>
+                    <h1 id="num-products">0</h1>
                 </div>
             </div>
         </div>
     </div>
     <div class="row py-5">
+        <h3>Doanh Thu <span id="doanhThu">0</span></h3>
+    </div>
+    @*<div class="row py-5">
         <h2 class="text-center w-100">Biểu đồ thống kê</h2>
         <div class="col-md-12 d-flex">
             <!-- Biểu đồ số lượng sản phẩm -->
@@ -50,7 +49,7 @@
                 <canvas id="user-chart" class=""></canvas>
             </div>
         </div>
-    </div>
+    </div>*@
     <div class="row py-5">
         <div class="col-md-12">
             <h2>Danh sách user</h2>
@@ -108,45 +107,118 @@
 <script>
     $(document).ready(function () {
 
-        reloadTableUser();
-        reloadTableOrder();
-        reloadTableProduct();
-        //list user
-        function reloadTableUser(){
-            var table = $('#table-user').DataTable({
-                "ajax": {
-                    "url": urlGetUsers,
-                    "type": "GET",
-                    "beforeSend": function(xhr) {
-                            xhr.setRequestHeader('Authorization', token);
-                        },
-                    "contentType": "application/json",
-                    "datatype": "json",
-                    "dataSrc": ""
-                },
-                "columns": [
-                    { "data": "id" },
-                    { "data": "email" },
-                    { "data": "fullName" },
-                    { "data": "phone" },
-                    { "data": "address" }
+        var tableUsers;
+        var tableProducts;
+        var tableOrders;
+
+        loadData();
+
+        function loadData() {
+            getUsers();
+            getProducts();
+            getTableOrders();
+            getOrderDetails();
+        }
+
+        function getOrderDetails() {
+            ajaxRequest(urlGetOrderDetailReceived, 'GET', null, function(xhr) {
+                xhr.setRequestHeader('Authorization', token);
+            }, function(response) {
+                var tableOrderDetails = response;
+                // tính tổng doanh thu và set vào thẻ span
+                var totalRevenue = 0;
+                for (var i = 0; i < tableOrderDetails.length; i++) {
+                    var orderDetail = tableOrderDetails[i];
+                    totalRevenue += orderDetail.amount * orderDetail.paymentPrice;
+                }
+                $('#doanhThu').text(totalRevenue.toLocaleString() + ' đ');
+            }, function(jqXHR, textStatus, errorThrown) {
+                console.log(textStatus, errorThrown);
+            });
+        }
+
+        function ajaxRequest(url, type, data, beforeSendFunc, successFunc, errorFunc) {
+            $.ajax({
+                url: url,
+                type: type,
+                data: data,
+                beforeSend: beforeSendFunc,
+                contentType: 'application/json',
+                dataType: 'json',
+                success: successFunc,
+                error: errorFunc
+            });
+        }
+
+        function getUsers() {
+            ajaxRequest(urlGetUsers, 'GET', null, function(xhr) {
+                xhr.setRequestHeader('Authorization', token);
+            }, function(response) {
+                tableUsers = response;
+                renderUsers();
+            }, function(jqXHR, textStatus, errorThrown) {
+                console.log(textStatus, errorThrown);
+            });
+        }
+
+        function getProducts() {
+            ajaxRequest(urlGetProducts, 'GET', null, null, function(response) {
+                tableProducts = response;
+                renderProducts();
+            }, function(jqXHR, textStatus, errorThrown) {
+                console.log(textStatus, errorThrown);
+            });
+        }
+
+        function getTableOrders() {
+            ajaxRequest(urlGetOrdersOfUser, 'GET', null, function(xhr) {
+                xhr.setRequestHeader('Authorization', token);
+            }, function(response) {
+                tableOrders = response;
+                renderTableOrder();
+            }, function(xhr, status, error) {
+                console.log('Error:', error);
+            });
+        }
+
+        function renderUsers() {
+            $('#num-users').text(tableUsers.length);
+            $('#table-user').DataTable({
+                data: tableUsers,
+                columns: [
+                    { data: 'id' },
+                    { data: 'email' },
+                    { data: 'fullName' },
+                    { data: 'phone' },
+                    { data: 'address' }
                 ]
             });
         }
 
-        function reloadTableOrder(){
+        function renderProducts() {
+            $('#num-products').text(tableProducts.length);
+            $('#table-product').DataTable({
+                data: tableProducts,
+                columns: [
+                    { data: 'id' },
+                    { data: 'title' },
+                    { data: 'recentPrice' },
+                    { data: 'amount' },
+                    {
+                        data: null,
+                        render: function(data, type, row) {
+                            return '<a class="btn btn-success" href="'+urlLocal+'Admin/UpdateProduct/'+row.id+'">Cập nhật</a>';
+                        }
+                    }
+                ]
+            });
+        }
+
+        function renderTableOrder() {
+            $('#num-orders').text(tableOrders.length);
             var table = $('#table-order').DataTable({
-                "ajax": {
-                    "url": urlGetOrdersOfUser,
-                    "beforeSend": function(xhr) {
-                            xhr.setRequestHeader('Authorization', token);
-                        },
-                    "type": "GET",
-                    "contentType": "application/json",
-                    "datatype": "json",
-                    "dataSrc": ""
-                },
-                "columns": [
+                data: tableOrders,
+                columns: [
                     { "data": "id" },
                     { "data": "user.fullName" },
                     { "data": "orderAddress" },
@@ -162,107 +234,104 @@
             });
         }
 
-        function reloadTableProduct(){
-            var table = $('#table-product').DataTable({
-                "ajax": {
-                    "url": urlGetProducts,
-                    "type": "GET",
-                    "contentType": "application/json",
-                    "datatype": "json",
-                    "dataSrc": ""
-                },
-                "columns": [
-                    { "data": "id" },
-                    { "data": "title" },
-                    { "data": "recentPrice" },
-                    { "data": "amount" },
-                    { "data": null, render: function(data, type, row) {
-                        return '<a class="btn btn-success" href="'+urlLocal+'Admin/UpdateProduct/'+row.id+'">Cập nhật</a>';
-                    }}
-                ]
-            });
-        }
-    });
+        //function countUsers() {
+        //    var now = new Date();
+        //    var oneMonthAgo = new Date();
+        //    oneMonthAgo.setMonth(now.getMonth() - 1);
 
+        //    // Đếm số lượng người dùng mới (tạo tài khoản trong 1 tháng trở lại đây)
+        //    var newUserCount = tableUsers.filter(function(user) {
+        //        var createdAt = new Date(user.createdAt);
+        //        return createdAt > oneMonthAgo;
+        //    }).length;
 
-    // Dữ liệu số lượng người dùng
-    var activeUserCount = 150;
-    var inactiveUserCount = 50;
+        //    // Đếm số lượng người dùng cũ (tạo tài khoản trước 1 tháng trở lại đây)
+        //    var oldUserCount = tableUsers.filter(function(user) {
+        //        var createdAt = new Date(user.createdAt);
+        //        return createdAt <= oneMonthAgo;
+        //    }).length;
 
-    // Dữ liệu số lượng đơn hàng
-    var orderCounts = [12, 19, 3, 5, 2, 3, 7, 9, 10, 2, 8, 11];
+        //    return { newUserCount: newUserCount, oldUserCount: oldUserCount };
+        //}
 
-    // Dữ liệu số lượng sản phẩm
-    var productLabels = ['Product A', 'Product B', 'Product C', 'Product D', 'Product E'];
-    var productCounts = [30, 50, 20, 10, 40];
+        // //Sử dụng hàm countUsers() để lấy số lượng người dùng mới và cũ
+        // //Dữ liệu số lượng người dùng
+        //var newUser = 150;
+        //var oldUser = 50;
 
-    // Tạo biểu đồ
-    var userChart = new Chart(document.getElementById('user-chart'), {
-        type: 'pie',
-        data: {
-            labels: ['Active Users', 'Inactive Users'],
-            datasets: [{
-                label: 'User Count',
-                data: [activeUserCount, inactiveUserCount],
-                backgroundColor: ['#007bff', '#dc3545']
-            }]
-        },
-        options: {
-            title: {
-                display: true,
-                text: 'User Statistics'
-            }
-        }
-    });
+        //// Tạo biểu đồ
+        //var userChart = new Chart(document.getElementById('user-chart'), {
+        //    type: 'pie',
+        //    data: {
+        //        labels: ['Mới', 'Cũ'],
+        //        datasets: [{
+        //            label: 'User Count',
+        //            data: [newUser, oldUser],
+        //            backgroundColor: ['#007bff', '#dc3545']
+        //        }]
+        //    },
+        //    options: {
+        //        title: {
+        //            display: true,
+        //            text: 'Thống Kê Người Dùng Mới Trong Tháng'
+        //        }
+        //    }
+        //});
 
-    var orderChart = new Chart(document.getElementById('order-chart'), {
-        type: 'bar',
-        data: {
-            labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-            datasets: [{
-                label: 'Order Count',
-                data: orderCounts,
-                backgroundColor: '#007bff'
-            }]
-        },
-        options: {
-            title: {
-                display: true,
-                text: 'Order Statistics'
-            },
-            scales: {
-                yAxes: [{
-                    ticks: {
-                        beginAtZero: true
-                    }
-                }]
-            }
-        }
-    });
+        //// Dữ liệu số lượng đơn hàng
+        //var orderCounts = [12, 19, 3, 5, 2, 3, 7, 9, 10, 2, 8, 11];
+        //var orderChart = new Chart(document.getElementById('order-chart'), {
+        //    type: 'bar',
+        //    data: {
+        //        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+        //        datasets: [{
+        //            label: 'Order Count',
+        //            data: orderCounts,
+        //            backgroundColor: '#007bff'
+        //        }]
+        //    },
+        //    options: {
+        //        title: {
+        //            display: true,
+        //            text: 'Order Statistics'
+        //        },
+        //        scales: {
+        //            yAxes: [{
+        //                ticks: {
+        //                    beginAtZero: true
+        //                }
+        //            }]
+        //        }
+        //    }
+        //});
 
-    var productChart = new Chart(document.getElementById('product-chart'), {
-        type: 'line',
-        data: {
-            labels: productLabels,
-            datasets: [{
-                label: 'Product Count',
-                data: productCounts,
-                fill: false,
-                borderColor: '#007bff'
-            }]
-        },
-        options: {
-            title: {
-                display: true,
-                text: 'Product Statistics'
-            },
-            scales: {
-                yAxes: [{
-                    ticks: {
-                        beginAtZero: true
-                    }
-                }]
-            }
-        }
+        //// Dữ liệu số lượng sản phẩm
+        //var productLabels = ['Product A', 'Product B', 'Product C', 'Product D', 'Product E'];
+        //var productCounts = [30, 50, 20, 10, 40];
+        //var productChart = new Chart(document.getElementById('product-chart'), {
+        //    type: 'line',
+        //    data: {
+        //        labels: productLabels,
+        //        datasets: [{
+        //            label: 'Product Count',
+        //            data: productCounts,
+        //            fill: false,
+        //            borderColor: '#007bff'
+        //        }]
+        //    },
+        //    options: {
+        //        title: {
+        //            display: true,
+        //            text: 'Product Statistics'
+        //        },
+        //        scales: {
+        //            yAxes: [{
+        //                ticks: {
+        //                    beginAtZero: true
+        //                }
+        //            }]
+        //        }
+        //    }
+        //});
     });
 </script>

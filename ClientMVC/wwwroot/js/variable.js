@@ -27,6 +27,9 @@ var urlOrderProducts = urlOrder + "/OrderProducts";
 //confirm order products status ordered, cancel,...
 var urlConfirmOrder = urlOrder + "/ConfirmOrder";
 
+//
+var urlGetOrderDetailReceived = urlAPIGateway + "OrderDetails/GetOrderDetailReceived";
+
 //url add review product
 var urlAddReview = urlAPIGateway + "Reviews/AddReview";
 //url get reviews of product + id
