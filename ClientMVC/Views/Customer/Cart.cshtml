@@ -1,7 +1,7 @@
 ﻿@using Microsoft.AspNetCore.Http
 @model List<Models.Cart>
 @{
-    string token = Context.Session.GetString("token");
+    ViewData["Title"] = "Giỏ Hàng";
 }
 
 <!-- Shopping Cart Section Begin -->
@@ -35,7 +35,7 @@
                                             <a asp-action="ProductDetail" asp-controller="Shop" asp-route-id="@item.Product.Id">
                                                 <h6>@item.Product.Title</h6>
                                             </a>
-                                            <h5>@item.Product.RecentPrice</h5>
+                                            <h5>@string.Format("{0:#,##0} đ", item.Product.RecentPrice)</h5>
                                         </div>
                                     </td>
                                     <td class="quantity__item">
@@ -49,7 +49,7 @@
                                         var totalPriceofProduct = item.Product.RecentPrice * item.Quantity;
                                         totalPrice += totalPriceofProduct;
                                     }
-                                    <td class="cart__price" id="price-@item.Id">$@totalPriceofProduct</td>
+                                    <td class="cart__price" id="price-@item.Id">@string.Format("{0:#,##0} đ", totalPriceofProduct)</td>
                                     <td class="cart__close">
                                         <button class="btn btn-default" data-href="@item.Product.Title" runat="server" data-id="@item.Id" data-toggle="modal" data-target="#confirm-delete">
                                             <i style="cursor: pointer" class="deleteProduct fa fa-close"></i>
@@ -85,7 +85,7 @@
                     <h6>Tổng tiền giỏ hàng</h6>
                     <ul>
                         <li>Tổng tiền trừ <span>0 VND</span></li>
-                        <li>Tổng <span id="total">@string.Format("{0:#,##0} VND", totalPrice)</span></li>
+                        <li>Tổng <span id="total">@string.Format("{0:#,##0} đ", totalPrice)</span></li>
                     </ul>
                     <a data-toggle="modal" data-target="#confirm-order" class="primary-btn text-white" style="cursor: pointer">Đặt hàng</a>
                 </div>
@@ -141,14 +141,14 @@
 <!-- Shopping Cart Section End -->
 <script>
 $(document).ready(function () {
-    $('#confirm-delete').on('show.bs.modal', function (e) {
-        var token = 'Bearer @Html.Raw(token)';
-        var id = $(e.relatedTarget).data('id');
 
+    //delele product in cart
+    $('#confirm-delete').on('show.bs.modal', function (e) {
+        var id = $(e.relatedTarget).data('id');
         $(this).find('.btn-ok').off('click').on('click', function () {
             $('tr[data-id="' + id + '"]').remove();
             $.ajax({
-                url: 'https://localhost:44364/api/apigateway/Carts/' + id,
+                url: urlDeleteCart + id,
                 type: 'DELETE',
                 beforeSend: function (xhr) {
                     xhr.setRequestHeader('Authorization', token);
@@ -156,11 +156,11 @@ $(document).ready(function () {
                 success: function (result) {
                     console.log("success", id);
                     calculateTotalPrice();
-                    toastr.success('Xoá sản phẩm thành công!');
+                    toastr.success(messSuccess);
                     $('#confirm-delete').modal('hide');
                 },
                 error: function (xhr, textStatus, errorThrown) {
-                    toastr.error('Có lỗi xảy ra vui lòng thử lại sau!');
+                    toastr.error(messError);
                 }
             });
         });
@@ -168,27 +168,25 @@ $(document).ready(function () {
         $('.modal-backdrop').remove();
     });
 
-
+    // xác nhận đặt hàng
     $('#confirm-order').on('show.bs.modal', function (e) {
-        var token = 'Bearer @Html.Raw(token)';
         var id = $(e.relatedTarget).data('id');
-
         $(this).find('.btn-ok').off('click').on('click', function () {
             $.ajax({
-                url: 'https://localhost:44364/api/apigateway/Orders/OrderProducts',
+                url: urlOrderProducts,
                 type: 'GET',
                 beforeSend: function (xhr) {
                     xhr.setRequestHeader('Authorization', token);
                 },
                 success: function (result) {
-                    toastr.success('Đặt hàng thành công', '', { timeOut: 5000 });
+                    toastr.success(messSuccess, '', { timeOut: 5000 });
                     $('#confirm-order').modal('hide');
                     $('.product_cart').remove();
                     // Update cart item prices to 0
-                    $('#total').text('$ 0');
+                    $('#total').text('0 VND');
                 },
                 error: function (xhr, textStatus, errorThrown) {
-                    toastr.error('Có lỗi xảy ra vui lòng thử lại sau! Hãy kiểm tra lại địa chỉ của bạn!');
+                    toastr.error(messError);
                 }
             });
         });
@@ -205,15 +203,12 @@ $(document).ready(function () {
             return;
         }
 
-        // Lấy chuỗi token từ cookie hoặc local storage (nếu đã đăng nhập)
-        var token = 'Bearer @Html.Raw(token)';
-
         var id = $(this).closest('tr').data('id');
         var quantity = parseInt(inputValue);
 
         // Gửi yêu cầu PUT đến API để cập nhật số lượng sản phẩm trong giỏ hàng
         $.ajax({
-            url: 'https://localhost:44364/api/apigateway/Carts/PutCart',
+            url: urlPutCart,
             type: 'PUT',
             data: JSON.stringify({ Id: id, Quantity: quantity }),
             contentType: 'application/json',
@@ -221,17 +216,15 @@ $(document).ready(function () {
                 xhr.setRequestHeader('Authorization', token);
             },
             success: function (result) {
-                console.log('Sản phẩm đã được cập nhật số lượng trong giỏ hàng');
-                $('tr[data-id="' + id + '"] .cart__price').text('$' + (result.product.recentPrice * quantity));
+                $('tr[data-id="' + id + '"] .cart__price').text((result.product.recentPrice * quantity) + ' VND');
                 $('tr[data-id="' + id + '"] .quantity-input').val(result.quantity);
                 calculateTotalPrice();
                 if (quantity != result.quantity) {
                     toastr.error('Số lượng đạt tới giới hạn!');
                 }
-
             },
             error: function (xhr, textStatus, errorThrown) {
-                toastr.error('Có lỗi xảy ra vui lòng thử lại sau!');
+                toastr.error(messError);
             }
         });
     });
@@ -241,33 +234,30 @@ $(document).ready(function () {
         var totalPrice = 0;
         $('.product_cart').each(function () {
             var quantity = $(this).find('.quantity-input').val();
-            var price = $(this).find('.product__cart__item__text h5').text().replace('$', '');
+            var price = $(this).find('.product__cart__item__text h5').text().replace(' đ', '').replace(',', '');
             var total = quantity * price;
-            $(this).find('.cart__price').text('$' + total);
+            $(this).find('.cart__price').text(total.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
             totalPrice += total;
         });
-        $('#total').text('$ ' + totalPrice.toFixed(0));
+        $('#total').text(totalPrice.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
     }
 
     //check quantity
     $(document).on('click', '#checkQuantity', function () {
-        // Lấy chuỗi token từ cookie hoặc local storage (nếu đã đăng nhập)
-        var token = 'Bearer @Html.Raw(token)';
-        // Gửi yêu cầu DELETE đến API để xóa sản phẩm khỏi giỏ hàng
         $.ajax({
-            url: 'https://localhost:44364/api/apigateway/Carts/CheckQuantity',
+            url: urlCheckQuantityCart,
             type: 'GET',
             beforeSend: function (xhr) {
                 xhr.setRequestHeader('Authorization', token);
             },
             success: function (result) {
-                toastr.success('Kiểm tra số lượng thành công! Sẽ tiến hành tải lại trang');
+                toastr.success(messSuccess + ' Sẽ tiến hành tải lại trang!');
                 setTimeout(function () {
                     location.reload();
-                }, 3000);
+                }, 2000);
             },
             error: function (xhr, textStatus, errorThrown) {
-                toastr.error('Có lỗi xảy ra vui lòng thử lại sau!');
+                toastr.error(messError);
             }
         });
     });

@@ -1,7 +1,8 @@
 ﻿@using Microsoft.AspNetCore.Http
 @model Models.Product
 @{
-    string token = Context.Session.GetString("token");
+    ViewData["Title"] = "Chi Tiết Sản Phẩm";
+    var isLogin = Context.Session.Get("IsLoggedIn");
     List<Models.Product> products = ViewBag.Products;
 }
 
@@ -56,7 +57,7 @@
                             <span>@Model.Reviews.Count() Đánh Giá</span>
                         </div>
                         
-                        <h3>@string.Format("{0:#,##0} VND", Model.RecentPrice) <span>@string.Format("{0:#,##0} VND", Model.RecentPrice * 1.1)</span></h3>
+                        <h3>@string.Format("{0:#,##0} đ", Model.RecentPrice) <span>@string.Format("{0:#,##0} đ", Model.RecentPrice * 1.1)</span></h3>
 
                         <p>
                             @Model.Description
@@ -67,7 +68,7 @@
                                     <input id="quatity" type="text" min="1" value="1">
                                 </div>
                             </div>
-                            @if (String.IsNullOrEmpty(token))
+                            @if (isLogin is null)
                             {
                                 <a asp-action="Login" asp-controller="Account" class="primary-btn pointer-event">Đăng nhập để mua</a>
                             } 
@@ -170,7 +171,7 @@
                         </div>
                         <div class="product__item__text">
                             <h6>@item.Title</h6>
-                            @if (String.IsNullOrEmpty(token))
+                            @if (isLogin is null)
                             {
                                 <a asp-action="Login" asp-controller="Account" class="add-cart">Đăng nhập để mua</a>
                             } 
@@ -202,7 +203,7 @@
                                 <i hidden class="fa fa-star"></i>
                             </div>
 
-                            <h5>@string.Format("{0:#,##0} VND", item.RecentPrice)</h5>
+                            <h5>@string.Format("{0:#,##0} đ", item.RecentPrice)</h5>
                         </div>
                     </div>
                 </div>
@@ -214,7 +215,6 @@
 
 <script>
     $(document).ready(function () {
-        var token = 'Bearer @Html.Raw(token)';
         //feed back product 
         $(".fa-star").click(function() {  
             $(".fa-star").css("color", "black");  
@@ -230,7 +230,7 @@
             var rate = $('#rating').val();
 
             $.ajax({
-                url: 'https://localhost:44364/api/apigateway/Reviews/AddReview',
+                url: urlAddReview,
                 method: 'POST',
                 beforeSend: function(xhr) {
                     xhr.setRequestHeader('Authorization', token);
@@ -244,10 +244,10 @@
                 }),
                 success: function(data) {
                     reloadTableReview();
-                    toastr.success('Đánh giá thành công!');
+                    toastr.success(messSuccess);
                 },
                 error: function(jqXHR, textStatus, errorThrown) {
-                    toastr.error('Có lỗi xảy ra vui lòng thử lại sau!');
+                    toastr.error(messError);
                 }
             });
         });
@@ -257,7 +257,7 @@
         function reloadTableReview(){
             var table = $('#reviewTable').DataTable({
                 "ajax": {
-                    "url": "https://localhost:44364/api/apigateway/Reviews/GetReviewsOfProduct/" + @Model.Id,
+                    "url": urlGetReviewsOfProduct + @Model.Id,
                     "type": "GET",
                     "contentType": "application/json",
                     "datatype": "json",
@@ -280,7 +280,7 @@
                 var quantity = $('#quatity').val();
 
                 $.ajax({
-                    url: 'https:localhost:44364/api/apigateway/Carts/AddProductToCart',
+                    url: urlAddProductToCart,
                     type: 'POST',
                     beforeSend: function(xhr) {
                         xhr.setRequestHeader('Authorization', token);
@@ -289,10 +289,10 @@
                     contentType: 'application/json; charset=utf-8',
                     dataType: 'json',
                     success: function (data) {
-                        toastr.success('Thêm sản phẩm thành công!');
+                        toastr.success(messSuccess);
                     },
                     error: function (jqXHR, textStatus, errorThrown) {
-                        toastr.error('Có lỗi xảy ra vui lòng thử lại sau!');
+                        toastr.error(messError);
                     }
                 });
             });
@@ -304,7 +304,7 @@
             var productId = this.dataset.id;
 
             $.ajax({
-                url: 'https://localhost:44364/api/apigateway/Carts/AddProductToCart',
+                url: urlAddProductToCart,
                 type: 'POST',
                 beforeSend: function(xhr) {
                     xhr.setRequestHeader('Authorization', token);
@@ -314,10 +314,10 @@
                 dataType: 'json',
                 success: function (data) {
                     console.log("success", productId);
-                    toastr.success('Thêm sản phẩm thành công!');
+                    toastr.success(messSuccess);
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
-                    toastr.error('Có lỗi xảy ra vui lòng thử lại sau!');
+                    toastr.error(messError);
                 }
             });
         });

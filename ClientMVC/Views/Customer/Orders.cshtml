@@ -1,5 +1,7 @@
 ﻿@model List<Models.Order>
-
+@{
+    ViewData["Title"] = "Lịch Sử Mua Hàng";
+}
 <style>
     /* Thiết lập style cho nút điều khiển */
     .btn-sm {
@@ -20,22 +22,6 @@
     }
 </style>
 
-@*<div class="container-fluid p-5">
-    @foreach (var item in Model)
-    {
-        <div>
-            <h4>
-                Mã Đơn Hàng: @item.Id, Ngày đặt: @item.CreateAt, Trạng Thái: @item.Status.Title
-            </h4>
-            <button class="btn btn-primary btn-sm view-order-btn">Xem chi tiết</button>
-            @if (item.StatusId == 1){
-                <button class="btn btn-danger btn-sm cancel-order-btn">Hủy đơn hàng</button>
-                <button class="btn btn-success btn-sm receive-order-btn">Nhận hàng</button>
-            }
-        </div>
-    }
-</div>
-*@
 <div class="container-fluid p-5">
     <table id="orderTable" class="table table-striped table-bordered">
         <thead>
@@ -51,7 +37,6 @@
             {
                 <tr>
                     <td>@item.Id</td>
-                    @*<td>@item.User.Address</td>*@
                     <td>@item.CreateAt</td>
                     <td>@item.Status.Title</td>
                     <td>
@@ -59,30 +44,12 @@
                         class="btn btn-@(item.StatusId == 1 || item.StatusId == 2 ? "success" : "primary") btn-sm view-order-btn">
                             Xem chi tiết
                         </a>
-                        @*@if (item.StatusId == 1)
-                        {
-                            <button class="btn btn-danger btn-sm cancel-order-btn">Hủy đơn hàng</button>
-                        }
-                        @if (item.StatusId == 3)
-                        {
-                            <button class="btn btn-success btn-sm receive-order-btn">Nhận hàng</button>
-                        }*@
                     </td>
                 </tr>
             }
-            <!-- Các dòng khác của bảng -->
         </tbody>
     </table>
 </div>
 <script>
-    // Xử lý khi người dùng nhấn vào nút "Xem chi tiết"
-    //$(document).on('click', '.view-order-btn', function () {
-    //    var row = $(this).closest('tr');
-    //    var name = row.find('td:eq(0)').text();
-    //    var address = row.find('td:eq(1)').text();
-    //    var status = row.find('td:eq(2)').text();
-
-    //    // Hiển thị thông tin đơn hàng
-    //    alert('Tên người đặt hàng: ' + name + '\nĐịa chỉ: ' + address + '\nTrạng thái đơn hàng: ' + status);
-    //})
+    
 </script>

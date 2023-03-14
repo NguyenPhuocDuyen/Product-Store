@@ -1,10 +1,11 @@
 ﻿@using Models;
 @using Microsoft.AspNetCore.Http
 @{
+    ViewData["Title"] = "Thống Kê";
+
     List<User> listUser = ViewBag.ListUser;    
-    List<Order> listOrder = ViewBag.ListOrder;    
-    List<Product> listProduct = ViewBag.ListProduct;        
-    string token = Context.Session.GetString("token");
+    List<Order> listOrder = ViewBag.ListOrder;
+    List<Product> listProduct = ViewBag.ListProduct;
 }
 <div class="container-fluid p-5">
     <div class="row py-5">
@@ -106,8 +107,7 @@
 <!-- Script tạo các bảng và biểu đồ -->
 <script>
     $(document).ready(function () {
-        var token = 'Bearer @Html.Raw(token)';
-        
+
         reloadTableUser();
         reloadTableOrder();
         reloadTableProduct();
@@ -115,7 +115,7 @@
         function reloadTableUser(){
             var table = $('#table-user').DataTable({
                 "ajax": {
-                    "url": urlAPIGateway + "Users/GetUsers",
+                    "url": urlGetUsers,
                     "type": "GET",
                     "beforeSend": function(xhr) {
                             xhr.setRequestHeader('Authorization', token);
@@ -137,7 +137,7 @@
         function reloadTableOrder(){
             var table = $('#table-order').DataTable({
                 "ajax": {
-                    "url": urlAPIGateway + "Orders/GetOrdersOfUser",
+                    "url": urlGetOrdersOfUser,
                     "beforeSend": function(xhr) {
                             xhr.setRequestHeader('Authorization', token);
                         },
@@ -165,7 +165,7 @@
         function reloadTableProduct(){
             var table = $('#table-product').DataTable({
                 "ajax": {
-                    "url": urlAPIGateway + "Products/GetProducts",
+                    "url": urlGetProducts,
                     "type": "GET",
                     "contentType": "application/json",
                     "datatype": "json",

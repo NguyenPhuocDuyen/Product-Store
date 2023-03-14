@@ -2,7 +2,6 @@
 @using Microsoft.AspNetCore.Http
 @{
     ViewData["Title"] = "Cập Nhật Sản Phẩm";
-    string token = Context.Session.GetString("token");
 }
 <style>
     label {
@@ -82,8 +81,6 @@
     }
 
     $(document).ready(function() {
-        var token = 'Bearer @Html.Raw(token)';
-
         var titleInput = $("input[name='Title']");
         var categoryIdInput = $("select[name='CategoryId']");
         var descriptionInput = $("input[name='Description']");
@@ -102,17 +99,17 @@
             };
             $.ajax({
                 type: "PUT",
-                url: "https://localhost:44364/api/apigateway/Products/UpdateProduct/" + data.Id,
+                url: urlUpdateProduct + data.Id,
                 data: JSON.stringify(data),
                 contentType: "application/json",
                 beforeSend: function(xhr) {
                     xhr.setRequestHeader('Authorization', token);
                 },
                 success: function(response) {
-                    toastr.success('Cập nhật sản phẩm thành công');
+                    toastr.success(messSuccess);
                 },
                 error: function(xhr, textStatus, errorThrown) {
-                    toastr.error('Có lỗi xảy ra vui lòng thử lại sau!');
+                    toastr.error(messError);
                 }
             });
         });

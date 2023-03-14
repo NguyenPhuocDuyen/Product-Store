@@ -1,215 +1,108 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
+﻿@{
+    ViewData["Title"] = "Thông Tin Shop";
 }
-<!-- Breadcrumb Section Begin -->
-    @*<section class="breadcrumb-option">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="breadcrumb__text">
-                        <h4>About Us</h4>
-                        <div class="breadcrumb__links">
-                            <a href="./index.html">Home</a>
-                            <span>About Us</span>
-                        </div>
-                    </div>
+<!-- About Section Begin -->
+<section class="about spad">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="about__pic">
+                    <img src="/images/ablout.jpg" alt="">
                 </div>
             </div>
         </div>
-    </section>*@
-    <!-- Breadcrumb Section End -->
+        <div class="row">
+            <div class="col-lg-4 col-md-4 col-sm-6">
+                <div class="about__item">
+                    <h4>Chúng Tôi Là Ai ?</h4>
+                    <p>Chúng tôi là một đội ngũ chuyên nghiệp trong lĩnh vực nội thất, 
+                        cam kết mang đến cho bạn những sản phẩm và dịch vụ tốt nhất để tạo nên không gian sống đẹp và thoải mái hơn.</p>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-6">
+                <div class="about__item">
+                    <h4>Chúng Tôi Làm Gì ?</h4>
+                    <p>Không chỉ tập trung vào việc cung cấp sản phẩm chất lượng, 
+                        chúng tôi còn đặt khách hàng là trung tâm và luôn nỗ lực để đáp ứng mọi nhu cầu và mong muốn của khách hàng.</p>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-6">
+                <div class="about__item">
+                    <h4>Tại Sao Nên Chọn Chúng Tôi</h4>
+                    <p>Chọn chúng tôi là một sự lựa chọn đúng đắn vì chúng tôi mang đến cho khách hàng những sản phẩm nội thất chất lượng cao, 
+                        được thiết kế độc đáo và đa dạng về mẫu mã, giá cả phù hợp với mọi đối tượng khách hàng.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- About Section End -->
 
-    <!-- About Section Begin -->
-    <section class="about spad">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="about__pic">
-                        <img src="/images/ablout.jpg" alt="">
+<!-- Testimonial Section Begin -->
+<section class="testimonial">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-6 p-0">
+                <div class="testimonial__text">
+                    <span class="icon_quotations"></span>
+                    <p>“Ngôi nhà của bạn nên kể lại câu chuyện về bạn, và là bộ sưu tập của những thứ bạn yêu thích.”
+                    </p>
+                    <div class="testimonial__author">
+                        <div class="testimonial__author__pic">
+                            <img src="/images/nateberkus.jpg" alt="">
+                        </div>
+                        <div class="testimonial__author__text">
+                            <h5>Nate Berkus</h5>
+                            <p>Nhà Thiết Kế Nội Thất</p>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-lg-4 col-md-4 col-sm-6">
-                    <div class="about__item">
-                        <h4>Chúng Tôi Là Ai ?</h4>
-                        <p>Chúng tôi là một đội ngũ chuyên nghiệp trong lĩnh vực nội thất, 
-                            cam kết mang đến cho bạn những sản phẩm và dịch vụ tốt nhất để tạo nên không gian sống đẹp và thoải mái hơn.</p>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-4 col-sm-6">
-                    <div class="about__item">
-                        <h4>Chúng Tôi Làm Gì ?</h4>
-                        <p>Không chỉ tập trung vào việc cung cấp sản phẩm chất lượng, 
-                            chúng tôi còn đặt khách hàng là trung tâm và luôn nỗ lực để đáp ứng mọi nhu cầu và mong muốn của khách hàng.</p>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-4 col-sm-6">
-                    <div class="about__item">
-                        <h4>Tại Sao Nên Chọn Chúng Tôi</h4>
-                        <p>Chọn chúng tôi là một sự lựa chọn đúng đắn vì chúng tôi mang đến cho khách hàng những sản phẩm nội thất chất lượng cao, 
-                            được thiết kế độc đáo và đa dạng về mẫu mã, giá cả phù hợp với mọi đối tượng khách hàng.</p>
-                    </div>
-                </div>
+            <div class="col-lg-6 p-0">
+                <div class="testimonial__pic set-bg" data-setbg="/images/nateberkushouse.jpg"></div>
             </div>
         </div>
-    </section>
-    <!-- About Section End -->
+    </div>
+</section>
+<!-- Testimonial Section End -->
 
-    <!-- Testimonial Section Begin -->
-    <section class="testimonial">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-lg-6 p-0">
-                    <div class="testimonial__text">
-                        <span class="icon_quotations"></span>
-                        <p>“Ngôi nhà của bạn nên kể lại câu chuyện về bạn, và là bộ sưu tập của những thứ bạn yêu thích.”
-                        </p>
-                        <div class="testimonial__author">
-                            <div class="testimonial__author__pic">
-                                <img src="/images/nateberkus.jpg" alt="">
-                            </div>
-                            <div class="testimonial__author__text">
-                                <h5>Nate Berkus</h5>
-                                <p>Nhà Thiết Kế Nội Thất</p>
-                            </div>
-                        </div>
+<!-- Counter Section Begin -->
+<section class="counter spad">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-3 col-md-6 col-sm-6">
+                <div class="counter__item">
+                    <div class="counter__item__number">
+                        <h2 class="cn_num">@ViewBag.TotalUser</h2>
                     </div>
+                    <span>Khách Hàng <br />Của Chúng Tôi</span>
                 </div>
-                <div class="col-lg-6 p-0">
-                    <div class="testimonial__pic set-bg" data-setbg="/images/nateberkushouse.jpg"></div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-6">
+                <div class="counter__item">
+                    <div class="counter__item__number">
+                        <h2 class="cn_num">@ViewBag.TotalCategory</h2>
+                    </div>
+                    <span>Tổng <br />Danh Mục</span>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-6">
+                <div class="counter__item">
+                    <div class="counter__item__number">
+                        <h2 class="cn_num">@ViewBag.TotalProduct</h2>
+                    </div>
+                    <span>Số <br />Sản Phẩm</span>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-6">
+                <div class="counter__item">
+                    <div class="counter__item__number">
+                        <h2 class="cn_num">98</h2>
+                        <strong>%</strong>
+                    </div>
+                    <span>Hạnh Phúc <br />Khách Hàng</span>
                 </div>
             </div>
         </div>
-    </section>
-    <!-- Testimonial Section End -->
-
-    <!-- Counter Section Begin -->
-    <section class="counter spad">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-3 col-md-6 col-sm-6">
-                    <div class="counter__item">
-                        <div class="counter__item__number">
-                            <h2 class="cn_num">@ViewBag.TotalUser</h2>
-                        </div>
-                        <span>Khách Hàng <br />Của Chúng Tôi</span>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6 col-sm-6">
-                    <div class="counter__item">
-                        <div class="counter__item__number">
-                            <h2 class="cn_num">@ViewBag.TotalCategory</h2>
-                        </div>
-                        <span>Tổng <br />Danh Mục</span>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6 col-sm-6">
-                    <div class="counter__item">
-                        <div class="counter__item__number">
-                            <h2 class="cn_num">@ViewBag.TotalProduct</h2>
-                        </div>
-                        <span>Số <br />Sản Phẩm</span>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6 col-sm-6">
-                    <div class="counter__item">
-                        <div class="counter__item__number">
-                            <h2 class="cn_num">98</h2>
-                            <strong>%</strong>
-                        </div>
-                        <span>Hạnh Phúc <br />Khách Hàng</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-    <!-- Counter Section End -->
-@*
-    <!-- Team Section Begin -->
-    <section class="team spad">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="section-title">
-                        <span>Our Team</span>
-                        <h2>Meet Our Team</h2>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-lg-3 col-md-6 col-sm-6">
-                    <div class="team__item">
-                        <img src="/img/about/team-1.jpg" alt="">
-                        <h4>John Smith</h4>
-                        <span>Fashion Design</span>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6 col-sm-6">
-                    <div class="team__item">
-                        <img src="/img/about/team-2.jpg" alt="">
-                        <h4>Christine Wise</h4>
-                        <span>C.E.O</span>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6 col-sm-6">
-                    <div class="team__item">
-                        <img src="/img/about/team-3.jpg" alt="">
-                        <h4>Sean Robbins</h4>
-                        <span>Manager</span>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6 col-sm-6">
-                    <div class="team__item">
-                        <img src="/img/about/team-4.jpg" alt="">
-                        <h4>Lucy Myers</h4>
-                        <span>Delivery</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-    <!-- Team Section End -->
-
-    <!-- Client Section Begin -->
-    <section class="clients spad">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="section-title">
-                        <span>Partner</span>
-                        <h2>Happy Clients</h2>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-lg-3 col-md-4 col-sm-4 col-6">
-                    <a href="#" class="client__item"><img src="/img/clients/client-1.png" alt=""></a>
-                </div>
-                <div class="col-lg-3 col-md-4 col-sm-4 col-6">
-                    <a href="#" class="client__item"><img src="/img/clients/client-2.png" alt=""></a>
-                </div>
-                <div class="col-lg-3 col-md-4 col-sm-4 col-6">
-                    <a href="#" class="client__item"><img src="/img/clients/client-3.png" alt=""></a>
-                </div>
-                <div class="col-lg-3 col-md-4 col-sm-4 col-6">
-                    <a href="#" class="client__item"><img src="/img/clients/client-4.png" alt=""></a>
-                </div>
-                <div class="col-lg-3 col-md-4 col-sm-4 col-6">
-                    <a href="#" class="client__item"><img src="/img/clients/client-5.png" alt=""></a>
-                </div>
-                <div class="col-lg-3 col-md-4 col-sm-4 col-6">
-                    <a href="#" class="client__item"><img src="/img/clients/client-6.png" alt=""></a>
-                </div>
-                <div class="col-lg-3 col-md-4 col-sm-4 col-6">
-                    <a href="#" class="client__item"><img src="/img/clients/client-7.png" alt=""></a>
-                </div>
-                <div class="col-lg-3 col-md-4 col-sm-4 col-6">
-                    <a href="#" class="client__item"><img src="/img/clients/client-8.png" alt=""></a>
-                </div>
-            </div>
-        </div>
-    </section>
-    <!-- Client Section End -->*@
+    </div>
+</section>

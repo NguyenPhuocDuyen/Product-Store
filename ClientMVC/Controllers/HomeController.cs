@@ -10,26 +10,21 @@ namespace ClientMVC.Controllers
 {
     public class HomeController : Controller
     {
-        //private readonly ILogger<HomeController> _logger;
-        
         HttpResponseMessage response;
         string responseString;
-
-        //public HomeController(ILogger<HomeController> logger)
-        //{
-        //    _logger = logger;
-        //}
 
         public IActionResult Index()
         {
             try
             {
+                //get list product
                 response = GobalVariables.WebAPIClient.GetAsync("Products/GetProducts").Result;
                 if (response.IsSuccessStatusCode)
                 {
                     responseString = response.Content.ReadAsStringAsync().Result;
                     List<Product> products = JsonConvert.DeserializeObject<List<Product>>(responseString);
 
+                    //get top product sale
                     response = GobalVariables.WebAPIClient.GetAsync("Products/TopSaleProductId").Result;
                     if (response.IsSuccessStatusCode)
                     {
@@ -38,7 +33,7 @@ namespace ClientMVC.Controllers
 
                         ViewBag.ProductsTopSale = products.Where(x => idProducts.Contains(x.Id)).ToList();
                     }
-
+                    //return list 4 product new
                     return View(products.OrderByDescending(x => x.CreateAt).Take(4).ToList());
                 }
             }
@@ -46,16 +41,5 @@ namespace ClientMVC.Controllers
 
             return View();
         }
-
-        //public IActionResult Privacy()
-        //{
-        //    return View();
-        //}
-
-        //[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        //public IActionResult Error()
-        //{
-        //    return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        //}
     }
 }

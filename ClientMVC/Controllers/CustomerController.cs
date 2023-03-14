@@ -10,13 +10,8 @@ namespace ClientMVC.Controllers
     [SessionCheck]
     public class CustomerController : Controller
     {
-
         HttpResponseMessage response;
         string responseString;
-        //public IActionResult Index()
-        //{
-        //    return View();
-        //}
 
         public IActionResult Cart()
         {
@@ -52,20 +47,6 @@ namespace ClientMVC.Controllers
 
             return RedirectToAction("Index", "Home");
         }
-
-        //public IActionResult OrderProducts()
-        //{
-        //    try
-        //    {
-        //        response = GobalVariables.WebAPIClient.GetAsync("Orders/OrderProducts").Result;
-        //        if (response.IsSuccessStatusCode)
-        //        {
-        //            return RedirectToAction("Cart", "Customer");
-        //        }
-        //    } catch { }
-
-        //    return RedirectToAction("Index", "Home");
-        //}
 
         public IActionResult Orders()
         {

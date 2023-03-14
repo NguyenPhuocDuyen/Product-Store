@@ -48,7 +48,7 @@
     @{
         var isLogin = Context.Session.Get("IsLoggedIn");
         var role = Context.Session.GetString("role");
-        var email = Context.Session.GetString("email");
+        var fullname = Context.Session.GetString("fullname");
     }
     <!-- Page Preloder -->
     <div id="preloder">
@@ -67,7 +67,7 @@
                 }
                 else
                 {
-                    <a asp-action="Details" asp-controller="Customer">@email</a>
+                    <a asp-action="Details" asp-controller="Customer">@fullname</a>
                     <a asp-action="Logout" asp-controller="Account">Đăng Xuất</a>
                 }
             </div>
@@ -103,7 +103,7 @@
                                 }
                                 else
                                 {
-                                    <a asp-action="Details" asp-controller="Customer">@email</a>
+                                    <a asp-action="Details" asp-controller="Customer">@fullname</a>
                                     <a asp-action="Logout" asp-controller="Account">Đăng Xuất</a>
                                 }
                             </div>
@@ -201,7 +201,7 @@
                         <div class="footer__newslatter">
                             <p>Nhận thông báo mới nhất!</p>
                             <form action="#">
-                                <input type="text" placeholder="Your email">
+                                <input type="text" placeholder="Email của bạn...">
                                 <button type="submit"><span class="icon_mail_alt"></span></button>
                             </form>
                         </div>
