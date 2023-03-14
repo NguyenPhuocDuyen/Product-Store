@@ -3,7 +3,7 @@
 @{
     ViewData["Title"] = "Trang Chủ";
     List<Models.Product> ProductsTopSale = ViewBag.ProductsTopSale;
-    string token = Context.Session.GetString("token");
+    var isLogin = Context.Session.Get("IsLoggedIn");
 }
 <section class="hero">
     <div class="hero__slider owl-carousel">
@@ -106,7 +106,7 @@
                         </div>
                         <div class="product__item__text">
                             <h6>@item.Title</h6>
-                            @if(String.IsNullOrEmpty(token))
+                            @if(isLogin is null)
                             {
                                 <a asp-action="Login" asp-controller="Account">Đăng nhập để mua</a>
                             }
@@ -136,7 +136,7 @@
                                 }
                                 <i hidden class="fa fa-star"></i>
                             </div>
-                            <h5>@string.Format("{0:#,##0} VND", item.RecentPrice)</h5>
+                            <h5>@string.Format("{0:#,##0} đ", item.RecentPrice)</h5>
                         </div>
                     </div>
                 </div>
@@ -158,7 +158,7 @@
                             </div>
                             <div class="product__item__text">
                             <h6>@item.Title</h6>
-                            @if(String.IsNullOrEmpty(token))
+                            @if(isLogin is null)
                             {
                                 <a asp-action="Login" asp-controller="Account">Đăng nhập để mua</a>
                             }
@@ -188,7 +188,7 @@
                                 }
                                 <i hidden class="fa fa-star"></i>
                             </div>
-                            <h5>@string.Format("{0:#,##0} VND", item.RecentPrice)</h5>
+                            <h5>@string.Format("{0:#,##0} đ", item.RecentPrice)</h5>
                         </div>
                         </div>
                     </div>
@@ -242,7 +242,7 @@
                             <p>Giây</p>
                         </div>
                     </div>
-                    <a asp-action="Index" asp-controller="Shop" class="primary-btn">Mua Ngay</a>
+                    <a asp-action="ProductDetail" asp-controller="Shop" asp-route-id="@itemNew.Id" class="primary-btn">Mua Ngay</a>
                 </div>
             </div>
         </div>
@@ -280,6 +280,7 @@
 </section>
 
 <script>
+    //add product to cart
     $(document).ready(function () {
         var id = $(this).closest('.product__item').data('id');
         var buttons = document.querySelectorAll('#addCart');
@@ -288,7 +289,7 @@
                 var productId = this.dataset.id;
 
                 $.ajax({
-                    url: urlAPIGateway + 'Carts/AddProductToCart',
+                    url: urlAddProductToCart,
                     type: 'POST',
                     beforeSend: function(xhr) {
                         xhr.setRequestHeader('Authorization', token);
@@ -297,10 +298,10 @@
                     contentType: 'application/json; charset=utf-8',
                     dataType: 'json',
                     success: function (data) {
-                        toastr.success('Thêm sản phẩm thành công!');
+                        toastr.success(messSuccess);
                     },
                     error: function (jqXHR, textStatus, errorThrown) {
-                        toastr.error('Có lỗi xảy ra vui lòng thử lại sau!');
+                        toastr.error(messError);
                     }
                 });
             });

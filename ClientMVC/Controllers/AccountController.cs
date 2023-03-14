@@ -27,7 +27,6 @@ namespace ClientMVC.Controllers
         {
             if (!ModelState.IsValid)
             {
-                //ViewBag.error = "Input blank or email not correct!";
                 return View(userLogin);
             }
 
@@ -47,10 +46,7 @@ namespace ClientMVC.Controllers
                     HttpContext.Session.Set("IsLoggedIn", BitConverter.GetBytes(true));
 
                     HttpContext.Session.SetString("role", user.Role.Description);
-                    HttpContext.Session.SetInt32("userId", user.Id);
-                    HttpContext.Session.SetString("email", user.Email);
                     HttpContext.Session.SetString("fullname", user.FullName);
-                    HttpContext.Session.SetString("phone", user.Phone);
 
                     //set token by password becasue password = token return from api
                     HttpContext.Session.SetString("token", user.Password);
@@ -65,13 +61,11 @@ namespace ClientMVC.Controllers
                         Expires = DateTimeOffset.UtcNow.AddDays(1)
                     });
 
-
                     return RedirectToAction("Index", "Home");
                 }
             }
             catch { }
 
-            ViewBag.error = "Email or password not correct!";
             return View();
         }
 
@@ -107,7 +101,6 @@ namespace ClientMVC.Controllers
             }
             catch { }
 
-            ViewBag.error = "Email exist or confirm password not correct!";
             return View();
         }
 

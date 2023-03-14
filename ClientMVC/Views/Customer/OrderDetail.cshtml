@@ -3,11 +3,10 @@
 @using Microsoft.AspNetCore.Http
 
 @{
-    ViewData["Title"] = "OrderDetail";
+    ViewData["Title"] = "Chi Tiết Đơn Hàng";
     Order order = ViewBag.Order;
     int? total = 0;
     string role = Context.Session.GetString("role");
-    string token = Context.Session.GetString("token");
 }
 
 <div class="container-fluid p-5">
@@ -42,10 +41,10 @@
                         @Html.DisplayFor(modelItem => item.Amount)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.PaymentPrice)
+                        @string.Format("{0:#,##0} đ", item.PaymentPrice)
                     </td>
                     <td>
-                        @string.Format("{0:#,##0} VND", item.Amount*item.PaymentPrice)
+                        @string.Format("{0:#,##0} đ", item.Amount*item.PaymentPrice)
                     </td>
                     <td>
                         <a class="btn btn-primary" asp-action="ProductDetail" asp-controller="Shop" asp-route-id="@item.ProductId">Xem sản phẩm</a>
@@ -56,7 +55,7 @@
     </table>
     <div class="d-flex justify-content-end">
         <div class="p-2">
-            <h4>Tổng Tiền: @string.Format("{0:#,##0} VND", total)</h4>
+            <h4>Tổng Tiền: @string.Format("{0:#,##0} đ", total)</h4>
         </div>
         <div class="p-2">
             @{
@@ -79,12 +78,11 @@
 </div>
 <script>
     $(document).ready(function() {
-        var token = 'Bearer @Html.Raw(token)';
         $('.order-action-btn').click(function() {
             var id = $(this).data('id');
             var statusId = $(this).data('statusid');
             $.ajax({
-                url: 'https://localhost:44364/api/apigateway/Orders/ConfirmOrder',
+                url: urlConfirmOrder,
                 type: 'POST',
                 beforeSend: function(xhr) {
                         xhr.setRequestHeader('Authorization', token);
@@ -95,13 +93,13 @@
                     StatusId: statusId
                 }),
                 success: function(response) {
-                    toastr.success('Thành công Trang sẽ được tải lại!');
+                    toastr.success(messSuccess);
                     setTimeout(function () {
                         location.reload();
                     }, 2000);
                 },
                 error: function(xhr) {
-                    toastr.error('Có lỗi xảy ra vui lòng thử lại sau!');
+                    toastr.error(messError);
                 }
             });
         });

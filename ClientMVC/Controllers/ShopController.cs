@@ -1,15 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Models;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
-using System.Security.Policy;
-using System.Threading.Tasks;
 using System.Web;
 using Utility;
 
@@ -145,16 +141,6 @@ namespace ClientMVC.Controllers
             return View();
         }
 
-        //public IActionResult Blog()
-        //{
-        //    return View();
-        //}
-
-        //public IActionResult BlogDetail()
-        //{
-        //    return View();
-        //}
-
         public IActionResult ProductDetail(int id)
         {
             try
@@ -188,11 +174,6 @@ namespace ClientMVC.Controllers
 
             return RedirectToAction("Index");
         }
-
-        //public IActionResult CheckOut()
-        //{
-        //    return View();
-        //}
 
         public IActionResult Contact()
         {

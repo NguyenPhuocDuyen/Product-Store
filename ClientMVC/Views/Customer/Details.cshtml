@@ -1,7 +1,7 @@
 ﻿@model Models.User
 @using Microsoft.AspNetCore.Http
 @{
-    string token = Context.Session.GetString("token");
+   ViewData["Title"] = "Thông Tin Khách Hàng";
 }
 <div class="row">
     <div class="container my-5">
@@ -66,8 +66,6 @@
 
 <script>
     $(document).ready(function() {
-        var token = 'Bearer @Html.Raw(token)';
-
         var fullNameInput = $("input[name='FullName']");
         var phoneInput = $("input[name='Phone']");
         var addressInput = $("input[name='Address']");
@@ -100,7 +98,7 @@
                     };
                     $.ajax({
                         type: "POST",
-                        url: "https://localhost:44364/api/apigateway/Users/UpdateInfoUser",
+                        url: urlUpdateInfoUser,
                         data: JSON.stringify(data),
                         contentType: "application/json",
                         beforeSend: function(xhr) {
@@ -109,10 +107,10 @@
                         success: function(response) {
                             $('#updateUser').text('Cập Nhật Thông Tin');
                             $('#updateUser').removeClass('btn-primary').addClass('btn-success');
-                            toastr.success('Cập nhật thông tin thành công');
+                            toastr.success(messSuccess);
                         },
                         error: function(xhr, textStatus, errorThrown) {
-                            toastr.error('Có lỗi xảy ra vui lòng thử lại sau!');
+                            toastr.error(messError);
                         }
                     });
                 }
@@ -142,7 +140,7 @@
                     };
                     $.ajax({
                         type: "POST",
-                        url: "https://localhost:44364/api/apigateway/Users/UpdateInfoUser",
+                        url: urlUpdateInfoUser,
                         data: JSON.stringify(data),
                         contentType: "application/json",
                         beforeSend: function(xhr) {
@@ -151,10 +149,10 @@
                         success: function(response) {
                             $('#updatePassword').text('Cập Nhật Mật Khẩu');
                             $('#updatePassword').removeClass('btn-primary').addClass('btn-success');
-                            toastr.success('Cập nhật mật khẩu thành công');
+                            toastr.success(messSuccess);
                         },
                         error: function(xhr, textStatus, errorThrown) {
-                            toastr.error('Có lỗi xảy ra vui lòng thử lại sau!');
+                            toastr.error(messError);
                         }
                     });
                 }
