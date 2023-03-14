@@ -133,37 +133,6 @@ namespace ClientMVC.Controllers
         [HttpGet]
         public IActionResult Dashboard()
         {
-            try
-            {
-                //get Category list
-                response = GobalVariables.WebAPIClient.GetAsync("Users/GetUsers").Result;
-                if (response.IsSuccessStatusCode)
-                {
-                    responseString = response.Content.ReadAsStringAsync().Result;
-                    List<User> users = JsonConvert.DeserializeObject<List<User>>(responseString);
-                    ViewBag.ListUser = users;
-                }
-
-                //get order list
-                response = GobalVariables.WebAPIClient.GetAsync("Orders/GetOrdersOfUser").Result;
-                if (response.IsSuccessStatusCode)
-                {
-                    responseString = response.Content.ReadAsStringAsync().Result;
-                    List<Order> orders = JsonConvert.DeserializeObject<List<Order>>(responseString);
-                    ViewBag.ListOrder = orders;
-                }
-
-                //get product list
-                response = GobalVariables.WebAPIClient.GetAsync("Products/GetProducts").Result;
-                if (response.IsSuccessStatusCode)
-                {
-                    responseString = response.Content.ReadAsStringAsync().Result;
-                    List<Product> products = JsonConvert.DeserializeObject<List<Product>>(responseString);
-                    ViewBag.ListProduct = products;
-                }
-            }
-            catch { }
-
             return View();
         }
 

@@ -11,7 +11,6 @@ namespace OrderService.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
     public class OrderDetailsController : ControllerBase
     {
         private readonly IUnitOfWork _db;
@@ -21,7 +20,22 @@ namespace OrderService.Controllers
             _db = db;
         }
 
+        // GET: api/OrderDetails when order has status is OrderReceived
+        [HttpGet("GetOrderDetailReceived")]
+        public async Task<IActionResult> GetOrderDetailReceived()
+        {
+            var orderDetails = await _db.OrderDetail.GetAllAsync(filter: x => x.Order.StatusId == 3, includeProperties: "Order");
+            
+            if (orderDetails == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(orderDetails);
+        }
+
         // GET: api/OrderDetails/5
+        [Authorize]
         [HttpGet("{orderId}")]
         public async Task<IActionResult> GetOrderDetail(int orderId)
         {

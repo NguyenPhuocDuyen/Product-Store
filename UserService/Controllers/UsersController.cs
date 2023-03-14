@@ -148,12 +148,12 @@ namespace UserService.Controllers
                 user.FullName = userInput.FullName;
                 user.Phone = userInput.Phone;
                 user.Address = userInput.Address;
-                user.UpdateAt = DateTime.Now;
             }
             else
             {
                 user.Password = userInput.Password;
             }
+            user.UpdateAt = DateTime.Now;
 
             try
             {

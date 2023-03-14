@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualBasic;
 using Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
@@ -219,6 +220,7 @@ namespace OrderService.Controllers
             }
 
             order.StatusId = o.StatusId;
+            order.UpdateAt = DateTime.Now;
             _db.Order.Update(order);
             try
             {

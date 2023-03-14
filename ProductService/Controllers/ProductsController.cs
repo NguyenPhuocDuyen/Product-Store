@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -90,6 +91,7 @@ namespace ProductService.Controllers
             pro.RecentPrice = product.RecentPrice;
             pro.Amount = product.Amount;
             pro.CategoryId = product.CategoryId;
+            pro.UpdateAt = DateTime.Now;
 
             if (!string.IsNullOrEmpty(product.Thumbnail))
             {

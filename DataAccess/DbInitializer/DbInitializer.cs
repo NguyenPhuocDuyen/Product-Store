@@ -133,7 +133,7 @@ namespace DataAccess.DbInitializer
                 item.Email = $"Customer{i}@gmail.com";
                 item.Password = $"Customer{i}@gmail.com";
                 item.FullName = $"Customer {i}";
-                item.Phone = $"0788223{i}{i*2}";
+                item.Phone = $"0788223{i}{i * 2}";
             }
             _db.Users.AddRange(users);
             _db.SaveChanges();
@@ -203,7 +203,7 @@ namespace DataAccess.DbInitializer
                 new Product { Description=" Gây ấn tượng với họa tiết được cách điệu từ nhân vật mang điệu múa dân tộc Chăm, chiếc quạt được trang trí mang đậm tính dân tộc",Thumbnail="/images/products/quat-nan-treo-tuong.jpg", Title = "Quạt nan treo tường"},
             };
             var categoryListDb = _db.Categories.ToList();
-            
+
             foreach (var item in products)
             {
                 //add CategoryId for product when title contains category description
@@ -213,7 +213,7 @@ namespace DataAccess.DbInitializer
                     {
                         item.CategoryId = cate.Id;
                         break;
-                    }   
+                    }
                 }
                 //item.UserId = 1;
                 item.RecentPrice = new Random().Next(0, 1000) * 1000;
@@ -241,7 +241,7 @@ namespace DataAccess.DbInitializer
             var userList = _db.Users.ToList();
             var statusList = _db.Statuses.ToList();
             List<Order> orders = new();
-            for (int j=0; j<10; j++)
+            for (int j = 0; j < 10; j++)
             {
                 orders.Add(new Order
                 {
@@ -258,17 +258,20 @@ namespace DataAccess.DbInitializer
             var listOrder = _db.Orders.ToList();
             var listProduct = _db.Products.ToList();
             List<OrderDetail> ordersDetail = new();
+            int z = 1;
             foreach (Order order in listOrder)
             {
+                if (z > listProduct.Count - 10) z = 1;
                 for (int j = 0; j < 5; j++)
                 {
                     ordersDetail.Add(new OrderDetail
                     {
-                        ProductId = listProduct[j+5].Id,
+                        ProductId = listProduct[j + z].Id,
                         OrderId = order.Id,
                         Amount = new Random().Next(0, 20) + 1,
-                        PaymentPrice = listProduct[j + 5].RecentPrice
+                        PaymentPrice = listProduct[j + z].RecentPrice
                     });
+                    ++z;
                 }
             }
             _db.OrderDetails.AddRange(ordersDetail);
