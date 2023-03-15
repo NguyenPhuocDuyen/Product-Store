@@ -99,28 +99,32 @@
     }
 </style>
 
+    
 <!-- Phần đánh giá -->
 <section class="related spad">
     <div class="container">
         <h3>Đánh giá sản phẩm</h3>
-        <form style="margin-bottom: 1em;" id="reviewProduct">
-            <div class="rating">
-                <div class="con">  
-                    <i class="fa fa-star" aria-hidden="true" data-value="1" style="color: #ffc107;"></i>  
-                    <i class="fa fa-star" aria-hidden="true" data-value="2" style="color: #ffc107;"></i>  
-                    <i class="fa fa-star" aria-hidden="true" data-value="3" style="color: #ffc107;"></i>  
-                    <i class="fa fa-star" aria-hidden="true" data-value="4" style="color: #ffc107;"></i>  
-                    <i class="fa fa-star" aria-hidden="true" data-value="5" style="color: #ffc107;"></i>  
-                </div> 
-            </div>
-            <input type="hidden" name="rating" id="rating" value="5">
-            <input type="hidden" asp-for="Id"/>
-            <br>
-            <label for="description">Nhập mô tả đánh giá của bạn:</label><br>
-            <textarea id="description" name="description" rows="4" cols="60" required></textarea>
-            <br><br>
-            <input type="submit" class="btn btn-primary" value="Đăng đánh giá">
-        </form>
+        @if(isLogin is not null)
+        {
+            <form style="margin-bottom: 1em;" id="reviewProduct">
+                <div class="rating">
+                    <div class="con">  
+                        <i class="fa fa-star" aria-hidden="true" data-value="1" style="color: #ffc107;"></i>  
+                        <i class="fa fa-star" aria-hidden="true" data-value="2" style="color: #ffc107;"></i>  
+                        <i class="fa fa-star" aria-hidden="true" data-value="3" style="color: #ffc107;"></i>  
+                        <i class="fa fa-star" aria-hidden="true" data-value="4" style="color: #ffc107;"></i>  
+                        <i class="fa fa-star" aria-hidden="true" data-value="5" style="color: #ffc107;"></i>  
+                    </div> 
+                </div>
+                <input type="hidden" name="rating" id="rating" value="5">
+                <input type="hidden" asp-for="Id"/>
+                <br>
+                <label for="description">Nhập mô tả đánh giá của bạn:</label><br>
+                <textarea id="description" name="description" rows="4" cols="60" required></textarea>
+                <br><br>
+                <input type="submit" class="btn btn-primary" value="Đăng đánh giá">
+            </form>
+        }
         <hr/>
         <table id="reviewTable" class="table">
             <thead>
@@ -215,6 +219,8 @@
 
 <script>
     $(document).ready(function () {
+        var reviewTable = null;
+
         //feed back product 
         $(".fa-star").click(function() {  
             $(".fa-star").css("color", "black");  
@@ -243,7 +249,7 @@
                     'Rate': rate
                 }),
                 success: function(data) {
-                    reloadTableReview();
+                    reviewTable.ajax.reload(null, false);
                     toastr.success(messSuccess);
                 },
                 error: function(jqXHR, textStatus, errorThrown) {
@@ -255,7 +261,7 @@
         reloadTableReview();
         //list review
         function reloadTableReview(){
-            var table = $('#reviewTable').DataTable({
+            reviewTable = $('#reviewTable').DataTable({
                 "ajax": {
                     "url": urlGetReviewsOfProduct + @Model.Id,
                     "type": "GET",
