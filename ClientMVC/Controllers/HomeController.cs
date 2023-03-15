@@ -23,6 +23,7 @@ namespace ClientMVC.Controllers
                 {
                     responseString = response.Content.ReadAsStringAsync().Result;
                     List<Product> products = JsonConvert.DeserializeObject<List<Product>>(responseString);
+                    products = products.Where(x=>x.Amount > 0).ToList();
 
                     //get top product sale
                     response = GobalVariables.WebAPIClient.GetAsync("Products/TopSaleProductId").Result;

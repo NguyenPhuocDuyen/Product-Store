@@ -122,6 +122,8 @@ namespace CartService.Controllers
                 && x.ProductId == cart.ProductId,
                 includeProperties: "Product");
 
+            var product = await _db.Product.GetFirstOrDefaultAsync(x=>x.Id == cart.ProductId);
+
             // Check cart is exist in database to create cart or upadate quantity
             if (oldCart == null)
             {
@@ -141,6 +143,10 @@ namespace CartService.Controllers
                 {
                     oldCart.Quantity += 1;
                 }
+
+                //amount of product is max
+                if (product.Amount < oldCart.Quantity) oldCart.Quantity = product.Amount;
+
                 oldCart.UpdateAt = DateTime.Now;
                 _db.Cart.Update(oldCart);
             }
