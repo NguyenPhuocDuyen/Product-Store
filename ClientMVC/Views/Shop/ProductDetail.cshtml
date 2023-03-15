@@ -65,7 +65,7 @@
                         <div class="product__details__cart__option">
                             <div class="quantity">
                                 <div class="pro-qty">
-                                    <input id="quatity" type="text" min="1" value="1">
+                                    <input id="quantityBuy" type="text" min="1" value="1">
                                 </div>
                             </div>
                             @if (isLogin is null)
@@ -267,7 +267,10 @@
                     "type": "GET",
                     "contentType": "application/json",
                     "datatype": "json",
-                    "dataSrc": ""
+                    "dataSrc": "",
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        toastr.error(messError);
+                    }
                 },
                 "columns": [
                     { "data": "user.fullName" },
@@ -283,7 +286,7 @@
         buttons.forEach(function (button) {
             button.addEventListener('click', function () {
                 var productId = this.dataset.id;
-                var quantity = $('#quatity').val();
+                
 
                 $.ajax({
                     url: urlAddProductToCart,
@@ -291,7 +294,7 @@
                     beforeSend: function(xhr) {
                         xhr.setRequestHeader('Authorization', token);
                     },
-                    data: JSON.stringify({ ProductId: productId, quantity: quantity }),
+                    data: JSON.stringify({ ProductId: productId }),
                     contentType: 'application/json; charset=utf-8',
                     dataType: 'json',
                     success: function (data) {
@@ -308,6 +311,7 @@
         var button = document.querySelector('#addCartDetail');
         button.addEventListener('click', function () {
             var productId = this.dataset.id;
+            var quantity = $('#quantityBuy').val();
 
             $.ajax({
                 url: urlAddProductToCart,
@@ -315,11 +319,10 @@
                 beforeSend: function(xhr) {
                     xhr.setRequestHeader('Authorization', token);
                 },
-                data: JSON.stringify({ ProductId: productId }),
+                data: JSON.stringify({ ProductId: productId, Quantity: quantity }),
                 contentType: 'application/json; charset=utf-8',
                 dataType: 'json',
                 success: function (data) {
-                    console.log("success", productId);
                     toastr.success(messSuccess);
                 },
                 error: function (jqXHR, textStatus, errorThrown) {

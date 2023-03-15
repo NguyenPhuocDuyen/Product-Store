@@ -49,3 +49,4 @@ var urlCheckQuantityCart = urlCart + "/CheckQuantity";
 //toast message 
 var messSuccess = 'Thành công!';
 var messError = 'Thất bại thử lại sau!';
+var messErrorService = 'Lỗi service!';
