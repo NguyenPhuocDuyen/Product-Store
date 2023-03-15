@@ -106,6 +106,10 @@ namespace ClientMVC.Controllers
 
         public IActionResult Logout()
         {
+            if (Request.Cookies["access_token"] != null)
+            {
+                Response.Cookies.Delete("access_token");
+            }
             HttpContext.Session.Clear();
             return RedirectToAction("Index", "Home");
         }
