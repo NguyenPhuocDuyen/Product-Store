@@ -9,9 +9,7 @@
     <Content Remove="wwwroot\images\products\Ban-chu-z.jpg" />
     <Content Remove="wwwroot\images\products\ban-lam-viec.jpg" />
     <Content Remove="wwwroot\images\products\ban-phan.jpg" />
-    <Content Remove="wwwroot\images\products\ban-tron.jpg" />
     <Content Remove="wwwroot\images\products\banan.jpg" />
-    <Content Remove="wwwroot\images\products\binh-hoa-ve-tay.jpg" />
     <Content Remove="wwwroot\images\products\binh-ruou-ngam-trang-tri.jpg" />
     <Content Remove="wwwroot\images\products\binh-ruou-vang.jpg" />
     <Content Remove="wwwroot\images\products\binh-thuy-tinh.jpg" />
@@ -24,7 +22,6 @@
     <Content Remove="wwwroot\images\products\dong-ho-treo-tuong-con-thuyen.jpg" />
     <Content Remove="wwwroot\images\products\dong-ho-treo-tuong-decor-vuon-chim.jpg" />
     <Content Remove="wwwroot\images\products\ghe-3-chan.jpg" />
-    <Content Remove="wwwroot\images\products\ghe-an.jpg" />
     <Content Remove="wwwroot\images\products\ghe-dau.jpg" />
     <Content Remove="wwwroot\images\products\ghe-sofa.jpg" />
     <Content Remove="wwwroot\images\products\ghe-van-phong.jpg" />
@@ -44,7 +41,6 @@
     <Content Remove="wwwroot\images\products\ke-trang-tri.jpg" />
     <Content Remove="wwwroot\images\products\ke-tron.jpg" />
     <Content Remove="wwwroot\images\products\ly-trang-tri.jpg" />
-    <Content Remove="wwwroot\images\products\quat-vai-treo-tuong.jpg" />
     <Content Remove="wwwroot\images\products\rem-cua.jpg" />
     <Content Remove="wwwroot\images\products\tham-trai-san.jpg" />
     <Content Remove="wwwroot\images\products\tu-3-ngan.jpg" />
@@ -62,8 +58,6 @@
     <None Include="wwwroot\images\products\Ban-chu-z.jpg" />
     <None Include="wwwroot\images\products\ban-lam-viec.jpg" />
     <None Include="wwwroot\images\products\ban-phan.jpg" />
-    <None Include="wwwroot\images\products\ban-tron.jpg" />
-    <None Include="wwwroot\images\products\binh-hoa-ve-tay.jpg" />
     <None Include="wwwroot\images\products\binh-ruou-ngam-trang-tri.jpg" />
     <None Include="wwwroot\images\products\binh-ruou-vang.jpg" />
     <None Include="wwwroot\images\products\binh-thuy-tinh.jpg" />
@@ -76,7 +70,6 @@
     <None Include="wwwroot\images\products\dong-ho-treo-tuong-con-thuyen.jpg" />
     <None Include="wwwroot\images\products\dong-ho-treo-tuong-decor-vuon-chim.jpg" />
     <None Include="wwwroot\images\products\ghe-3-chan.jpg" />
-    <None Include="wwwroot\images\products\ghe-an.jpg" />
     <None Include="wwwroot\images\products\ghe-dau.jpg" />
     <None Include="wwwroot\images\products\ghe-sofa.jpg" />
     <None Include="wwwroot\images\products\ghe-van-phong.jpg" />
@@ -96,7 +89,6 @@
     <None Include="wwwroot\images\products\ke-trang-tri.jpg" />
     <None Include="wwwroot\images\products\ke-tron.jpg" />
     <None Include="wwwroot\images\products\ly-trang-tri.jpg" />
-    <None Include="wwwroot\images\products\quat-vai-treo-tuong.jpg" />
     <None Include="wwwroot\images\products\rem-cua.jpg" />
     <None Include="wwwroot\images\products\tham-trai-san.jpg" />
     <None Include="wwwroot\images\products\tu-3-ngan.jpg" />
