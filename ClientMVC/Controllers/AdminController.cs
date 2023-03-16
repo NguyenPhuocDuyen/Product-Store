@@ -61,12 +61,14 @@ namespace ClientMVC.Controllers
                     response = GobalVariables.WebAPIClient.PostAsJsonAsync("Products/AddProduct", product).Result;
                     if (response.IsSuccessStatusCode)
                     {
-                        return RedirectToAction("Index", "Shop");
+                        ViewBag.mess = "Thêm sản phẩm thành công!";
+                        return View();
+                        //return RedirectToAction("Index", "Shop");
                     }
                 }
                 catch { }
             }
-
+            ViewBag.mess = "Thêm sản phẩm thất bại!";
             return View(product);
         }
 
