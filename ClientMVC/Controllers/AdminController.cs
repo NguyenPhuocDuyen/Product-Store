@@ -41,6 +41,19 @@ namespace ClientMVC.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateProduct(Product product, IFormFile ThumbnailFile)
         {
+            try
+            {
+                //get Category list
+                response = GobalVariables.WebAPIClient.GetAsync("Categorys").Result;
+                if (response.IsSuccessStatusCode)
+                {
+                    responseString = response.Content.ReadAsStringAsync().Result;
+                    List<Category> categories = JsonConvert.DeserializeObject<List<Category>>(responseString);
+                    ViewBag.CategoryId = new SelectList(categories, "Id", "Description");
+                }
+            }
+            catch { }
+
             if (ModelState.IsValid)
             {
                 if (ThumbnailFile != null && ThumbnailFile.Length > 0)
@@ -103,6 +116,19 @@ namespace ClientMVC.Controllers
         [HttpPost]
         public async Task<IActionResult> UpdateProduct(Product product, IFormFile ThumbnailFile)
         {
+            try
+            {
+                //get Category list
+                response = GobalVariables.WebAPIClient.GetAsync("Categorys").Result;
+                if (response.IsSuccessStatusCode)
+                {
+                    responseString = response.Content.ReadAsStringAsync().Result;
+                    List<Category> categories = JsonConvert.DeserializeObject<List<Category>>(responseString);
+                    ViewBag.CategoryId = new SelectList(categories, "Id", "Description");
+                }
+            }
+            catch { }
+
             if (ModelState.IsValid)
             {
                 if (ThumbnailFile != null && ThumbnailFile.Length > 0)
@@ -120,15 +146,17 @@ namespace ClientMVC.Controllers
                 // call api save product
                 try
                 {
-                    response = GobalVariables.WebAPIClient.PostAsJsonAsync($"Products/UpdateProduct/{product.Id}", product).Result;
+                    response = GobalVariables.WebAPIClient.PutAsJsonAsync($"Products/UpdateProduct/{product.Id}", product).Result;
                     if (response.IsSuccessStatusCode)
                     {
-                        return RedirectToAction("Index", "Shop");
+                        ViewBag.mess = "Cập nhật thành công";
+                        return View(product);
                     }
                 }
                 catch { }
             }
 
+            ViewBag.mess = "Cập nhật thất bại";
             return View(product);
         }
 

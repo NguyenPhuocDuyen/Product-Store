@@ -144,11 +144,18 @@ namespace CartService.Controllers
                     oldCart.Quantity += 1;
                 }
 
+                bool isQuantityFull = false;
                 //amount of product is max
-                if (product.Amount < oldCart.Quantity) oldCart.Quantity = product.Amount;
+                if (product.Amount < oldCart.Quantity)
+                {
+                    oldCart.Quantity = product.Amount;
+                    isQuantityFull = true;
+                }
 
                 oldCart.UpdateAt = DateTime.Now;
                 _db.Cart.Update(oldCart);
+
+                if (isQuantityFull) return BadRequest();
             }
 
             try
