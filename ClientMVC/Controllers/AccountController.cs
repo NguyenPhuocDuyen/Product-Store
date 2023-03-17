@@ -68,6 +68,7 @@ namespace ClientMVC.Controllers
             }
             catch { }
 
+            ViewBag.mess = "Đăng nhập thất bại vui lòng thử lại!";
             return View();
         }
 
@@ -103,6 +104,7 @@ namespace ClientMVC.Controllers
             }
             catch { }
 
+            ViewBag.mess = "Email đã tồn tại!";
             return View();
         }
 

@@ -14,6 +14,7 @@ namespace Models.ViewModel
         public string Email { get; set; }
 
         [Required(ErrorMessage = "Mật Khẩu không được bỏ trống")]
+        [MinLength(6, ErrorMessage = "Độ dài tối thiểu 6 ký tự")]
         public string Password { get; set; } = string.Empty;
     }
 }
