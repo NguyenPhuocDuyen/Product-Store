@@ -31,69 +31,55 @@
         margin-bottom: 1em;
     }
 
-    /*select {
-        margin-bottom: 1em;
-    }
-
-    input[type="submit"] {
-        background-color: #4CAF50;
-        color: white;
-        padding: 0.5em 1em;
-        border: none;
-        border-radius: 0.5em;
-        cursor: pointer;
-    }
-
-    input[type="submit"]:hover {
-        background-color: #3e8e41;
-    }*/
-
     .preview {
         max-width: 100%;
         margin-bottom: 1em;
     }
 </style>
-<p class="alert-info">@ViewBag.mess</p>
-<div class="w-100 my-5">
-    <div class="col-md-12">
-        <form asp-action="CreateProduct" enctype="multipart/form-data">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Title" class="control-label"></label>
-                <input asp-for="Title" class="form-control" />
-                <span asp-validation-for="Title" class="text-danger"></span>
-            </div>
-            <div style="margin-bottom: 4em;" class="form-group">
-                <label asp-for="CategoryId" class="control-label"></label>
-                <select asp-for="CategoryId" asp-items="@ViewBag.CategoryId" class="form-control" ></select>
-                <span asp-validation-for="CategoryId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
-                <textarea asp-for="Description" class="form-control" ></textarea>
-                <span asp-validation-for="Description" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="RecentPrice" class="control-label">Giá Sản Phẩm (đ)</label>
-                <input asp-for="RecentPrice" class="form-control" />
-                <span asp-validation-for="RecentPrice" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Amount" class="control-label"></label>
-                <input asp-for="Amount" class="form-control" />
-                <span asp-validation-for="Amount" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label for="ThumbnailFile" class="control-label"></label>
-                <input id="ThumbnailFile" type="file" name="ThumbnailFile" class="form-control" accept="image/*" onchange="previewImage()" required/>
-                <div class="preview">
-                    <img id="thumbnail-preview">
+<div style="padding-top: 10px">
+    <div class="w-100 my-5 m-5">
+        <div class="col-md-12">
+            <form asp-action="CreateProduct" enctype="multipart/form-data">
+                <h4>Thêm Sản Phẩm</h4>
+                <p class="alert-info">@ViewBag.mess</p>
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="Title" class="control-label"></label>
+                    <input asp-for="Title" class="form-control" />
+                    <span asp-validation-for="Title" class="text-danger"></span>
                 </div>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
+                <div style="margin-bottom: 4em;" class="form-group">
+                    <label asp-for="CategoryId" class="control-label"></label>
+                    <select asp-for="CategoryId" asp-items="@ViewBag.CategoryId" class="form-control" ></select>
+                    <span asp-validation-for="CategoryId" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Description" class="control-label"></label>
+                    <textarea asp-for="Description" class="form-control" ></textarea>
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="RecentPrice" class="control-label">Giá Sản Phẩm (đ)</label>
+                    <input asp-for="RecentPrice" class="form-control" />
+                    <span asp-validation-for="RecentPrice" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Amount" class="control-label"></label>
+                    <input asp-for="Amount" class="form-control" />
+                    <span asp-validation-for="Amount" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label for="ThumbnailFile" class="control-label"></label>
+                    <input id="ThumbnailFile" type="file" name="ThumbnailFile" class="form-control" accept="image/*" onchange="previewImage()" required/>
+                    <div class="preview">
+                        <img id="thumbnail-preview">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Create" class="btn btn-primary" />
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 

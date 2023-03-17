@@ -47,6 +47,8 @@ namespace ClientMVC.Controllers
 
                     HttpContext.Session.SetString("role", user.Role.Description);
                     HttpContext.Session.SetString("fullname", user.FullName);
+                    HttpContext.Session.SetString("email", user.Email);
+                    HttpContext.Session.SetInt32("id", user.Id);
 
                     //set token by password becasue password = token return from api
                     HttpContext.Session.SetString("token", user.Password);

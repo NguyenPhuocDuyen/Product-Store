@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis;
 using Models;
 using Newtonsoft.Json;
@@ -6,6 +7,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Text;
+using System.Text.RegularExpressions;
 using System.Web;
 using Utility;
 
@@ -109,7 +112,7 @@ namespace ClientMVC.Controllers
         {
             try
             {
-                //get Category list
+                //get total user 
                 response = GobalVariables.WebAPIClient.GetAsync("Users/TotalUser").Result;
                 if (response.IsSuccessStatusCode)
                 {
@@ -123,7 +126,7 @@ namespace ClientMVC.Controllers
                 if (response.IsSuccessStatusCode)
                 {
                     responseString = response.Content.ReadAsStringAsync().Result;
-                    List<Category>  categories = JsonConvert.DeserializeObject<List<Category>>(responseString);
+                    List<Category> categories = JsonConvert.DeserializeObject<List<Category>>(responseString);
                     ViewBag.TotalCategory = categories.Count;
                 }
 
@@ -135,6 +138,22 @@ namespace ClientMVC.Controllers
                     List<Product> products = JsonConvert.DeserializeObject<List<Product>>(responseString);
                     ViewBag.TotalProduct = products.Count;
                 }
+
+                //get % happy
+                response = GobalVariables.WebAPIClient.GetAsync("Reviews/GetReviewsOfProduct").Result;
+                if (response.IsSuccessStatusCode)
+                {
+                    responseString = response.Content.ReadAsStringAsync().Result;
+                    List<Review> reviews = JsonConvert.DeserializeObject<List<Review>>(responseString);
+                    double? averageRate = reviews.Average(x => x.Rate);
+                    if (reviews.Count == 0)
+                    {
+                        averageRate = 5;
+                    }
+                    int percentHappiness = (int)Math.Round((decimal)(averageRate / 5 * 100));
+                    ViewBag.PercentHappiness = percentHappiness;
+                }
+
             }
             catch { }
 
@@ -145,6 +164,30 @@ namespace ClientMVC.Controllers
         {
             try
             {
+                //check user bought this product to display form review of this product
+                int? userId = HttpContext.Session.GetInt32("id");
+                bool isBought = false;
+                if (userId is not null)
+                {
+                    response = GobalVariables.WebAPIClient.GetAsync("OrderDetails/GetOrderDetailReceived").Result;
+                    if (response.IsSuccessStatusCode)
+                    {
+                        responseString = response.Content.ReadAsStringAsync().Result;
+                        List<OrderDetail> orderDetails = JsonConvert.DeserializeObject<List<OrderDetail>>(responseString);
+                        {
+                            foreach (var item in orderDetails)
+                            {
+                                if (item.Order.UserId == userId)
+                                {
+                                    isBought = true;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+                ViewBag.IsBought = isBought;
+
                 // Get product from database based on ID
                 response = GobalVariables.WebAPIClient.GetAsync($"Products/{id}").Result;
                 if (response.IsSuccessStatusCode)
@@ -159,10 +202,10 @@ namespace ClientMVC.Controllers
                     {
                         responseString = response.Content.ReadAsStringAsync().Result;
                         products = JsonConvert.DeserializeObject<List<Product>>(responseString);
-                        products = products.Where(x 
+                        products = products.Where(x
                             => x.Category.Description.Equals(product.Category.Description)
                             || x.Title.ToLower().Contains(product.Title.ToLower()))
-                            .OrderByDescending(x=>x.UpdateAt)
+                            .OrderByDescending(x => x.UpdateAt)
                             .Take(4).ToList();
                         ViewBag.Products = products;
                     }
@@ -179,5 +222,14 @@ namespace ClientMVC.Controllers
         {
             return View();
         }
+
+        //// Phương thức chuyển đổi chữ có dấu thành không dấu
+        //private static string RemoveDiacritics(string text)
+        //{
+        //    string normalized = text.Normalize(NormalizationForm.FormKD);
+        //    Regex regex = new Regex("[^\\p{L}\\p{Nd}\\s]");
+        //    string result = regex.Replace(normalized, "");
+        //    return result;
+        //}
     }
 }

@@ -4,6 +4,7 @@
     ViewData["Title"] = "Chi Tiết Sản Phẩm";
     var isLogin = Context.Session.Get("IsLoggedIn");
     List<Models.Product> products = ViewBag.Products;
+    bool isBought = ViewBag.IsBought;
 }
 
 <!-- Shop Details Section Begin -->
@@ -104,7 +105,7 @@
 <section class="related spad">
     <div class="container">
         <h3>Đánh giá sản phẩm</h3>
-        @if(isLogin is not null)
+        @if(isBought)
         {
             <form style="margin-bottom: 1em;" id="reviewProduct">
                 <div class="rating">

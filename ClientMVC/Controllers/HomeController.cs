@@ -15,6 +15,7 @@ namespace ClientMVC.Controllers
 
         public IActionResult Index()
         {
+            List<Product> products = new();
             try
             {
                 //get list product
@@ -22,7 +23,7 @@ namespace ClientMVC.Controllers
                 if (response.IsSuccessStatusCode)
                 {
                     responseString = response.Content.ReadAsStringAsync().Result;
-                    List<Product> products = JsonConvert.DeserializeObject<List<Product>>(responseString);
+                    products = JsonConvert.DeserializeObject<List<Product>>(responseString);
                     products = products.Where(x=>x.Amount > 0).ToList();
 
                     //get top product sale
@@ -40,7 +41,7 @@ namespace ClientMVC.Controllers
             }
             catch { }
 
-            return View();
+            return View(products);
         }
     }
 }

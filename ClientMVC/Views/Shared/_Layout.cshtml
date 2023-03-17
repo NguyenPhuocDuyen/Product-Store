@@ -49,6 +49,7 @@
         var isLogin = Context.Session.Get("IsLoggedIn");
         var role = Context.Session.GetString("role");
         var fullname = Context.Session.GetString("fullname");
+        var email = Context.Session.GetString("email");
     }
     <!-- Page Preloder -->
     <div id="preloder">
@@ -103,7 +104,7 @@
                                 }
                                 else
                                 {
-                                    <a asp-action="Details" asp-controller="Customer">@fullname</a>
+                                    <a asp-action="Details" asp-controller="Customer">@email</a>
                                     <a asp-action="Logout" asp-controller="Account">Đăng Xuất</a>
                                 }
                             </div>
@@ -163,6 +164,8 @@
     </header>
     <!-- Header Section End -->
 
+    <div style="margin-bottom: 130px;">
+    </div>
     @RenderBody()
 
     <!-- Footer Section Begin -->

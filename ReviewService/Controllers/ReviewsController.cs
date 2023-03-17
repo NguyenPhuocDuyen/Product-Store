@@ -21,6 +21,14 @@ namespace ReviewService.Controllers
             _db = db;
         }
 
+
+        // GET: api/Reviews
+        [HttpGet("GetReviewsOfProduct")]
+        public async Task<ActionResult<List<Review>>> GetReviewsOfProduct()
+        {
+            return (await _db.Review.GetAllAsync()).ToList();
+        }
+        
         // GET: api/Reviews
         [HttpGet("GetReviewsOfProduct/{id}")]
         public async Task<ActionResult<List<Review>>> GetReviewsOfProduct(int id)
