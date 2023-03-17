@@ -12,6 +12,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System;
 using Microsoft.Extensions.Configuration;
+using Utility;
 
 namespace UserService.Controllers
 {
@@ -79,6 +80,7 @@ namespace UserService.Controllers
                 try
                 {
                     user.RoleId = 2;
+                    user.Password = HasPassword.HashPassword(user.Password);
                     _db.User.Add(user);
                     await _db.SaveAsync();
                     return u;
@@ -96,14 +98,14 @@ namespace UserService.Controllers
         {
             var u = await _db.User.GetFirstOrDefaultAsync(
                 filter: x => x.Email.ToLower().Trim()
-                .Equals(user.Email.ToLower().Trim())
-                && x.Password.ToLower().Trim()
-                .Equals(user.Password.ToLower().Trim()),
-                includeProperties: "Role"
-                );
+                .Equals(user.Email.ToLower().Trim()), includeProperties: "Role");
 
-            if (u == null)
-                return BadRequest(new { message = "Username or password is incorrect" });
+            if (u == null) return NotFound();
+
+            bool isCorrectPassword = HasPassword.CheckPassword(user.Password, u.Password);
+
+            if (!isCorrectPassword)
+                return BadRequest(new { message = "Password not correct" });
 
             //tao handler
             var tokenHandler = new JwtSecurityTokenHandler();

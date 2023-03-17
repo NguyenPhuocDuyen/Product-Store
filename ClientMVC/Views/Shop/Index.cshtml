@@ -145,8 +145,6 @@
                                         <span class="label">Mới</span>
                                     }
                                     <ul class="product__hover">
-                                        @*<li><a href="#"><img src="~/img/icon/heart.png" alt=""></a></li>
-                                        <li><a href="#"><img src="~/img/icon/compare.png" alt=""> <span>Compare</span></a></li>*@
                                         <li><a href="@Url.Action("ProductDetail", "Shop", new { id = item.Id })"><img src="~/img/icon/search.png" alt="@item.Title"></a></li>
                                     </ul>
                                 </div>
@@ -184,7 +182,7 @@
                                         <i hidden class="fa fa-star"></i>
                                     </div>
 
-                                    <h5>$@item.RecentPrice</h5>
+                                    <h5>@string.Format("{0:#,##0} đ", item.RecentPrice)</h5>
                                 </div>
                             </div>
                         </div>

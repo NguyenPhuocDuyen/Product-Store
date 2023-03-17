@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Utility;
 
 namespace DataAccess.DbInitializer
 {
@@ -55,7 +56,7 @@ namespace DataAccess.DbInitializer
             _db.SaveChanges();
 
             //add user
-            _db.Users.Add(new User { RoleId = 1, Email = "Admin@gmail.com", Password = "Admin@gmail.com" });
+            _db.Users.Add(new User { RoleId = 1, Email = "Admin@gmail.com", Password = HasPassword.HashPassword("Admin@gmail.com")});
             _db.SaveChanges();
             List<User> users = new List<User>()
             {
@@ -131,7 +132,7 @@ namespace DataAccess.DbInitializer
                 i++;
                 item.RoleId = 2;
                 item.Email = $"Customer{i}@gmail.com";
-                item.Password = $"Customer{i}@gmail.com";
+                item.Password = HasPassword.HashPassword($"Customer{i}@gmail.com");
                 item.FullName = $"Customer {i}";
                 item.Phone = $"0788223{i}{i * 2}";
             }
