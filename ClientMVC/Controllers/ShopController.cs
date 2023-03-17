@@ -17,9 +17,7 @@ namespace ClientMVC.Controllers
     public class ShopController : Controller
     {
         HttpResponseMessage response;
-        HttpRequestMessage request;
         string responseString;
-        //string content;
 
         public IActionResult Index(string searchContent, int min, int max,
             int sort_order = 1, int pageIndex = 1)
@@ -58,17 +56,11 @@ namespace ClientMVC.Controllers
                     //check search by name and price
                     if (searchContent is not null)
                     {
-                        if (sort_order != 0)
-                        {
-                            searchContent = HttpUtility.UrlDecode(searchContent);
-                        }
+                        searchContent = RemoveDiacriticsAndSpecialCharacters(searchContent);
 
-                        searchContent = HttpUtility.HtmlDecode(searchContent);
-                        //content = searchContent;
-                        searchContent = searchContent.ToLower().Trim();
                         products = products.Where(x
-                            => x.Title.ToLower().Trim().Contains(searchContent)
-                            || x.Category.Description.ToLower().Trim().Contains(searchContent)
+                            => RemoveDiacriticsAndSpecialCharacters(x.Title).Contains(searchContent)
+                            || RemoveDiacriticsAndSpecialCharacters(x.Category.Description).Contains(searchContent)
                             ).ToList();
                     }
                     //filter
@@ -91,7 +83,7 @@ namespace ClientMVC.Controllers
                     ViewBag.min = min;
                     ViewBag.max = max;
                     ViewBag.sort_order = sort_order;
-                    ViewBag.TotalProduct = products.Count();
+                    ViewBag.TotalProduct = products.Count;
                     //paging
                     var pageSize = 12;
                     var PagingListProduct = PaginatedList<Product>.CreateAsync(
@@ -223,13 +215,17 @@ namespace ClientMVC.Controllers
             return View();
         }
 
-        //// Phương thức chuyển đổi chữ có dấu thành không dấu
-        //private static string RemoveDiacritics(string text)
-        //{
-        //    string normalized = text.Normalize(NormalizationForm.FormKD);
-        //    Regex regex = new Regex("[^\\p{L}\\p{Nd}\\s]");
-        //    string result = regex.Replace(normalized, "");
-        //    return result;
-        //}
+        // Phương thức chuyển đổi chữ có dấu thành không dấu bỏ ký tự đặc biệt
+        private static string RemoveDiacriticsAndSpecialCharacters(string text)
+        {
+            string normalized = text.ToLower().Trim().Normalize(NormalizationForm.FormKD);
+            Regex regex = new("[^\\p{L}\\p{Nd}\\s#@!&$%]");
+            string result = regex.Replace(normalized, "");
+
+            // Replace "đ" with "d"
+            result = result.Replace("đ", "d");
+
+            return result;
+        }
     }
 }
