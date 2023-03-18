@@ -13,6 +13,11 @@ using System.Threading.Tasks;
 using System;
 using Microsoft.Extensions.Configuration;
 using Utility;
+using System.Security.Cryptography;
+using System.Net.Http;
+using Newtonsoft.Json;
+using System.Net.Http.Json;
+using Models.ViewModel;
 
 namespace UserService.Controllers
 {
@@ -79,10 +84,43 @@ namespace UserService.Controllers
             {
                 try
                 {
+                    // Tạo mã xác thực
+                    byte[] randomBytes = new byte[32];
+                    using (RNGCryptoServiceProvider rng = new())
+                    {
+                        rng.GetBytes(randomBytes);
+                    }
+                    string token = BitConverter.ToString(randomBytes).Replace("-", "").ToLower();
+
                     user.RoleId = 2;
                     user.Password = HasPassword.HashPassword(user.Password);
+
+                    //xác thực mail
+                    user.EmailConfirmationToken = token;
+                    user.EmailConfirmationSentAt = DateTime.Now;
+                    user.EmailConfirmed = false;
+
                     _db.User.Add(user);
                     await _db.SaveAsync();
+
+                    //send mail to confirm account
+                    try
+                    {
+                        MailContent mailContent = new MailContent()
+                        {
+                            To = user.Email,
+                            Subject = "Kích hoạt tài khoản TKDecor",
+                            Body = $"<h4>Bạn đã tạo tài khoản cho web TKDecor </h4><p>Vui lòng click vào <a href=\"https://localhost:44310/Account/Login?tokenMail=" + token + "\">đây</a> để kích hoạt tài khoản của bạn.</p>"
+                        };
+
+                        HttpResponseMessage response = GobalVariables.WebAPIClient.PostAsJsonAsync($"Mails/PostMail", mailContent).Result;
+                        if (response.IsSuccessStatusCode)
+                        {
+                            return u;
+                        }
+                    }
+                    catch { }
+
                     return u;
                 }
                 catch { }
@@ -98,7 +136,8 @@ namespace UserService.Controllers
         {
             var u = await _db.User.GetFirstOrDefaultAsync(
                 filter: x => x.Email.ToLower().Trim()
-                .Equals(user.Email.ToLower().Trim()), includeProperties: "Role");
+                .Equals(user.Email.ToLower().Trim()), 
+                includeProperties: "Role");
 
             if (u == null) return NotFound();
 
@@ -106,6 +145,8 @@ namespace UserService.Controllers
 
             if (!isCorrectPassword)
                 return BadRequest(new { message = "Password not correct" });
+
+            if (!u.EmailConfirmed) return BadRequest("Email chưa xác nhận");
 
             //tao handler
             var tokenHandler = new JwtSecurityTokenHandler();
@@ -156,6 +197,28 @@ namespace UserService.Controllers
                 user.Password = userInput.Password;
             }
             user.UpdateAt = DateTime.Now;
+
+            try
+            {
+                _db.User.Update(user);
+                await _db.SaveAsync();
+                return NoContent();
+            }
+            catch
+            {
+                return BadRequest();
+            }
+        }
+
+        //confirm mail user info
+        [HttpPost("ConfirmMail")]
+        public async Task<IActionResult> ConfirmMail(User userInput)
+        {
+            var user = await _db.User.GetFirstOrDefaultAsync(x => x.EmailConfirmationToken == userInput.EmailConfirmationToken);
+
+            if (user == null) return NotFound();
+
+            user.EmailConfirmed = true;
 
             try
             {

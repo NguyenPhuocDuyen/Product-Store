@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualBasic;
 using Models;
+using Models.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;

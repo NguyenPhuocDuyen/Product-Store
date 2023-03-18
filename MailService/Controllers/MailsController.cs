@@ -1,6 +1,7 @@
 ﻿using MailService.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Models.ViewModel;
 using System.Threading.Tasks;
 
 namespace MailService.Controllers

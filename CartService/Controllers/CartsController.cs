@@ -9,6 +9,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using System;
+using Models.ViewModel;
 
 namespace CartService.Controllers
 {

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using Microsoft.AspNetCore.Http;
 using Models;
+using Models.ViewModel;
 
 namespace ClientMVC
 {

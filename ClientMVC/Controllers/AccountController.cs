@@ -7,7 +7,7 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Net.Http;
 using System.Net.Http.Json;
-
+using Utility;
 
 namespace ClientMVC.Controllers
 {
@@ -16,8 +16,24 @@ namespace ClientMVC.Controllers
         HttpResponseMessage response;
         string responseString;
 
-        public IActionResult Login()
+        public IActionResult Login(string tokenMail)
         {
+            if (!string.IsNullOrEmpty(tokenMail))
+            {
+                try
+                {
+                    response = GobalVariables.WebAPIClient.PostAsJsonAsync("Users/ConfirmMail", new User { EmailConfirmationToken = tokenMail }).Result;
+                    if (response.IsSuccessStatusCode)
+                    {
+                        ViewBag.messConfirmMail = "Đã kích hoạt thành công, bạn có thể đăng nhập!";
+                    } else
+                    {
+                        ViewBag.messConfirmMail = "Kích hoạt thất bại, bạn hãy thử lại sau!";
+                    }
+                }
+                catch { }
+            }
+
             return View();
         }
 
@@ -99,7 +115,7 @@ namespace ClientMVC.Controllers
                 response = GobalVariables.WebAPIClient.PostAsJsonAsync("Users/PostUser", user).Result;
                 if (response.IsSuccessStatusCode)
                 {
-                    ViewBag.notification = "Đăng ký thành công, bạn có thể qua đăng nhập!";
+                    ViewBag.notification = "Đăng ký thành công, bạn hãy xác nhận mail!";
                     return View();
                 }
             }
@@ -118,5 +134,11 @@ namespace ClientMVC.Controllers
             HttpContext.Session.Clear();
             return RedirectToAction("Index", "Home");
         }
+
+        //public IActionResult ConfirmMail()
+        //{
+        //    //ViewBag.tokenMail = tokenMail;
+        //    return View();
+        //}
     }
 }
