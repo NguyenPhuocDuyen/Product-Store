@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using Models.ViewModel;
+using System.Threading.Tasks;
 
 namespace MailService.Models
 {

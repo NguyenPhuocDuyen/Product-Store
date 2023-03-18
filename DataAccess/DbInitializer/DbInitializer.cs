@@ -1,7 +1,9 @@
 ﻿using Models;
+using Models.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security;
 using System.Text;
 using System.Threading.Tasks;
 using Utility;
@@ -56,7 +58,12 @@ namespace DataAccess.DbInitializer
             _db.SaveChanges();
 
             //add user
-            _db.Users.Add(new User { RoleId = 1, Email = "Admin@gmail.com", Password = HasPassword.HashPassword("Admin@gmail.com")});
+            _db.Users.Add(new User {
+                RoleId = 1,
+                Email = "Admin@gmail.com",
+                Password = HasPassword.HashPassword("Admin@gmail.com"),
+                EmailConfirmed = true
+            });
             _db.SaveChanges();
             List<User> users = new List<User>()
             {
@@ -135,6 +142,7 @@ namespace DataAccess.DbInitializer
                 item.Password = HasPassword.HashPassword($"Customer{i}@gmail.com");
                 item.FullName = $"Customer {i}";
                 item.Phone = $"0788223{i}{i * 2}";
+                item.EmailConfirmed = true;
             }
             _db.Users.AddRange(users);
             _db.SaveChanges();
