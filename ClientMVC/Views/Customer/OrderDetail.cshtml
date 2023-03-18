@@ -81,23 +81,36 @@
         $('.order-action-btn').click(function() {
             var id = $(this).data('id');
             var statusId = $(this).data('statusid');
-            $.ajax({
-                url: urlConfirmOrder,
-                type: 'POST',
-                beforeSend: function(xhr) {
-                        xhr.setRequestHeader('Authorization', token);
-                },
-                contentType: 'application/json; charset=utf-8',
-                data: JSON.stringify({
-                    Id: id,
-                    StatusId: statusId
-                }),
-                success: function(response) {
-                    $('.btn').remove();
-                    toastr.success(messSuccess);
-                },
-                error: function(xhr) {
-                    toastr.error(messError);
+            swal({
+                title: "Xác nhận",
+                text: "Bạn có chắc chắn muốn thực hiện hành động này?",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            })
+            .then((willConfirm) => {
+                if (willConfirm) {
+                    $.ajax({
+                        url: urlConfirmOrder,
+                        type: 'POST',
+                        beforeSend: function(xhr) {
+                            xhr.setRequestHeader('Authorization', token);
+                        },
+                        contentType: 'application/json; charset=utf-8',
+                        data: JSON.stringify({
+                            Id: id,
+                            StatusId: statusId
+                        }),
+                        success: function(response) {
+                            $('.btn').remove();
+                            toastr.success(messSuccess);
+                        },
+                        error: function(xhr) {
+                            toastr.error(messError);
+                        }
+                    });
+                } else {
+                    swal("Hủy bỏ hành động");
                 }
             });
         });
