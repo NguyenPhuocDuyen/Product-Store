@@ -1,4 +1,5 @@
-﻿@using Microsoft.AspNetCore.Http
+﻿@using ClientMVC.Views.Shared;
+@using Microsoft.AspNetCore.Http
 @using Models;
 <!DOCTYPE html>
 <html lang="en">
@@ -48,7 +49,6 @@
     @{
         var isLogin = Context.Session.Get("IsLoggedIn");
         var role = Context.Session.GetString("role");
-        var fullname = Context.Session.GetString("fullname");
         var email = Context.Session.GetString("email");
     }
     <!-- Page Preloder -->
@@ -68,7 +68,7 @@
                 }
                 else
                 {
-                    <a asp-action="Details" asp-controller="Customer">@fullname</a>
+                    <a asp-action="Details" asp-controller="Customer">@email</a>
                     <a asp-action="Logout" asp-controller="Account">Đăng Xuất</a>
                 }
             </div>
@@ -168,59 +168,15 @@
     </div>
     @RenderBody()
 
-    <!-- Footer Section Begin -->
-    <footer class="footer" style="padding-bottom: 70px;">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-3 col-md-6 col-sm-6">
-                    <div class="footer__about">
-                        <div class="footer__logo">
-                            <a href="#"><img src="/img/logotkdecorfooter.png" alt=""></a>
-                        </div>
-                        <p>Niềm vui của là cũng là niềm vui của chúng tôi. Rất hân hạnh được phụ vụ cho quý khách.</p>
-                    </div>
-                </div>
-                <div class="col-lg-2 offset-lg-1 col-md-3 col-sm-6">
-                    <div class="footer__widget">
-                        <h6>Mua Sắm</h6>
-                        <ul>
-                            <li><a asp-controller="Home" asp-action="Index">Trang Chủ</a></li>
-                            <li><a asp-controller="Shop" asp-action="Index">Shop</a></li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="col-lg-2 col-md-3 col-sm-6">
-                    <div class="footer__widget">
-                        <h6>Thông Tin</h6>
-                        <ul>
-                            <li><a asp-controller="Shop" asp-action="About">Thông Tin</a></li>
-                            <li><a asp-controller="Shop" asp-action="Contact">Liên Lạc</a></li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="col-lg-3 offset-lg-1 col-md-6 col-sm-6">
-                    <div class="footer__widget">
-                        <h6>Liên Lạc</h6>
-                        <div class="footer__newslatter">
-                            <p>Nhận thông báo mới nhất!</p>
-                            <form action="#">
-                                <input type="text" placeholder="Email của bạn...">
-                                <button type="submit"><span class="icon_mail_alt"></span></button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </footer>
-    <!-- Footer Section End -->
+    @{ var footerModel = new _FooterModel(); }
+    <partial name="_Footer" model="footerModel" />
 
     <!-- Search Begin -->
     <div class="search-model">
         <div class="h-100 d-flex align-items-center justify-content-center">
             <div class="search-close-switch">+</div>
             <form asp-action="Index" asp-controller="Shop" class="search-model-form">
-                <input type="text" id="search-input" name="searchContent" placeholder="Tìm kiếm sản phẩm.....">
+                <input type="text" name="searchContent" placeholder="Tìm kiếm sản phẩm.....">
             </form>
         </div>
     </div>

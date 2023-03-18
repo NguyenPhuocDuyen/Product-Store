@@ -13,58 +13,59 @@
         margin-bottom: 1em;
     }
 </style>
-<div class="row justify-content-center">
-    <h3>Cập Nhật Sản Phẩm</h3>
-</div>
-<form asp-action="UpdateProduct" method="post" enctype="multipart/form-data">
-    <p class="alert-info">@ViewBag.mess</p>
-    <div class="row justify-content-center">
-        <div class="col-md-4">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <input asp-for="Id" type="hidden" class="form-control" />
-            </div>
-            <div class="form-group">
-                <label asp-for="Title" class="control-label"></label>
-                <input asp-for="Title" class="form-control" />
-                <span asp-validation-for="Title" class="text-danger"></span>
-            </div>
-            <div class="form-group" style="margin-bottom: 4em;">
-                <label asp-for="CategoryId" class="control-label">Danh Mục Sản Phẩm</label>
-                <select asp-for="CategoryId" class="form-control" asp-items="@ViewBag.CategoryId" ></select>
-                <span asp-validation-for="CategoryId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control" />
-                <span asp-validation-for="Description" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="RecentPrice" class="control-label"></label>
-                <input asp-for="RecentPrice" class="form-control" />
-                <span asp-validation-for="RecentPrice" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Amount" class="control-label"></label>
-                <input asp-for="Amount" class="form-control" />
-                <span asp-validation-for="Amount" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <button id="updateInfoProduct" class="btn btn-primary">Cập nhật</button>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="form-group">
-                <label for="ThumbnailFile" class="control-label"></label>
-                <input id="ThumbnailFile" type="file" name="ThumbnailFile" class="form-control" accept="image/*" onchange="previewImage()" required/>
-                <div class="preview">
-                    <img id="thumbnail-preview">
+
+<div class="justify-content-center row" style="margin: 0">
+    <form asp-action="UpdateProduct" method="post" enctype="multipart/form-data" class="col col-10" style="margin: 0">
+        <h4>Cập Nhật Sản Phẩm</h4>
+        <p class="alert-info">@ViewBag.mess</p>
+        <div class="row justify-content-center">
+            <div class="col-md-5">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <input asp-for="Id" type="hidden" class="form-control" />
                 </div>
-                <input type="submit" value="Cập nhật toàn bộ bao gồm ảnh" class="btn btn-primary"/>
+                <div class="form-group">
+                    <label asp-for="Title" class="control-label"></label>
+                    <input asp-for="Title" class="form-control" />
+                    <span asp-validation-for="Title" class="text-danger"></span>
+                </div>
+                <div class="form-group" style="margin-bottom: 4em;">
+                    <label asp-for="CategoryId" class="control-label">Danh Mục Sản Phẩm</label>
+                    <select asp-for="CategoryId" class="form-control" asp-items="@ViewBag.CategoryId" ></select>
+                    <span asp-validation-for="CategoryId" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Description" class="control-label"></label>
+                    <textarea asp-for="Description" rows="6" class="form-control" ></textarea>
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="RecentPrice" class="control-label"></label>
+                    <input asp-for="RecentPrice" class="form-control" />
+                    <span asp-validation-for="RecentPrice" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Amount" class="control-label"></label>
+                    <input asp-for="Amount" class="form-control" />
+                    <span asp-validation-for="Amount" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <button id="updateInfoProduct" class="btn btn-primary">Cập nhật</button>
+                </div>
+            </div>
+            <div class="col-md-5">
+                <div class="form-group">
+                    <label for="ThumbnailFile" class="control-label"></label>
+                    <input id="ThumbnailFile" type="file" name="ThumbnailFile" class="form-control" accept="image/*" onchange="previewImage()" required/>
+                    <div class="preview">
+                        <img id="thumbnail-preview">
+                    </div>
+                    <input type="submit" value="Cập nhật thông tin bao gồm ảnh" class="btn btn-primary"/>
+                </div>
             </div>
         </div>
-    </div>
-</form>
+    </form>
+</div>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

@@ -30,17 +30,17 @@
             </div>
             <div class="col-lg-6 col-md-6">
                 <div class="contact__form">
-                    <form action="#">
+                    <form id="mailFormContact" action="#">
                         <div class="row">
                             <div class="col-lg-6">
-                                <input type="text" placeholder="Tên...">
+                                <input id="name-input" type="text" placeholder="Tên..."/>
                             </div>
                             <div class="col-lg-6">
-                                <input type="text" placeholder="Email...">
+                                <input id="email-input" type="text" placeholder="Email..."/>
                             </div>
                             <div class="col-lg-12">
-                                <textarea placeholder="Thông điệp"></textarea>
-                                <button type="submit" class="site-btn">Gửi Thông Điệp</button>
+                                <textarea id="message-input" placeholder="Thông điệp"></textarea>
+                                <button id="mailFormContactBtn" type="submit" class="site-btn">Gửi Thông Điệp</button>
                             </div>
                         </div>
                     </form>
@@ -50,3 +50,49 @@
     </div>
 </section>
 <!-- Contact Section End -->
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+
+<script>
+    $(document).ready(function() {
+        $('#mailFormContactBtn').click(function(e) {
+        e.preventDefault();
+        var name = $("#mailFormContact #name-input").val();
+        var email = $("#mailFormContact #email-input").val();
+        var message = $("#mailFormContact #message-input").val();
+
+        // Kiểm tra xem các giá trị đã nhập đầy đủ hay chưa
+        if (name === '' || email === '' || message === '') {
+            toastr.error('Vui lòng nhập đầy đủ thông tin');
+            return false;
+        }
+        
+        // Kiểm tra định dạng email
+        if (!isValidEmail(email)) {
+            toastr.error('Vui lòng nhập địa chỉ email hợp lệ');
+            return false;
+        }
+
+        $.ajax({
+            type: "POST",
+            url: urlPostMail,
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            data: JSON.stringify({
+                To: "duyennp7901@gmail.com",
+                Subject: "Khách Hàng Gửi Thông Điệp",
+                Body: "<h1>Mail của khách là: "+email+"</h1><br/><h2>Tên của khách là: "+name+"</h2><br/><p>Thông điệp của khách là: "+message+"</p><br/>"
+            }),
+            success: function(response) {
+                $("#mailFormContact #message-input").val('');
+                toastr.success(messSuccess);
+            },
+            error: function(xhr, textStatus, errorThrown) {
+                toastr.error(messError);
+            }
+        });
+        });
+    });
+</script>

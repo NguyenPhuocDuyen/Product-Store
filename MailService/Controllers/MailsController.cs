@@ -17,8 +17,8 @@ namespace MailService.Controllers
         }
 
         //gửi email
-        [HttpPost]
-        public async Task<IActionResult> Post([FromBody] MailContent mailContent)
+        [HttpPost("PostMail")]
+        public async Task<IActionResult> PostMail([FromBody] MailContent mailContent)
         {
             await sendMailService.SendMail(mailContent);
 

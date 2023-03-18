@@ -99,13 +99,14 @@ namespace ClientMVC.Controllers
                 response = GobalVariables.WebAPIClient.PostAsJsonAsync("Users/PostUser", user).Result;
                 if (response.IsSuccessStatusCode)
                 {
-                    return RedirectToAction(nameof(Login));
+                    ViewBag.notification = "Đăng ký thành công, bạn có thể qua đăng nhập!";
+                    return View();
                 }
             }
             catch { }
 
             ViewBag.mess = "Email đã tồn tại!";
-            return View();
+            return View(userRegister);
         }
 
         public IActionResult Logout()

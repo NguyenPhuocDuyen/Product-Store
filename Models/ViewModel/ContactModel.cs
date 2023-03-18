@@ -7,14 +7,13 @@ using System.Threading.Tasks;
 
 namespace Models.ViewModel
 {
-    public class UserLogin
+    public class ContactModel
     {
-        [Required(ErrorMessage = "Email không được bỏ trống")]
+        public string Name { get; set; }
+
         [RegularExpression(@"^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$", ErrorMessage = "Vui lòng nhập địa chỉ email hợp lệ")]
         public string Email { get; set; }
 
-        [Required(ErrorMessage = "Mật Khẩu không được bỏ trống")]
-        [MinLength(6, ErrorMessage = "Độ dài tối thiểu 6 ký tự")]
-        public string Password { get; set; } = string.Empty;
+        public string Message { get; set; }
     }
 }
