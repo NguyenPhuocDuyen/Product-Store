@@ -50,19 +50,7 @@ namespace ClientMVC.Controllers
 
         public IActionResult Orders()
         {
-            try
-            {
-                response = GobalVariables.WebAPIClient.GetAsync("Orders/GetOrdersOfUser").Result;
-                if (response.IsSuccessStatusCode)
-                {
-                    responseString = response.Content.ReadAsStringAsync().Result;
-                    List<Order> orders = JsonConvert.DeserializeObject<List<Order>>(responseString);
-                    return View(orders);
-                }
-            }
-            catch { }
-
-            return RedirectToAction("Index", "Home");
+            return View();
         }
 
         public IActionResult OrderDetail(int id)

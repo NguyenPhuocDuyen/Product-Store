@@ -46,6 +46,12 @@ var urlPutCart = urlCart + "/PutCart";
 //url check quantity in cart
 var urlCheckQuantityCart = urlCart + "/CheckQuantity";
 
+//url register user
+var urlPostUser = urlAPIGateway + "Users/PostUser";
+
+//url register user
+var urlPostMail = urlAPIGateway + "Mails/PostMail";
+
 //toast message 
 var messSuccess = 'Thành công!';
 var messError = 'Thất bại thử lại sau!';
@@ -74,4 +80,24 @@ var languageTableData = {
         "sortAscending": ": Sắp xếp tăng dần",
         "sortDescending": ": Sắp xếp giảm dần"
     }
+}
+
+//function call api
+function ajaxRequest(url, type, data, beforeSendFunc, successFunc, errorFunc) {
+    $.ajax({
+        url: url,
+        type: type,
+        data: data,
+        beforeSend: beforeSendFunc,
+        contentType: 'application/json',
+        dataType: 'json',
+        success: successFunc,
+        error: errorFunc
+    });
+}
+
+// Phương thức kiểm tra định dạng email
+function isValidEmail(email) {
+    var pattern = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
+    return pattern.test(email);
 }

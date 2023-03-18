@@ -41,10 +41,11 @@
                         <span asp-validation-for="ConfirmPassword" style="color: red" class="alert-danger form-control"></span>
                     </div>
                     <div class="form-group">
-                        <p class="alert-danger" style="color: red;">@ViewBag.mess</p>
+                        <p class="alert-" style="color: red;">@ViewBag.mess</p>
+                        <p class="alert-" style="color: #2300ff;">@ViewBag.notification</p>
                     </div>
                     <div class="form-group form-button">
-                        <input type="submit" name="signup" id="signup" class="form-submit" value="Đăng Ký"/>
+                        <input type="submit" name="signup" id="register-btn" class="form-submit" value="Đăng Ký"/>
                     </div>
                 </form>
             </div>
@@ -56,3 +57,7 @@
         </div>
     </div>
 </section>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

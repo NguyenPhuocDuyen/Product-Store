@@ -1,0 +1,91 @@
+﻿@page
+@model ClientMVC.Views.Shared._FooterModel
+@{
+}
+<!-- Footer Section Begin -->
+<footer class="footer" style="padding-bottom: 70px;">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-3 col-md-6 col-sm-6">
+                <div class="footer__about">
+                    <div class="footer__logo">
+                        <a href="#"><img src="/img/logotkdecorfooter.png" alt=""></a>
+                    </div>
+                    <p>Niềm vui của là cũng là niềm vui của chúng tôi. Rất hân hạnh được phụ vụ cho quý khách.</p>
+                </div>
+            </div>
+            <div class="col-lg-2 offset-lg-1 col-md-3 col-sm-6">
+                <div class="footer__widget">
+                    <h6>Mua Sắm</h6>
+                    <ul>
+                        <li><a asp-controller="Home" asp-action="Index">Trang Chủ</a></li>
+                        <li><a asp-controller="Shop" asp-action="Index">Shop</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-3 col-sm-6">
+                <div class="footer__widget">
+                    <h6>Thông Tin</h6>
+                    <ul>
+                        <li><a asp-controller="Shop" asp-action="About">Thông Tin</a></li>
+                        <li><a asp-controller="Shop" asp-action="Contact">Liên Lạc</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-lg-3 offset-lg-1 col-md-6 col-sm-6">
+                <div class="footer__widget">
+                    <h6>Liên Lạc</h6>
+                    <div class="footer__newslatter">
+                        <p>Nhận thông báo mới nhất!</p>
+                        <form id="nofiticationEmail">
+                            <input id="search-input" type="text" placeholder="Email của bạn..." style="color: white" />
+                            <button id="mailForm"><span class="icon_mail_alt"></span></button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+<!-- Footer Section End -->
+<script>
+    $(document).ready(function() {
+        
+        $('#mailForm').click(function(e) {
+            e.preventDefault();
+            var email = $("#search-input").val();
+
+            // Kiểm tra xem các giá trị đã nhập đầy đủ hay chưa
+            if (email === '') {
+                toastr.error('Vui lòng nhập đầy đủ thông tin');
+                return false;
+            }
+
+            // Kiểm tra định dạng email
+            if (!isValidEmail(email)) {
+                toastr.error('Vui lòng nhập địa chỉ email hợp lệ');
+                return false;
+            }
+
+            $.ajax({
+                type: "POST",
+                url: urlPostMail,
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                data: JSON.stringify({
+                    To: "duyennp7901@gmail.com",
+                    Subject: "Khách Hàng Muốn Nhận Thông báo mới",
+                    Body: "<h1>Mail của khách là: "+email+"</h1>"
+                }),
+                success: function(response) {
+                    $('#search-input').val('');
+                    toastr.success(messSuccess);
+                },
+                error: function(xhr, textStatus, errorThrown) {
+                    toastr.error(messError);
+                }
+            });
+        });
+    });
+</script>

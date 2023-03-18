@@ -93,16 +93,13 @@
                     StatusId: statusId
                 }),
                 success: function(response) {
+                    $('.btn').remove();
                     toastr.success(messSuccess);
-                    setTimeout(function () {
-                        location.reload();
-                    }, 2000);
                 },
                 error: function(xhr) {
                     toastr.error(messError);
                 }
             });
         });
-
     });
 </script>
