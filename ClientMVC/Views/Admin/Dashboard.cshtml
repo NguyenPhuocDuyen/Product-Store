@@ -121,6 +121,7 @@
             getOrderDetails();
         }
 
+        //get list orderdeatil have statusId of order is 3
         function getOrderDetails() {
             ajaxRequest(urlGetOrderDetailReceived, 'GET', null, function(xhr) {
                 xhr.setRequestHeader('Authorization', token);
@@ -138,6 +139,7 @@
             });
         }
 
+        //get list user
         function getUsers() {
             ajaxRequest(urlGetUsers, 'GET', null, function(xhr) {
                 xhr.setRequestHeader('Authorization', token);
@@ -149,6 +151,7 @@
             });
         }
 
+        //get list product
         function getProducts() {
             ajaxRequest(urlGetProducts, 'GET', null, null, function(response) {
                 tableProducts = response;
@@ -158,6 +161,7 @@
             });
         }
 
+        //get list order
         function getTableOrders() {
             ajaxRequest(urlGetOrdersOfUser, 'GET', null, function(xhr) {
                 xhr.setRequestHeader('Authorization', token);
@@ -169,6 +173,7 @@
             });
         }
 
+        //render table data for user
         function renderUsers() {
             $('#num-users').text(tableUsers.length);
             $('#table-user').DataTable({
@@ -184,6 +189,7 @@
             });
         }
 
+        //render table data for product
         function renderProducts() {
             $('#num-products').text(tableProducts.length);
             $('#table-product').DataTable({
@@ -204,6 +210,7 @@
             });
         }
 
+        //render table data for order
         function renderTableOrder() {
             $('#num-orders').text(tableOrders.length);
             var table = $('#table-order').DataTable({

@@ -18,7 +18,6 @@ namespace Models
 
         public int Id { get; set; }
         public string Email { get; set; } = string.Empty;
-        [MinLength(6, ErrorMessage = "Mật khẩu tối thiểu 6 ký tự!")]
         public string Password { get; set; } = string.Empty;
         public string FullName { get; set; } = string.Empty;
         public string Phone { get; set; } = string.Empty;

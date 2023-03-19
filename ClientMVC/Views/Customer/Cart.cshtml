@@ -147,54 +147,47 @@ $(document).ready(function () {
         var id = $(e.relatedTarget).data('id');
         $(this).find('.btn-ok').off('click').on('click', function () {
             $('tr[data-id="' + id + '"]').remove();
-            $.ajax({
-                url: urlDeleteCart + id,
-                type: 'DELETE',
-                beforeSend: function (xhr) {
-                    xhr.setRequestHeader('Authorization', token);
-                },
-                success: function (result) {
-                    console.log("success", id);
-                    calculateTotalPrice();
-                    toastr.success(messSuccess);
-                    $('#confirm-delete').modal('hide');
-                },
-                error: function (xhr, textStatus, errorThrown) {
-                    toastr.error(messError);
-                }
+
+            ajaxRequest(urlDeleteCart + id, 'DELETE', null, function(xhr) {
+                xhr.setRequestHeader('Authorization', token);
+            }, function(response) {
+                calculateTotalPrice();
+                toastr.success(messSuccess);
+                $('#confirm-delete').modal('hide');
+            }, function(jqXHR, textStatus, errorThrown) {
+                toastr.error(messError);
+                var error = JSON.parse(jqXHR.responseText);
+                toastr.error(error.error);
             });
         });
         $('#confirm-delete').modal('hide');
         $('.modal-backdrop').remove();
     });
 
-    // xác nhận đặt hàng
+    //confirm order
     $('#confirm-order').on('show.bs.modal', function (e) {
         var id = $(e.relatedTarget).data('id');
         $(this).find('.btn-ok').off('click').on('click', function () {
-            $.ajax({
-                url: urlOrderProducts,
-                type: 'GET',
-                beforeSend: function (xhr) {
-                    xhr.setRequestHeader('Authorization', token);
-                },
-                success: function (result) {
-                    toastr.success(messSuccess, '', { timeOut: 5000 });
-                    $('#confirm-order').modal('hide');
-                    $('.product_cart').remove();
-                    // Update cart item prices to 0
-                    $('#total').text('0 đ');
-                },
-                error: function (xhr, textStatus, errorThrown) {
-                    toastr.error(messError);
-                }
+
+            ajaxRequest(urlOrderProducts, 'GET', null, function(xhr) {
+                xhr.setRequestHeader('Authorization', token);
+            }, function(response) {
+                toastr.success(messSuccess, '', { timeOut: 5000 });
+                $('#confirm-order').modal('hide');
+                $('.product_cart').remove();
+                // Update cart item prices to 0
+                $('#total').text('0 đ');
+            }, function(jqXHR, textStatus, errorThrown) {
+                toastr.error(messError);
+                var error = JSON.parse(jqXHR.responseText);
+                toastr.error(error.error);
             });
         });
         $('#confirm-order').modal('hide');
         $('.modal-backdrop').remove();
     });
 
-    // Gọi tới API để cập nhật số lượng sản phẩm
+    // call api to update quantity
     $(document).on('change', '.quantity-input', function () {
         var inputValue = $(this).val();
         if (!Number.isInteger(parseInt(inputValue)) || parseInt(inputValue) < 1) {
@@ -206,26 +199,18 @@ $(document).ready(function () {
         var id = $(this).closest('tr').data('id');
         var quantity = parseInt(inputValue);
 
-        // Gửi yêu cầu PUT đến API để cập nhật số lượng sản phẩm trong giỏ hàng
-        $.ajax({
-            url: urlPutCart,
-            type: 'PUT',
-            data: JSON.stringify({ Id: id, Quantity: quantity }),
-            contentType: 'application/json',
-            beforeSend: function (xhr) {
-                xhr.setRequestHeader('Authorization', token);
-            },
-            success: function (result) {
-                $('tr[data-id="' + id + '"] .cart__price').text((result.product.recentPrice * quantity) + ' VND');
-                $('tr[data-id="' + id + '"] .quantity-input').val(result.quantity);
-                calculateTotalPrice();
-                if (quantity != result.quantity) {
-                    toastr.error('Số lượng đạt tới giới hạn!');
-                }
-            },
-            error: function (xhr, textStatus, errorThrown) {
-                toastr.error(messError);
+        // call api to update quantity in cart
+        ajaxRequest(urlPutCart, 'PUT', JSON.stringify({ Id: id, Quantity: quantity }), function(xhr) {
+            xhr.setRequestHeader('Authorization', token);
+        }, function(response) {
+            $('tr[data-id="' + id + '"] .cart__price').text((response.product.recentPrice * quantity) + ' VND');
+            $('tr[data-id="' + id + '"] .quantity-input').val(response.quantity);
+            calculateTotalPrice();
+            if (quantity != response.quantity) {
+                toastr.error('Số lượng đạt tới giới hạn trong kho!');
             }
+        }, function(jqXHR, textStatus, errorThrown) {
+            toastr.error(messError);
         });
     });
 
@@ -244,21 +229,15 @@ $(document).ready(function () {
 
     //check quantity
     $(document).on('click', '#checkQuantity', function () {
-        $.ajax({
-            url: urlCheckQuantityCart,
-            type: 'GET',
-            beforeSend: function (xhr) {
-                xhr.setRequestHeader('Authorization', token);
-            },
-            success: function (result) {
-                toastr.success(messSuccess + ' Sẽ tiến hành tải lại trang!');
-                setTimeout(function () {
-                    location.reload();
-                }, 2000);
-            },
-            error: function (xhr, textStatus, errorThrown) {
-                toastr.error(messError);
-            }
+        ajaxRequest(urlCheckQuantityCart, 'GET', null, function(xhr) {
+            xhr.setRequestHeader('Authorization', token);
+        }, function(response) {
+            toastr.success(messSuccess + ' Sẽ tiến hành tải lại trang!');
+            setTimeout(function () {
+                location.reload();
+            }, 2000);
+        }, function(jqXHR, textStatus, errorThrown) {
+            toastr.error(messError);
         });
     });
 });

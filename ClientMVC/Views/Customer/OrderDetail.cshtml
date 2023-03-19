@@ -64,14 +64,14 @@
                 {
                     if (role == RoleContent.Admin)
                     {
-                        <button data-id="@order.Id" data-statusId="2" class="btn btn-success btn-sm order-action-btn">Xác nhận giao đơn hàng</button>
+                        <button data-id="@order.Id" data-statusId="2" class="btn-action btn btn-success btn-sm order-action-btn">Xác nhận giao đơn hàng</button>
                     }
-                    <button data-id="@order.Id" data-statusId="4" class="btn btn-danger btn-sm order-action-btn">Hủy đơn hàng</button>
+                    <button data-id="@order.Id" data-statusId="4" class="btn-action btn btn-danger btn-sm order-action-btn">Hủy đơn hàng</button>
                 }
                 if (order.StatusId == 2 && role == RoleContent.Customer)
                 {
-                    <button data-id="@order.Id" data-statusId="3" class="btn btn-success btn-sm order-action-btn">Nhận hàng</button>
-                    <button data-id="@order.Id" data-statusId="4" class="btn btn-danger btn-sm order-action-btn">Hủy nhận đơn hàng</button>
+                    <button data-id="@order.Id" data-statusId="3" class="btn-action btn btn-success btn-sm order-action-btn">Nhận hàng</button>
+                    <button data-id="@order.Id" data-statusId="4" class="btn-action btn btn-danger btn-sm order-action-btn">Hủy nhận đơn hàng</button>
                 }
             }
         </div>
@@ -79,6 +79,7 @@
 </div>
 <script>
     $(document).ready(function() {
+        //action for orrder 
         $('.order-action-btn').click(function() {
             var id = $(this).data('id');
             var statusId = $(this).data('statusid');
@@ -91,24 +92,15 @@
             })
             .then((willConfirm) => {
                 if (willConfirm) {
-                    $.ajax({
-                        url: urlConfirmOrder,
-                        type: 'POST',
-                        beforeSend: function(xhr) {
-                            xhr.setRequestHeader('Authorization', token);
-                        },
-                        contentType: 'application/json; charset=utf-8',
-                        data: JSON.stringify({
-                            Id: id,
-                            StatusId: statusId
-                        }),
-                        success: function(response) {
-                            $('.btn').remove();
-                            toastr.success(messSuccess);
-                        },
-                        error: function(xhr) {
-                            toastr.error(messError);
-                        }
+                    ajaxRequest(urlConfirmOrder, 'POST', JSON.stringify({ Id: id, StatusId: statusId }), function(xhr) {
+                        xhr.setRequestHeader('Authorization', token);
+                    }, function(response) {
+                        $('.btn-action').remove();
+                        toastr.success(messSuccess);
+                    }, function(jqXHR, textStatus, errorThrown) {
+                        toastr.error(messError);
+                        var error = JSON.parse(jqXHR.responseText);
+                        toastr.error(error.error);
                     });
                 } else {
                     swal("Hủy bỏ hành động");

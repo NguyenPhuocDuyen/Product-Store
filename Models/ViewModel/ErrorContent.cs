@@ -27,6 +27,6 @@ namespace Models.ViewModel
         //not allow 
         public static string NotAllow = "Bạn không được phép thực hiện hành động này!";
 
-        public static string CheckQuantity = "Số lượng không đủ bán đã cập nhật số lượng mới!";
+        public static string CheckQuantity = "Số lượng đã đạt tối đa chúng tôi có, đã cập nhật số lượng trong giỏ hàng!";
     }
 }

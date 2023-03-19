@@ -236,30 +236,23 @@
             var description = $('#description').val();
             var rate = $('#rating').val();
 
-            $.ajax({
-                url: urlAddReview,
-                method: 'POST',
-                beforeSend: function(xhr) {
-                    xhr.setRequestHeader('Authorization', token);
-                },
-                contentType: 'application/json; charset=utf-8',
-                dataType: 'json',
-                data: JSON.stringify({
+            var data = JSON.stringify({
                     'ProductId': productId,
                     'Description': description,
                     'Rate': rate
-                }),
-                success: function(data) {
+                });
+
+            ajaxRequest(urlAddReview, 'POST', data, function(xhr) {
+                    xhr.setRequestHeader('Authorization', token);
+                }, function(response) {
                     reviewTable.ajax.reload(null, false);
                     toastr.success(messSuccess);
-                },
-                error: function(jqXHR, textStatus, errorThrown) {
+                }, function(jqXHR, textStatus, errorThrown) {
                     toastr.error(messError);
-                }
-            });
+                    var error = JSON.parse(jqXHR.responseText);
+                    toastr.error(error.error);
+                });
         });
-
-        
 
         reloadTableReview();
         //list review
@@ -291,22 +284,14 @@
             button.addEventListener('click', function () {
                 var productId = this.dataset.id;
                 
-
-                $.ajax({
-                    url: urlAddProductToCart,
-                    type: 'POST',
-                    beforeSend: function(xhr) {
-                        xhr.setRequestHeader('Authorization', token);
-                    },
-                    data: JSON.stringify({ ProductId: productId }),
-                    contentType: 'application/json; charset=utf-8',
-                    dataType: 'json',
-                    success: function (data) {
-                        toastr.success(messSuccess);
-                    },
-                    error: function (jqXHR, textStatus, errorThrown) {
-                        toastr.error(messError);
-                    }
+                ajaxRequest(urlAddProductToCart, 'POST', JSON.stringify({ ProductId: productId }), function(xhr) {
+                    xhr.setRequestHeader('Authorization', token);
+                }, function(response) {
+                    toastr.success(messSuccess);
+                }, function(jqXHR, textStatus, errorThrown) {
+                    toastr.error(messError);
+                    var error = JSON.parse(jqXHR.responseText);
+                    toastr.error(error.error);
                 });
             });
         });
@@ -317,22 +302,15 @@
             var productId = this.dataset.id;
             var quantity = $('#quantityBuy').val();
 
-            $.ajax({
-                url: urlAddProductToCart,
-                type: 'POST',
-                beforeSend: function(xhr) {
+            ajaxRequest(urlAddProductToCart, 'POST', JSON.stringify({ ProductId: productId, Quantity: quantity }), function(xhr) {
                     xhr.setRequestHeader('Authorization', token);
-                },
-                data: JSON.stringify({ ProductId: productId, Quantity: quantity }),
-                contentType: 'application/json; charset=utf-8',
-                dataType: 'json',
-                success: function (data) {
+                }, function(response) {
                     toastr.success(messSuccess);
-                },
-                error: function (jqXHR, textStatus, errorThrown) {
-                    toastr.error(messError + ' - Đã thêm đạt tới giới hạn còn lại!');
-                }
-            });
+                }, function(jqXHR, textStatus, errorThrown) {
+                    toastr.error(messError);
+                    var error = JSON.parse(jqXHR.responseText);
+                    toastr.error(error.error);
+                });
         });
     });
 </script>
