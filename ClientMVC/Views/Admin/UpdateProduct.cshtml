@@ -93,6 +93,7 @@
         var recentPriceInput = $("input[name='RecentPrice']");
         var amountInput = $("input[name='Amount']");
 
+        //update info product
         $('#updateInfoProduct').on('click', function(e) {
             e.preventDefault();
             var data = {
@@ -104,21 +105,15 @@
                 Amount: amountInput.val()
             };
 
-            $.ajax({
-                type: "PUT",
-                url: urlUpdateProduct + data.Id,
-                data: JSON.stringify(data),
-                contentType: "application/json",
-                beforeSend: function(xhr) {
+            ajaxRequest(urlUpdateProduct + data.Id, 'PUT', JSON.stringify(data), function(xhr) {
                     xhr.setRequestHeader('Authorization', token);
-                },
-                success: function(response) {
+                }, function(response) {
                     toastr.success(messSuccess);
-                },
-                error: function(xhr, textStatus, errorThrown) {
+                }, function(jqXHR, textStatus, errorThrown) {
                     toastr.error(messError);
-                }
-            });
+                    var error = JSON.parse(jqXHR.responseText);
+                    toastr.error(error.error);
+                });
         });
     });
 </script>

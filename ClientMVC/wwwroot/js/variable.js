@@ -39,6 +39,7 @@ var urlGetReviewsOfProduct = urlAPIGateway + "Reviews/GetReviewsOfProduct/";
 var urlCart = urlAPIGateway + "Carts";
 //url add product to cart
 var urlAddProductToCart = urlCart + '/AddProductToCart';
+var urlGetCartsUser = urlCart + '/GetCartsUser';
 //url delete cart/id
 var urlDeleteCart = urlCart + "/";
 //url update cart/id
@@ -89,7 +90,7 @@ function ajaxRequest(url, type, data, beforeSendFunc, successFunc, errorFunc) {
         type: type,
         data: data,
         beforeSend: beforeSendFunc,
-        contentType: 'application/json',
+        contentType: 'application/json; charset=utf-8',
         dataType: 'json',
         success: successFunc,
         error: errorFunc

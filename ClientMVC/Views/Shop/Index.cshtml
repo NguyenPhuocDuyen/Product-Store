@@ -229,27 +229,21 @@
     }
 
     $(document).ready(function () {
+        //add product to cart
         var id = $(this).closest('.product__item').data('id');
         var buttons = document.querySelectorAll('#addCart');
         buttons.forEach(function (button) {
             button.addEventListener('click', function () {
                 var productId = this.dataset.id;
 
-                $.ajax({
-                    url: urlAddProductToCart,
-                    type: 'POST',
-                    beforeSend: function(xhr) {
-                        xhr.setRequestHeader('Authorization', token);
-                    },
-                    data: JSON.stringify({ ProductId: productId }),
-                    contentType: 'application/json; charset=utf-8',
-                    dataType: 'json',
-                    success: function (data) {
-                        toastr.success(messSuccess);
-                    },
-                    error: function (jqXHR, textStatus, errorThrown) {
-                        toastr.error(messError);
-                    }
+                ajaxRequest(urlAddProductToCart, 'POST', JSON.stringify({ ProductId: productId }), function(xhr) {
+                    xhr.setRequestHeader('Authorization', token);
+                }, function(response) {
+                    toastr.success(messSuccess);
+                }, function(jqXHR, textStatus, errorThrown) {
+                    toastr.error(messError);
+                    var error = JSON.parse(jqXHR.responseText);
+                    toastr.error(error.error);
                 });
             });
         });
