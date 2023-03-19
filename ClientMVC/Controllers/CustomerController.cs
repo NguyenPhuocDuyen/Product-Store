@@ -18,6 +18,7 @@ namespace ClientMVC.Controllers
         {
             try
             {
+                //call api get cart of user
                 response = GobalVariables.WebAPIClient.GetAsync($"Carts/GetCartsUser").Result;
                 if (response.IsSuccessStatusCode)
                 {
@@ -35,6 +36,7 @@ namespace ClientMVC.Controllers
         {
             try
             {
+                //call api get user info
                 response = GobalVariables.WebAPIClient.GetAsync("Users/GetUserInfo").Result;
                 if (response.IsSuccessStatusCode)
                 {
@@ -58,6 +60,7 @@ namespace ClientMVC.Controllers
         {
             try
             {
+                //call api get OrderDetails by order id
                 response = GobalVariables.WebAPIClient.GetAsync($"OrderDetails/{id}").Result;
                 if (response.IsSuccessStatusCode)
                 {

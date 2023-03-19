@@ -35,16 +35,6 @@ namespace ClientMVC.Controllers
                     ViewBag.Categories = categories;
                 }
 
-                //get sort price list
-                response = GobalVariables.WebAPIClient.GetAsync("FilterPrices").Result;
-                List<int> filterPrices = new();
-                if (response.IsSuccessStatusCode)
-                {
-                    responseString = response.Content.ReadAsStringAsync().Result;
-                    filterPrices = JsonConvert.DeserializeObject<List<int>>(responseString);
-                    ViewBag.FilterPrices = filterPrices;
-                }
-
                 //get product list
                 response = GobalVariables.WebAPIClient.GetAsync("Products/GetProducts").Result;
                 if (response.IsSuccessStatusCode)

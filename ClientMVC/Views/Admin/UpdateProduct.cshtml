@@ -14,7 +14,7 @@
     }
 </style>
 
-<div class="justify-content-center row" style="margin: 0">
+<div class="justify-content-center row" style="margin: 0; margin-top: 140px">
     <form asp-action="UpdateProduct" method="post" enctype="multipart/form-data" class="col col-10" style="margin: 0">
         <h4>Cập Nhật Sản Phẩm</h4>
         <p class="alert-info">@ViewBag.mess</p>
@@ -36,7 +36,7 @@
                 </div>
                 <div class="form-group">
                     <label asp-for="Description" class="control-label"></label>
-                    <textarea asp-for="Description" rows="6" class="form-control" ></textarea>
+                    <textarea asp-for="Description" id="input-description" rows="6" class="form-control" ></textarea>
                     <span asp-validation-for="Description" class="text-danger"></span>
                 </div>
                 <div class="form-group">
@@ -89,12 +89,12 @@
     $(document).ready(function() {
         var titleInput = $("input[name='Title']");
         var categoryIdInput = $("select[name='CategoryId']");
-        var descriptionInput = $("input[name='Description']");
+        var descriptionInput = $("#input-description");
         var recentPriceInput = $("input[name='RecentPrice']");
         var amountInput = $("input[name='Amount']");
 
         $('#updateInfoProduct').on('click', function(e) {
-            //e.preventDefault();
+            e.preventDefault();
             var data = {
                 Id: $("input[name='Id']").val(),
                 Title: titleInput.val(),
@@ -103,6 +103,7 @@
                 RecentPrice: recentPriceInput.val(),
                 Amount: amountInput.val()
             };
+
             $.ajax({
                 type: "PUT",
                 url: urlUpdateProduct + data.Id,

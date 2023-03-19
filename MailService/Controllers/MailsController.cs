@@ -17,12 +17,12 @@ namespace MailService.Controllers
             this.sendMailService = sendMailService;
         }
 
-        //gửi email
+        //send email
+        // POST: api/Mails/PostMail
         [HttpPost("PostMail")]
-        public async Task<IActionResult> PostMail([FromBody] MailContent mailContent)
+        public async Task<ActionResult> PostMail([FromBody] MailContent mailContent)
         {
             await sendMailService.SendMail(mailContent);
-
             return NoContent();
         }
     }

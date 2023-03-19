@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Models;
+using Models.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,35 +22,38 @@ namespace ReviewService.Controllers
             _db = db;
         }
 
-
-        // GET: api/Reviews
+        //get all review
+        // GET: api/Reviews/GetReviewsOfProduct
         [HttpGet("GetReviewsOfProduct")]
         public async Task<ActionResult<List<Review>>> GetReviewsOfProduct()
         {
             return (await _db.Review.GetAllAsync()).ToList();
         }
-        
-        // GET: api/Reviews
+
+        //get review of one product
+        // GET: api/Reviews/GetReviewsOfProduct/1
         [HttpGet("GetReviewsOfProduct/{id}")]
         public async Task<ActionResult<List<Review>>> GetReviewsOfProduct(int id)
         {
             return (await _db.Review.GetAllAsync(filter: x => x.ProductId == id, includeProperties: "User")).ToList();
         }
 
-        // POST: api/Reviews
+        // POST: api/Reviews/AddReview
         [HttpPost("AddReview")]
-        public async Task<IActionResult> PostReview(Review review)
+        public async Task<ActionResult> PostReview(Review review)
         {
             User user = new();
             var currentUser = HttpContext.User;
             if (currentUser.HasClaim(c => c.Type == ClaimTypes.Name))
             {
                 var userId = currentUser.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name).Value;
-                // Lấy thông tin người dùng dựa vào userId
+                // get user by id
                 user = await _db.User.GetFirstOrDefaultAsync(x => x.Id == int.Parse(userId));
             }
 
+            //get old review of user for one product
             var oldReview = await _db.Review.GetFirstOrDefaultAsync(x => x.UserId == user.Id && x.ProductId == review.ProductId);
+
             //check exist review to add or update
             if (oldReview == null)
             {
@@ -71,7 +75,7 @@ namespace ReviewService.Controllers
             }
             catch
             {
-                return BadRequest();
+                return BadRequest(new ErrorApp { Error = ErrorContent.Error });
             }
         }
     }
