@@ -169,8 +169,9 @@
     </header>
     <!-- Header Section End -->
 
-    <div style="margin-bottom: 130px;">
-    </div>
+    <div style="margin-bottom: 130px;"></div>
+    <p class="alert-danger" style="color: red; margin-top: 160px">@ViewBag.error</p>
+
     @RenderBody()
 
     @{ var footerModel = new _FooterModel(); }

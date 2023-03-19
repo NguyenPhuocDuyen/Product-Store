@@ -24,24 +24,22 @@ namespace ClientMVC.Controllers
                 {
                     responseString = response.Content.ReadAsStringAsync().Result;
                     products = JsonConvert.DeserializeObject<List<Product>>(responseString);
-                    products = products.Where(x=>x.Amount > 0).ToList();
+                    products = products.Where(x => x.Amount > 0).ToList();
 
-                    //get top product sale
+                    //get and set top product sale
                     response = GobalVariables.WebAPIClient.GetAsync("Products/TopSaleProductId").Result;
                     if (response.IsSuccessStatusCode)
                     {
                         responseString = response.Content.ReadAsStringAsync().Result;
                         List<int> idProducts = JsonConvert.DeserializeObject<List<int>>(responseString);
-
                         ViewBag.ProductsTopSale = products.Where(x => idProducts.Contains(x.Id)).ToList();
                     }
-                    //return list 4 product new
-                    return View(products.OrderByDescending(x => x.CreateAt).Take(4).ToList());
                 }
             }
             catch { }
 
-            return View(products);
+            //return list 4 product new
+            return View(products.OrderByDescending(x => x.CreateAt).Take(4).ToList());
         }
     }
 }

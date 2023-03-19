@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Models;
+using Models.ViewModel;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -32,11 +33,12 @@ namespace ClientMVC.Controllers
                     responseString = response.Content.ReadAsStringAsync().Result;
                     List<Category> categories = JsonConvert.DeserializeObject<List<Category>>(responseString);
                     ViewBag.CategoryId = new SelectList(categories, "Id", "Description");
+                    return View();
                 }
-            } 
+            }
             catch { }
 
-            return View();
+            return RedirectToAction("Index", "Home");
         }
 
         [HttpPost]
@@ -55,34 +57,41 @@ namespace ClientMVC.Controllers
             }
             catch { }
 
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
+                return View(product);
+
+            //save images
+            if (ThumbnailFile != null && ThumbnailFile.Length > 0)
             {
-                if (ThumbnailFile != null && ThumbnailFile.Length > 0)
-                {
-                    var fileName = GetUniqueFileName(ThumbnailFile.FileName);
-                    var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", "products", fileName);
+                var fileName = GetUniqueFileName(ThumbnailFile.FileName);
+                var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", "products", fileName);
 
-                    using (var stream = new FileStream(filePath, FileMode.Create))
-                    {
-                        await ThumbnailFile.CopyToAsync(stream);
-                    }
-                    product.Thumbnail = "/images/products/" + fileName;
-                }
-
-                // call api save product
-                try
+                using (var stream = new FileStream(filePath, FileMode.Create))
                 {
-                    response = GobalVariables.WebAPIClient.PostAsJsonAsync("Products/AddProduct", product).Result;
-                    if (response.IsSuccessStatusCode)
-                    {
-                        ViewBag.mess = "Thêm sản phẩm thành công!";
-                        return View();
-                        //return RedirectToAction("Index", "Shop");
-                    }
+                    await ThumbnailFile.CopyToAsync(stream);
                 }
-                catch { }
+                product.Thumbnail = "/images/products/" + fileName;
             }
-            ViewBag.mess = "Thêm sản phẩm thất bại!";
+
+            // call api save product
+            try
+            {
+                response = GobalVariables.WebAPIClient.PostAsJsonAsync("Products/AddProduct", product).Result;
+                if (response.IsSuccessStatusCode)
+                {
+                    ViewBag.mess = "Thêm sản phẩm thành công!";
+                }
+                else
+                {
+                    responseString = response.Content.ReadAsStringAsync().Result;
+                    ErrorApp errorApp = JsonConvert.DeserializeObject<ErrorApp>(responseString);
+                    ViewBag.mess = errorApp.Error;
+                }
+                return View();
+            }
+            catch { }
+
+            ViewBag.error = ErrorContent.Error;
             return View(product);
         }
 
@@ -130,34 +139,42 @@ namespace ClientMVC.Controllers
             }
             catch { }
 
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
+                return View(product);
+
+            //save images
+            if (ThumbnailFile != null && ThumbnailFile.Length > 0)
             {
-                if (ThumbnailFile != null && ThumbnailFile.Length > 0)
-                {
-                    var fileName = GetUniqueFileName(ThumbnailFile.FileName);
-                    var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", "products", fileName);
+                var fileName = GetUniqueFileName(ThumbnailFile.FileName);
+                var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", "products", fileName);
 
-                    using (var stream = new FileStream(filePath, FileMode.Create))
-                    {
-                        await ThumbnailFile.CopyToAsync(stream);
-                    }
-                    product.Thumbnail = "/images/products/" + fileName;
-                }
-
-                // call api save product
-                try
+                using (var stream = new FileStream(filePath, FileMode.Create))
                 {
-                    response = GobalVariables.WebAPIClient.PutAsJsonAsync($"Products/UpdateProduct/{product.Id}", product).Result;
-                    if (response.IsSuccessStatusCode)
-                    {
-                        ViewBag.mess = "Cập nhật thành công";
-                        return View(product);
-                    }
+                    await ThumbnailFile.CopyToAsync(stream);
                 }
-                catch { }
+                product.Thumbnail = "/images/products/" + fileName;
             }
 
-            ViewBag.mess = "Cập nhật thất bại";
+            try
+            {
+                // call api update product
+                response = GobalVariables.WebAPIClient.PutAsJsonAsync($"Products/UpdateProduct/{product.Id}", product).Result;
+                if (response.IsSuccessStatusCode)
+                {
+                    ViewBag.mess = "Cập nhật thành công";
+                }
+                else
+                {
+                    responseString = response.Content.ReadAsStringAsync().Result;
+                    ErrorApp errorApp = JsonConvert.DeserializeObject<ErrorApp>(responseString);
+                    ViewBag.error = errorApp.Error;
+                }
+            }
+            catch
+            {
+                ViewBag.error = ErrorContent.Error;
+            }
+
             return View(product);
         }
 

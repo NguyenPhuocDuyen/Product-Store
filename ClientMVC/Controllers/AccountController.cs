@@ -18,17 +18,22 @@ namespace ClientMVC.Controllers
 
         public IActionResult Login(string tokenMail)
         {
+            //call api confirm token
             if (!string.IsNullOrEmpty(tokenMail))
             {
                 try
                 {
+                    //call api confirm token mail
                     response = GobalVariables.WebAPIClient.PostAsJsonAsync("Users/ConfirmMail", new User { EmailConfirmationToken = tokenMail }).Result;
                     if (response.IsSuccessStatusCode)
                     {
                         ViewBag.messConfirmMail = "Đã kích hoạt thành công, bạn có thể đăng nhập!";
-                    } else
+                    }
+                    else
                     {
-                        ViewBag.messConfirmMail = "Kích hoạt thất bại, bạn hãy thử lại sau!";
+                        responseString = response.Content.ReadAsStringAsync().Result;
+                        ErrorApp errorApp = JsonConvert.DeserializeObject<ErrorApp>(responseString);
+                        ViewBag.messConfirmMail = errorApp.Error;
                     }
                 }
                 catch { }
@@ -42,9 +47,7 @@ namespace ClientMVC.Controllers
         public IActionResult Login(UserLogin userLogin)
         {
             if (!ModelState.IsValid)
-            {
                 return View(userLogin);
-            }
 
             try
             {
@@ -53,25 +56,27 @@ namespace ClientMVC.Controllers
                     Email = userLogin.Email,
                     Password = userLogin.Password
                 };
+                //call api to login
                 response = GobalVariables.WebAPIClient.PostAsJsonAsync("Users/Login", userTemp).Result;
                 if (response.IsSuccessStatusCode)
                 {
+                    //get data
                     responseString = response.Content.ReadAsStringAsync().Result;
-                    User user = JsonConvert.DeserializeObject<User>(responseString);
-
+                    dynamic data = JObject.Parse(responseString);
+                    User user = JsonConvert.DeserializeObject<User>(data.user.ToString());
+                    string accessToken = data.access_Token;
+                    //set session
                     HttpContext.Session.Set("IsLoggedIn", BitConverter.GetBytes(true));
-
                     HttpContext.Session.SetString("role", user.Role.Description);
                     HttpContext.Session.SetString("fullname", user.FullName);
                     HttpContext.Session.SetString("email", user.Email);
                     HttpContext.Session.SetInt32("id", user.Id);
 
-                    //set token by password becasue password = token return from api
-                    HttpContext.Session.SetString("token", user.Password);
-                    GobalVariables.WebAPIClient.AddAuthorizationHeader(user.Password);
+                    //set token for client to call api at controller
+                    GobalVariables.WebAPIClient.AddAuthorizationHeader(accessToken);
 
-                    // Lưu trữ token vào cookie
-                    Response.Cookies.Append("access_token", user.Password, new CookieOptions
+                    // set token into cookie
+                    Response.Cookies.Append("access_token", accessToken, new CookieOptions
                     {
                         HttpOnly = false,
                         SameSite = SameSiteMode.None,
@@ -81,10 +86,17 @@ namespace ClientMVC.Controllers
 
                     return RedirectToAction("Index", "Home");
                 }
+                else
+                {
+                    responseString = response.Content.ReadAsStringAsync().Result;
+                    ErrorApp errrApp = JsonConvert.DeserializeObject<ErrorApp>(responseString);
+                    ViewBag.error = errrApp.Error;
+                    return View(userLogin);
+                }
             }
             catch { }
 
-            ViewBag.mess = "Đăng nhập thất bại vui lòng thử lại!";
+            ViewBag.error = ErrorContent.Error;
             return View();
         }
 
@@ -98,9 +110,7 @@ namespace ClientMVC.Controllers
         public IActionResult Register(UserRegister userRegister)
         {
             if (!ModelState.IsValid)
-            {
                 return View(userRegister);
-            }
 
             try
             {
@@ -112,16 +122,23 @@ namespace ClientMVC.Controllers
                     Password = userRegister.Password,
                     Address = userRegister.Address
                 };
+                //call api register user
                 response = GobalVariables.WebAPIClient.PostAsJsonAsync("Users/PostUser", user).Result;
                 if (response.IsSuccessStatusCode)
                 {
                     ViewBag.notification = "Đăng ký thành công, bạn hãy xác nhận mail!";
-                    return View();
                 }
+                else
+                {
+                    responseString = response.Content.ReadAsStringAsync().Result;
+                    ErrorApp errorApp = JsonConvert.DeserializeObject<ErrorApp>(responseString);
+                    ViewBag.mess = errorApp.Error;
+                }
+                return View();
             }
             catch { }
 
-            ViewBag.mess = "Email đã tồn tại!";
+            ViewBag.mess = ErrorContent.Error;
             return View(userRegister);
         }
 
@@ -132,13 +149,8 @@ namespace ClientMVC.Controllers
                 Response.Cookies.Delete("access_token");
             }
             HttpContext.Session.Clear();
+
             return RedirectToAction("Index", "Home");
         }
-
-        //public IActionResult ConfirmMail()
-        //{
-        //    //ViewBag.tokenMail = tokenMail;
-        //    return View();
-        //}
     }
 }
