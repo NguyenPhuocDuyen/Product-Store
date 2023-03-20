@@ -203,12 +203,12 @@ $(document).ready(function () {
         ajaxRequest(urlPutCart, 'PUT', JSON.stringify({ Id: id, Quantity: quantity }), function(xhr) {
             xhr.setRequestHeader('Authorization', token);
         }, function(response) {
-            $('tr[data-id="' + id + '"] .cart__price').text((response.product.recentPrice * quantity) + ' VND');
+            $('tr[data-id="' + id + '"] .cart__price').text((response.product.recentPrice * quantity) + ' đ');
             $('tr[data-id="' + id + '"] .quantity-input').val(response.quantity);
-            calculateTotalPrice();
             if (quantity != response.quantity) {
                 toastr.error('Số lượng đạt tới giới hạn trong kho!');
             }
+            calculateTotalPrice();
         }, function(jqXHR, textStatus, errorThrown) {
             toastr.error(messError);
         });
