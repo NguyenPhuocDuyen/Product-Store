@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Models;
 using Models.ViewModel;
@@ -7,6 +8,8 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Net.Http;
 using System.Net.Http.Json;
+using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using Utility;
 
 namespace ClientMVC.Controllers
@@ -151,6 +154,80 @@ namespace ClientMVC.Controllers
             HttpContext.Session.Clear();
 
             return RedirectToAction("Index", "Home");
+        }
+
+        public IActionResult ForgotPassword()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult ForgotPassword(string email)
+        {
+            try
+            {
+                //call api forgot password to take token forgot password
+                response = GobalVariables.WebAPIClient.PostAsJsonAsync("Users/ForgotPassword", new User { Email = email }).Result;
+                if (response.IsSuccessStatusCode)
+                {
+                    ViewBag.notification = "Đã gửi mail xác nhận cập nhật mật khẩu thành công, bạn hãy vào mail xác nhận!";
+                }
+                else
+                {
+                    responseString = response.Content.ReadAsStringAsync().Result;
+                    ErrorApp errorApp = JsonConvert.DeserializeObject<ErrorApp>(responseString);
+                    ViewBag.mess = errorApp.Error;
+                }
+            }
+            catch 
+            { 
+                ViewBag.mess = ErrorContent.Error;
+            }
+
+            return View();
+        }
+
+        public IActionResult ResetPassword(string tokenPassword)
+        {
+            ViewBag.TokenPassword = tokenPassword;
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult ResetPassword(UserForgotPassword userInput, string tokenPassword)
+        {
+            if (!ModelState.IsValid)
+                return View(userInput);
+
+            try
+            {
+                User user = new()
+                {
+                    Email = userInput.Email,
+                    Password = userInput.Password
+                };
+
+                //call api forgot password to take token forgot password
+                response = GobalVariables.WebAPIClient.PostAsJsonAsync($"Users/ChangePassword/{tokenPassword}", user).Result;
+                if (response.IsSuccessStatusCode)
+                {
+                    ViewBag.notification = "Đã cập nhật mật khẩu thành công, bạn có thể đăng nhập!";
+                }
+                else
+                {
+                    responseString = response.Content.ReadAsStringAsync().Result;
+                    ErrorApp errorApp = JsonConvert.DeserializeObject<ErrorApp>(responseString);
+                    ViewBag.mess = errorApp.Error;
+                }
+            }
+            catch
+            {
+                ViewBag.mess = ErrorContent.Error;
+            }
+
+            return View();
         }
     }
 }

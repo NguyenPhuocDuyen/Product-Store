@@ -26,9 +26,14 @@ namespace Models
         public DateTime? CreateAt { get; set; } = DateTime.Now;
         public DateTime? UpdateAt { get; set; } = DateTime.Now;
         public bool? IsDelete { get; set; } = false;
+
         public bool EmailConfirmed { get; set; } = false;
         public string EmailConfirmationToken { get; set; } = string.Empty;
-        public DateTime? EmailConfirmationSentAt { get; set; } = DateTime.Now;
+        public DateTime? EmailConfirmationSentAt { get; set; }
+
+        public bool IsPasswordResetRequired { get; set; } = false;
+        public string ResetPasswordToken { get; set; } = string.Empty;
+        public DateTime? ResetPasswordSentAt { get; set; }
 
         public virtual Role Role { get; set; }
         public virtual ICollection<Cart> Carts { get; set; }
