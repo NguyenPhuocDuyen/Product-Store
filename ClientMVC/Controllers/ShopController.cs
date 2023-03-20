@@ -68,6 +68,7 @@ namespace ClientMVC.Controllers
                     {
                         products = products.OrderByDescending(x => x.RecentPrice).ToList();
                     }
+                    
                     //set var binding
                     ViewBag.searchContent = searchContent;
                     ViewBag.min = min;

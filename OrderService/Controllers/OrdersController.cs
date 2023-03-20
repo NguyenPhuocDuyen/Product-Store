@@ -64,7 +64,7 @@ namespace OrderService.Controllers
             }
             //sort by statys id and then creatAt desc
             listOrder = listOrder.OrderBy(x => x.StatusId).ThenByDescending(x => x.CreateAt).ToList();
-            var products = _db.Product;
+            //var products = _db.Product;
 
             return listOrder.ToList();
         }

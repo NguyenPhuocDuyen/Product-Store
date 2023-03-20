@@ -49,10 +49,8 @@ namespace ProductService.Controllers
         [HttpGet("TopSaleProductId")]
         public async Task<ActionResult<List<int>>> GetTopSaleProductId()
         {
-            //get order bought
-            var order = await _db.Order.GetAllAsync(filter: x => x.StatusId == 3);
             //get all orderdetail of all product have amount > 0
-            var orderDetails = await _db.OrderDetail.GetAllAsync(filter: x => x.Product.Amount > 0, includeProperties: "Product");
+            var orderDetails = await _db.OrderDetail.GetAllAsync(filter: x => x.Product.Amount > 0 && x.Order.StatusId == 3, includeProperties: "Product,Order");
             //filter and take 4 top product sale 
             var data = (from obj in orderDetails
                         group obj by obj.ProductId into gr
