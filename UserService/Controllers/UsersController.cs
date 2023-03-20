@@ -278,8 +278,8 @@ namespace UserService.Controllers
                     To = user.Email,
                     Subject = "Đặt lại mật khẩu cho tài khoản TKDecor Shop",
                     Body = $"<h1>Nếu bạn không đặt lại mật khẩu cho tài khoản TKDecor Shop thì vui lòng bỏ qua email này</h1>" +
-                        $"<h4>Nếu bạn đã đặt lại mật khẩu cho tài khoản TKDecor Shop thì click vào link dưới</h4>" +
-                        $"<p>Vui lòng click vào <a href=\"https://localhost:44310/Account/ResetPassword?tokenPassword=" + token + "\">đây</a> để kích hoạt tài khoản của bạn.</p>"
+                       $"<h4>Nếu bạn đã đặt lại mật khẩu cho tài khoản TKDecor Shop thì click vào link dưới</h4>" +
+                       $"<p>Vui lòng click vào <a href=\"https://localhost:44310/Account/ResetPassword?tokenPassword={token}&email={user.Email}\">đây</a> để kích hoạt tài khoản của bạn.</p>"
                 };
 
                 //send mail

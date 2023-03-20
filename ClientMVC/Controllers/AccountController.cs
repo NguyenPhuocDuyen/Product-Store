@@ -188,10 +188,10 @@ namespace ClientMVC.Controllers
             return View();
         }
 
-        public IActionResult ResetPassword(string tokenPassword)
+        public IActionResult ResetPassword(string tokenPassword, string email)
         {
             ViewBag.TokenPassword = tokenPassword;
-            return View();
+            return View(new UserRegister { Email = email });
         }
 
         [HttpPost]
