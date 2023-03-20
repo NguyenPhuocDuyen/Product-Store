@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Models.ViewModel
 {
-    public class UserRegister : UserLogin
+    public class UserRegister : UserForgotPassword
     {
         [Required(ErrorMessage = "Tên không được bỏ trống")]
         public string FullName { get; set; } = string.Empty;
@@ -17,21 +17,21 @@ namespace Models.ViewModel
         [Required(ErrorMessage = "Địa chỉ không được bỏ trống")]
         public string Address { get; set; } = string.Empty;
 
-        [Required(ErrorMessage = "Mật khẩu không được bỏ trống")] 
-        [Compare("Password", ErrorMessage = "Mật khẩu xác nhận không đúng.")]
-        public string ConfirmPassword { get; set; } = string.Empty;
+        //[Required(ErrorMessage = "Mật khẩu không được bỏ trống")] 
+        //[Compare("Password", ErrorMessage = "Mật khẩu xác nhận không đúng.")]
+        //public string ConfirmPassword { get; set; } = string.Empty;
 
         //[Required]
         //public bool agreeRule { get; set; }
 
-        public bool IsValid(string confirmPassword)
-        {
-            if (Password != confirmPassword)
-            {
-                return false;
-            }
+        //public bool IsValid(string confirmPassword)
+        //{
+        //    if (Password != confirmPassword)
+        //    {
+        //        return false;
+        //    }
 
-            return true;
-        }
+        //    return true;
+        //}
     }
 }

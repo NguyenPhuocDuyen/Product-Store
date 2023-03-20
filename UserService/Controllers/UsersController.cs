@@ -98,10 +98,6 @@ namespace UserService.Controllers
                     user.EmailConfirmationSentAt = DateTime.Now;
                     user.EmailConfirmed = false;
 
-                    //add to database
-                    _db.User.Add(user);
-                    await _db.SaveAsync();
-
                     //send mail to confirm account
                     //set data to send
                     MailContent mailContent = new()
@@ -116,6 +112,10 @@ namespace UserService.Controllers
                     //check status
                     if (response.IsSuccessStatusCode)
                     {
+                        //add to database
+                        _db.User.Add(user);
+                        await _db.SaveAsync();
+
                         return NoContent();
                     }
                     else
@@ -243,6 +243,96 @@ namespace UserService.Controllers
             {
                 return BadRequest(new ErrorApp { Error = ErrorContent.Error });
             }
+        }
+
+        // POST: api/Users/ForgotPassword
+        //ForgotPassword of user 
+        [HttpPost("ForgotPassword")]
+        public async Task<ActionResult> ForgotPassword(User userInput)
+        {
+            // get user by email confirm token 
+            var user = await _db.User.GetFirstOrDefaultAsync(
+                filter: x => x.Email.ToLower().Trim() == userInput.Email.ToLower().Trim());
+
+            if (user == null) return NotFound(new ErrorApp { Error = ErrorContent.UserNotFound });
+
+            try
+            {
+                // create code authen forgot password
+                byte[] randomBytes = new byte[32];
+                using (RNGCryptoServiceProvider rng = new())
+                {
+                    rng.GetBytes(randomBytes);
+                }
+                string token = BitConverter.ToString(randomBytes).Replace("-", "").ToLower();
+
+                //property authen mail
+                user.ResetPasswordToken = token;
+                user.ResetPasswordSentAt = DateTime.Now;
+                user.IsPasswordResetRequired = true;
+
+                //send mail to confirm account
+                //set data to send
+                MailContent mailContent = new()
+                {
+                    To = user.Email,
+                    Subject = "Đặt lại mật khẩu cho tài khoản TKDecor Shop",
+                    Body = $"<h1>Nếu bạn không đặt lại mật khẩu cho tài khoản TKDecor Shop thì vui lòng bỏ qua email này</h1>" +
+                        $"<h4>Nếu bạn đã đặt lại mật khẩu cho tài khoản TKDecor Shop thì click vào link dưới</h4>" +
+                        $"<p>Vui lòng click vào <a href=\"https://localhost:44310/Account/ResetPassword?tokenPassword=" + token + "\">đây</a> để kích hoạt tài khoản của bạn.</p>"
+                };
+
+                //send mail
+                HttpResponseMessage response = GobalVariables.WebAPIClient.PostAsJsonAsync($"Mails/PostMail", mailContent).Result;
+                //check status
+                if (response.IsSuccessStatusCode)
+                {
+                    //update to database
+                    _db.User.Update(user);
+                    await _db.SaveAsync();
+
+                    return NoContent();
+                }
+                else
+                {
+                    return BadRequest(new ErrorApp { Error = ErrorContent.SendEmail });
+                }
+            }
+            catch { }
+
+            return BadRequest(new ErrorApp { Error = ErrorContent.Error });
+        }
+
+        // POST: api/Users/ChangePassword/tokenPassword
+        //ChangePassword of user 
+        [HttpPost("ChangePassword/{tokenPassword}")]
+        public async Task<ActionResult> ChangePassword(string tokenPassword, User userInput)
+        {
+            // get user by email confirm token 
+            var user = await _db.User.GetFirstOrDefaultAsync(
+                filter: x => x.Email.ToLower().Trim() == userInput.Email.ToLower().Trim()
+                && x.ResetPasswordToken == tokenPassword
+                && x.IsPasswordResetRequired == true);
+
+            if (user == null) return NotFound(new ErrorApp { Error = ErrorContent.UserNotFound });
+
+            try
+            {
+                //if reset password, will back status do not reset password
+                user.IsPasswordResetRequired = false;
+                //set new password
+                user.Password = HasPassword.HashPassword(userInput.Password);
+
+                //update to database
+                _db.User.Update(user);
+                await _db.SaveAsync();
+
+                return NoContent();
+
+            }
+            catch { }
+
+            return BadRequest(new ErrorApp { Error = ErrorContent.Error });
         }
     }
 }
