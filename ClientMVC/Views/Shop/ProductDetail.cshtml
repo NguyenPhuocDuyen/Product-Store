@@ -34,10 +34,10 @@
                         <h4>@Model.Title</h4>
                         <div class="rating">
                             @{
-                                int? numberOfStar = null;
+                                double? numberOfStar = null;
                                 if (Model.Reviews.Any())
                                 {
-                                    numberOfStar = Model.Reviews.Sum(x => x.Rate) / Model.Reviews.Count();
+                                    numberOfStar = Model.Reviews.Average(x => x.Rate);
                                 }
                             }
 
@@ -189,7 +189,7 @@
                                 numberOfStar = 0;
                                 if (item.Reviews.Any())
                                 {
-                                    numberOfStar = item.Reviews.Sum(x => x.Rate) / item.Reviews.Count();
+                                    numberOfStar = (double) item.Reviews.Sum(x => x.Rate) / item.Reviews.Count();
                                 }
                             }
 

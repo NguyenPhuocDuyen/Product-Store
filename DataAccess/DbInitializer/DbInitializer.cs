@@ -58,10 +58,13 @@ namespace DataAccess.DbInitializer
             _db.SaveChanges();
 
             //add user
-            _db.Users.Add(new User {
+            _db.Users.Add(new User
+            {
                 RoleId = 1,
                 Email = "Admin@gmail.com",
                 Password = HasPassword.HashPassword("Admin@gmail.com"),
+                FullName = "Admin",
+                Address = "FPT Can Tho",
                 EmailConfirmed = true
             });
             _db.SaveChanges();
@@ -284,6 +287,32 @@ namespace DataAccess.DbInitializer
                 }
             }
             _db.OrderDetails.AddRange(ordersDetail);
+            _db.SaveChanges();
+
+            //add review 
+            List<Review> reviews = new();
+            foreach (var item in listProduct)
+            {
+                foreach (var user in userList)
+                {
+                    Review review = new();
+
+                    review.ProductId = item.Id;
+                    review.UserId = user.Id;
+                    review.Rate = new Random().Next(2, 5) + 1;
+                    if (review.Rate > 3)
+                    {
+                        review.Description = "Đẹp, chất lượng tuyệt vời";
+                    }
+                    else
+                    {
+                        review.Description = "Tạm được";
+                    }
+
+                    reviews.Add(review);
+                }
+            }
+            _db.Reviews.AddRange(reviews);
             _db.SaveChanges();
         }
     }
