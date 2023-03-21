@@ -1,5 +1,8 @@
-﻿@{
+﻿@using Microsoft.AspNetCore.Http
+@{
     ViewData["Title"] = "Liên Lạc";
+    string email = Context.Session.GetString("email");
+    string fullname = Context.Session.GetString("fullname");
 }
 <!-- Map Begin -->
 <div class="map">
@@ -33,10 +36,10 @@
                     <form id="mailFormContact" action="#">
                         <div class="row">
                             <div class="col-lg-6">
-                                <input id="name-input" type="text" placeholder="Tên..."/>
+                                <input id="name-input" type="text" value="@fullname" placeholder="Tên..."/>
                             </div>
                             <div class="col-lg-6">
-                                <input id="email-input" type="text" placeholder="Email..."/>
+                                <input id="email-input" type="text" value="@email" placeholder="Email..."/>
                             </div>
                             <div class="col-lg-12">
                                 <textarea id="message-input" placeholder="Thông điệp"></textarea>

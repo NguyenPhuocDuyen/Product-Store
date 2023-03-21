@@ -117,10 +117,10 @@
                             }
 
                             @{
-                                int? numberOfStar = null;
+                                double? numberOfStar = null;
                                 if (item.Reviews.Any())
                                 {
-                                    numberOfStar = item.Reviews.Sum(x => x.Rate) / item.Reviews.Count();
+                                    numberOfStar = item.Reviews.Average(x => x.Rate);
                                 }
                             }
                             <div class="rating">
@@ -170,10 +170,10 @@
                             }
 
                             @{
-                                int? numberOfStar = null;
+                                double? numberOfStar = null;
                                 if (item.Reviews.Any())
                                 {
-                                    numberOfStar = item.Reviews.Sum(x => x.Rate) / item.Reviews.Count();
+                                    numberOfStar = item.Reviews.Average(x => x.Rate);
                                 }
                             }
                             <div class="rating">
@@ -181,7 +181,7 @@
                                 {
                                     if(i < numberOfStar)
                                     {
-                                        <i class="fa fa-star"></i>
+                                        <i class="fa fa-star" style="color: orange;"></i>
                                     }
                                     else
                                     {
